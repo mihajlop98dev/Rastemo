@@ -1,0 +1,40 @@
+<div class="ai">
+
+  <header class="ai__header">
+    <div class="ai__header-icon">
+      <lucide-icon [img]="SparklesIcon" [size]="18"></lucide-icon>
+    </div>
+    <div>
+      <h1>AI pomoćnik</h1>
+      <p class="text-soft">Pitaj bilo šta o trudnoći — bez dijagnoza, samo podrška i informacije.</p>
+    </div>
+  </header>
+
+  <div class="ai__suggestions">
+    <button class="ai__suggestion" *ngFor="let s of suggestions" (click)="useSuggestion(s.label)">
+      <lucide-icon [img]="s.icon" [size]="15"></lucide-icon>
+      {{ s.label }}
+    </button>
+  </div>
+
+  <ui-card padding="none" class="ai__chat">
+    <div class="ai__messages">
+      <div *ngFor="let m of messages()" class="ai__message" [ngClass]="'ai__message--' + m.role">
+        <div class="ai__bubble">{{ m.text }}</div>
+      </div>
+    </div>
+
+    <form class="ai__composer" (ngSubmit)="send()">
+      <input
+        type="text"
+        [(ngModel)]="draft"
+        name="draft"
+        placeholder="Postavi pitanje..." />
+      <button type="submit" class="ai__send" [disabled]="!draft.trim()">
+        <lucide-icon [img]="SendIcon" [size]="17"></lucide-icon>
+      </button>
+    </form>
+  </ui-card>
+
+  <p class="ai__disclaimer text-muted">AI pomoćnik ne postavlja dijagnoze i ne menja lekara.</p>
+</div>

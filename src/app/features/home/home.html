@@ -1,0 +1,118 @@
+<div class="home">
+
+  <header class="home__header">
+    <h1>Ćao, {{ user.name }}! 👋</h1>
+    <p class="home__header-week">{{ user.weekNumber }}. nedelja + {{ user.weekDays }} dana</p>
+    <p class="home__header-due text-soft">Termin porođaja: {{ user.dueDate }}</p>
+  </header>
+
+  <div class="home__row home__row--top">
+
+    <ui-card class="home__baby-card" padding="lg">
+      <div class="home__baby-card-head">
+        <h2>Tvoja beba ove nedelje</h2>
+        <span class="home__baby-card-approx text-muted">Približno veličine {{ user.babyComparison }}</span>
+      </div>
+
+      <div class="home__baby-card-body">
+        <app-baby-visual [week]="user.weekNumber" size="lg" />
+
+        <div class="home__baby-stats">
+          <div class="home__baby-stat">
+            <strong>{{ user.babyLength }} cm</strong>
+            <span>dužina</span>
+          </div>
+          <div class="home__baby-stat">
+            <strong>{{ user.babyWeight }} g</strong>
+            <span>težina</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="home__baby-slider">
+        <span class="text-muted">{{ user.weekNumber }}. nedelja</span>
+        <ui-progress-bar [value]="weekProgress" [marker]="weekProgress" tone="primary" />
+        <span class="text-muted">{{ user.totalWeeks }}. nedelja</span>
+      </div>
+    </ui-card>
+
+    <ui-card class="home__week-card" padding="lg">
+      <h2>Ove nedelje</h2>
+      <div class="home__highlight" *ngFor="let h of highlights">
+        <span class="home__highlight-icon">
+          <lucide-icon [img]="highlightIcons[h.icon]" [size]="16"></lucide-icon>
+        </span>
+        <div>
+          <strong>{{ h.title }}</strong>
+          <p class="text-soft">{{ h.text }}</p>
+        </div>
+      </div>
+      <ui-button variant="outline" size="sm" [fullWidth]="true">Pročitaj više o ovoj nedelji</ui-button>
+    </ui-card>
+
+    <ui-card class="home__appointment-card" padding="lg">
+      <h2>Sledeći pregled</h2>
+      <div class="home__appointment-date">
+        <div class="home__appointment-day">
+          <strong>{{ appointment.day }}</strong>
+          <span>{{ appointment.month }}</span>
+        </div>
+        <div class="home__appointment-info">
+          <strong>{{ appointment.title }}</strong>
+          <span class="text-soft">{{ appointment.subtitle }}</span>
+        </div>
+      </div>
+      <div class="home__appointment-meta text-soft">
+        <span>🕐 {{ appointment.time }}</span>
+        <span>📍 {{ appointment.clinic }}</span>
+      </div>
+      <div class="home__appointment-actions">
+        <ui-button [routerLink]="['/pregled', appointment.id]" variant="outline" size="sm" [fullWidth]="true">Vidi detalje</ui-button>
+        <ui-button variant="secondary" size="sm" [fullWidth]="true">Dodaj u kalendar</ui-button>
+      </div>
+    </ui-card>
+
+  </div>
+
+  <div class="home__row home__row--bottom">
+
+    <ui-card class="home__quick-card" padding="lg">
+      <h2>Brzi unos</h2>
+      <div class="home__quick-actions">
+        <button class="home__quick-action" *ngFor="let action of quickActions">
+          <span class="home__quick-action-icon" [ngClass]="'home__quick-action-icon--' + action.tone">
+            <lucide-icon [img]="action.icon" [size]="19"></lucide-icon>
+          </span>
+          <span>{{ action.label }}</span>
+        </button>
+      </div>
+    </ui-card>
+
+    <ui-card class="home__reminder-card" padding="lg">
+      <ui-badge tone="peach">Dnevni podsetnik</ui-badge>
+      <p class="home__reminder-text">Popij čašu vode i zabeleži kako se osećaš danas.</p>
+      <ui-button variant="primary" size="sm">Zabeleži sada</ui-button>
+    </ui-card>
+
+    <ui-card class="home__progress-card" padding="lg">
+      <h2>Tvoja trudnoća</h2>
+      <div class="home__progress-ring">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" class="home__progress-track" />
+          <circle cx="50" cy="50" r="42" class="home__progress-fill"
+                  [style.stroke-dasharray]="264"
+                  [style.stroke-dashoffset]="264 - (264 * weekProgress / 100)" />
+        </svg>
+        <div class="home__progress-ring-label">
+          <strong>{{ weekProgress }}%</strong>
+          <span>od {{ user.totalWeeks }}</span>
+        </div>
+      </div>
+      <a routerLink="/pracenje" class="home__progress-link">
+        Pogledaj ceo pregled
+        <lucide-icon [img]="ChevronIcon" [size]="15"></lucide-icon>
+      </a>
+    </ui-card>
+
+  </div>
+</div>

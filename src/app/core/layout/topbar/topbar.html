@@ -1,0 +1,21 @@
+<header class="topbar">
+  <div class="topbar__search">
+    <lucide-icon [img]="SearchIcon" [size]="17"></lucide-icon>
+    <input type="text" placeholder="Pretraži članke, lekare, teme..." />
+  </div>
+
+  <div class="topbar__actions">
+    <button class="topbar__icon-btn" aria-label="Poruke">
+      <lucide-icon [img]="MessageIcon" [size]="19"></lucide-icon>
+    </button>
+    <button class="topbar__icon-btn" aria-label="Notifikacije">
+      <lucide-icon [img]="BellIcon" [size]="19"></lucide-icon>
+      <span class="topbar__dot"></span>
+    </button>
+    <a routerLink="/profil" class="topbar__profile">
+      <ui-avatar [name]="user.fullName" size="md" />
+      <span class="topbar__profile-name">{{ user.name }}</span>
+      <lucide-icon [img]="ChevronIcon" [size]="15" class="text-muted"></lucide-icon>
+    </a>
+  </div>
+</header>

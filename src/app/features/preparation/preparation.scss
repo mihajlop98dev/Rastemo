@@ -1,0 +1,127 @@
+.prep {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1360px;
+
+  &__header {
+    padding: var(--space-4) var(--space-1) var(--space-2);
+    h1 { font-size: 24px; margin-bottom: 4px; }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: var(--space-5);
+    align-items: start;
+
+    @media (max-width: 1080px) { grid-template-columns: 1fr; }
+  }
+
+  &__progress-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+
+    h2 { font-size: 16.5px; margin-bottom: 2px; }
+    span.text-muted { font-size: 12.5px; }
+  }
+
+  &__progress-pct {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    color: var(--color-sage);
+  }
+
+  &__group {
+    margin-top: var(--space-6);
+
+    h3 {
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border-soft);
+    cursor: pointer;
+
+    &:last-child { border-bottom: none; }
+
+    input { display: none; }
+  }
+
+  &__checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 1.5px solid var(--color-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    transition: all .15s ease;
+  }
+
+  &__item input:checked + &__checkbox {
+    background: var(--color-sage);
+    border-color: var(--color-sage);
+  }
+
+  &__item-label {
+    font-size: 13.5px;
+    color: var(--color-text);
+
+    &--done {
+      color: var(--color-text-muted);
+      text-decoration: line-through;
+    }
+  }
+
+  &__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__illustration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
+    color: var(--color-primary-dark);
+  }
+
+  &__tip {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-3);
+
+    strong { display: block; font-size: 13.5px; margin-bottom: 4px; }
+    p { font-size: 12.5px; line-height: 1.5; }
+  }
+
+  &__tip-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+  }
+}

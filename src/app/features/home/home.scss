@@ -1,0 +1,272 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1360px;
+
+  &__header {
+    padding: var(--space-4) var(--space-1) var(--space-2);
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    &-week {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      margin-bottom: 2px;
+    }
+
+    &-due { font-size: 13.5px; }
+  }
+
+  &__row {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: 1.7fr 1.15fr 1fr;
+
+    @media (max-width: 1180px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  h2 {
+    font-size: 16.5px;
+    margin-bottom: var(--space-4);
+  }
+
+  /* Baby card */
+  &__baby-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__baby-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+
+    h2 { margin: 0; }
+    &-approx { font-size: 12.5px; font-weight: 500; }
+  }
+
+  &__baby-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    padding: var(--space-3) 0 var(--space-5);
+  }
+
+  &__baby-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__baby-stat {
+    display: flex;
+    flex-direction: column;
+    strong { font-family: var(--font-heading); font-size: 22px; }
+    span { font-size: 12px; color: var(--color-text-muted); }
+  }
+
+  &__baby-slider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 12px;
+    margin-top: auto;
+
+    ui-progress-bar { flex: 1; }
+  }
+
+  /* Ove nedelje card */
+  &__week-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__highlight {
+    display: flex;
+    gap: 12px;
+    margin-bottom: var(--space-4);
+
+    strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
+    p { font-size: 12.5px; line-height: 1.5; }
+  }
+
+  &__highlight-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+  }
+
+  /* Appointment card */
+  &__appointment-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__appointment-date {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  &__appointment-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    flex-shrink: 0;
+
+    strong { font-family: var(--font-heading); font-size: 20px; color: var(--color-primary-dark); line-height: 1; }
+    span { font-size: 10px; font-weight: 700; color: var(--color-primary-dark); letter-spacing: .04em; }
+  }
+
+  &__appointment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    strong { font-size: 15px; }
+    span { font-size: 12.5px; }
+  }
+
+  &__appointment-meta {
+    display: flex;
+    gap: var(--space-4);
+    font-size: 12.5px;
+    margin-bottom: var(--space-5);
+  }
+
+  &__appointment-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: auto;
+  }
+
+  /* Quick actions */
+  &__quick-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+
+    @media (max-width: 640px) { flex-wrap: wrap; }
+  }
+
+  &__quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+    flex: 1;
+
+    &:hover span:first-child { transform: translateY(-2px); }
+  }
+
+  &__quick-action-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .15s ease;
+
+    &--primary { background: var(--color-primary-soft); color: var(--color-primary-dark); }
+    &--peach { background: var(--color-peach-light); color: #B36941; }
+    &--lavender { background: var(--color-lavender-light); color: #6C5A9E; }
+    &--sage { background: var(--color-sage-light); color: #4F7856; }
+    &--gold { background: var(--color-gold-light); color: #A6752A; }
+  }
+
+  /* Reminder card */
+  &__reminder-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    background: linear-gradient(160deg, var(--color-surface) 40%, var(--color-peach-light) 160%);
+  }
+
+  &__reminder-text {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--color-text-soft);
+  }
+
+  /* Progress card */
+  &__progress-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    h2 { align-self: flex-start; }
+  }
+
+  &__progress-ring {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin-bottom: var(--space-4);
+
+    svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+    &-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      strong { font-family: var(--font-heading); font-size: 22px; }
+      span { font-size: 11px; color: var(--color-text-muted); }
+    }
+  }
+
+  &__progress-track {
+    fill: none;
+    stroke: var(--color-bg-soft);
+    stroke-width: 9;
+  }
+
+  &__progress-fill {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 9;
+    stroke-linecap: round;
+    transition: stroke-dashoffset .5s ease;
+  }
+
+  &__progress-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+  }
+}

@@ -1,0 +1,62 @@
+<div class="mom-visual" [ngClass]="'mom-visual--' + size">
+  <svg viewBox="0 0 320 380" class="mom-visual__backdrop">
+    <defs>
+      <radialGradient id="mvBackdrop" cx="50%" cy="38%" r="62%">
+        <stop offset="0%" stop-color="var(--color-primary-light)" />
+        <stop offset="100%" stop-color="var(--color-peach-light)" />
+      </radialGradient>
+    </defs>
+    <circle cx="160" cy="190" r="170" fill="url(#mvBackdrop)" />
+    <circle cx="60" cy="80" r="5" class="mom-visual__sparkle" />
+    <circle cx="270" cy="120" r="4" class="mom-visual__sparkle" />
+    <circle cx="255" cy="300" r="6" class="mom-visual__sparkle" />
+    <circle cx="45" cy="290" r="3.5" class="mom-visual__sparkle" />
+  </svg>
+
+  <svg viewBox="0 0 320 380" class="mom-visual__figure">
+    <defs>
+      <linearGradient id="mvBody" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--color-primary)" />
+        <stop offset="100%" stop-color="var(--color-primary-dark)" />
+      </linearGradient>
+    </defs>
+
+    <!-- hair -->
+    <path
+      class="mom-visual__hair"
+      d="M128 58 C104 46 92 70 96 100 C99 122 112 138 128 140
+         C110 150 100 172 100 196 L118 198
+         C116 168 122 140 138 122
+         C152 106 150 78 128 58 Z" />
+
+    <!-- head -->
+    <circle class="mom-visual__skin" cx="168" cy="72" r="34" />
+
+    <!-- dress / body silhouette with belly -->
+    <path
+      class="mom-visual__body"
+      fill="url(#mvBody)"
+      d="M140 112
+         C110 116 88 146 84 190
+         C81 224 88 254 100 280
+         C92 300 92 322 104 338
+         C126 356 190 356 214 338
+         C228 324 228 300 218 280
+         C238 250 246 210 236 174
+         C228 144 206 118 176 111
+         C168 116 148 116 140 112
+         Z" />
+
+    <!-- resting arm on belly -->
+    <path
+      class="mom-visual__detail"
+      d="M204 168 C222 186 228 210 220 232 C215 246 200 254 186 250"
+      fill="none" stroke-linecap="round" />
+
+    <!-- collar hint -->
+    <path
+      class="mom-visual__detail"
+      d="M148 118 C158 128 178 128 188 118"
+      fill="none" stroke-linecap="round" />
+  </svg>
+</div>

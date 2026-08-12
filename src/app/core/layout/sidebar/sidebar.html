@@ -1,0 +1,27 @@
+<aside class="sidebar">
+  <a routerLink="/pocetna" class="sidebar__brand">
+    <span class="sidebar__brand-icon">
+      <lucide-icon [img]="HeartIcon" [size]="18"></lucide-icon>
+    </span>
+    <span class="sidebar__brand-text">
+      <strong>rastemo</strong>
+      <small>zajedno kroz najvažniji period</small>
+    </span>
+  </a>
+
+  <nav class="sidebar__nav">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.path"
+      routerLinkActive="sidebar__link--active"
+      class="sidebar__link">
+      <lucide-icon [img]="iconMap[item.icon]" [size]="19"></lucide-icon>
+      <span>{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <button class="sidebar__emergency">
+    <lucide-icon [img]="PhoneIcon" [size]="17"></lucide-icon>
+    Hitna pomoć
+  </button>
+</aside>

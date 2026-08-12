@@ -1,0 +1,42 @@
+<div class="authpage">
+  <div class="authpage__brand">
+    <span class="authpage__brand-icon"><lucide-icon [img]="HeartIcon" [size]="20"></lucide-icon></span>
+    <strong>rastemo</strong>
+  </div>
+
+  <ui-card padding="lg" class="authpage__card">
+    <h1>Kreiraj nalog</h1>
+    <p class="text-soft">Napravi svoj digitalni prostor za trudnoću.</p>
+
+    <form (ngSubmit)="submit()" class="authpage__form">
+      <label>
+        <span>Ime i prezime</span>
+        <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Marija Petrović" />
+      </label>
+      <label>
+        <span>Email</span>
+        <input type="email" [(ngModel)]="email" name="email" placeholder="marija@email.com" />
+      </label>
+      <label>
+        <span>Lozinka</span>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Minimum 6 karaktera" />
+      </label>
+
+      <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
+
+      <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading()">
+        {{ loading() ? 'Kreiranje naloga...' : 'Kreiraj nalog' }}
+      </ui-button>
+    </form>
+
+    <div class="authpage__divider"><span>ili</span></div>
+
+    <ui-button variant="secondary" size="lg" [fullWidth]="true" (click)="withGoogle()">
+      Nastavi sa Google nalogom
+    </ui-button>
+
+    <p class="authpage__switch">
+      Već imaš nalog? <a routerLink="/prijava">Prijavi se</a>
+    </p>
+  </ui-card>
+</div>

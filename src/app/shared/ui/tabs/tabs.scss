@@ -1,0 +1,34 @@
+.ui-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--color-bg-soft);
+  border-radius: var(--radius-pill);
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+    transition: all .15s ease;
+
+    &:hover { color: var(--color-text); }
+
+    &--active {
+      background: var(--color-surface);
+      color: var(--color-primary-dark);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  &__count {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+}

@@ -1,0 +1,24 @@
+<div class="landing">
+
+  <app-mom-visual size="xl" />
+
+  <div class="landing__brand">
+    <span class="landing__brand-icon">
+      <lucide-icon [img]="HeartIcon" [size]="22"></lucide-icon>
+    </span>
+    <h1>rastemo</h1>
+  </div>
+
+  <p class="landing__tagline">Zajedno kroz najvažniji period.</p>
+
+  <nav class="landing__shortcuts">
+    <a *ngFor="let s of shortcuts" [routerLink]="s.path" class="landing__shortcut">
+      <span class="landing__shortcut-icon">
+        <lucide-icon [img]="s.icon" [size]="18"></lucide-icon>
+      </span>
+      {{ s.label }}
+    </a>
+  </nav>
+
+  <ui-button routerLink="/pocetna" variant="primary" size="lg">Započni svoje putovanje</ui-button>
+</div>

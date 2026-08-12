@@ -1,0 +1,75 @@
+<div class="tracking">
+
+  <header class="tracking__header">
+    <div>
+      <h1>Praćenje trudnoće</h1>
+      <p class="text-soft">Prati kako se osećaš svakog dana.</p>
+    </div>
+    <ui-avatar [name]="user.fullName" size="md" />
+  </header>
+
+  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
+
+  <div class="tracking__grid" *ngIf="activeTab === 'simptomi'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Danas, 12. avgust</h2>
+      </div>
+
+      <div class="tracking__symptom" *ngFor="let s of symptoms">
+        <div class="tracking__symptom-name">
+          <span class="tracking__symptom-emoji">{{ s.emoji }}</span>
+          {{ s.name }}
+        </div>
+        <div class="tracking__symptom-levels">
+          <button
+            *ngFor="let lvl of levels"
+            class="tracking__level"
+            [class.tracking__level--active]="lvl === s.level"
+            [class.tracking__level--l1]="lvl === 1"
+            [class.tracking__level--l2]="lvl === 2"
+            [class.tracking__level--l3]="lvl === 3">
+            {{ lvl === 1 ? '🙂' : lvl === 2 ? '😐' : '😣' }}
+          </button>
+        </div>
+      </div>
+
+      <ui-button variant="outline" size="md">
+        <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
+        Dodaj simptom
+      </ui-button>
+    </ui-card>
+
+    <div class="tracking__side">
+      <ui-card padding="lg">
+        <h2>Trend ove nedelje</h2>
+        <svg viewBox="0 0 280 90" class="tracking__chart">
+          <polyline [attr.points]="trendPoints" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <circle *ngFor="let v of trendValues; let i = index"
+                  [attr.cx]="10 + (i * 260 / (trendValues.length - 1))"
+                  [attr.cy]="80 - ((v - 1) / 2) * 70"
+                  r="3.5" fill="var(--color-primary)" />
+        </svg>
+        <div class="tracking__chart-labels">
+          <span *ngFor="let d of trendDays">{{ d }}</span>
+        </div>
+      </ui-card>
+
+      <ui-card padding="lg" class="tracking__warning">
+        <div class="tracking__warning-icon">
+          <lucide-icon [img]="AlertIcon" [size]="16"></lucide-icon>
+        </div>
+        <div>
+          <strong>Važno</strong>
+          <p class="text-soft">Ako se simptom pogoršava, novi je ili te zabrinjava, obrati se svom lekaru.</p>
+        </div>
+      </ui-card>
+    </div>
+
+  </div>
+
+  <ui-card *ngIf="activeTab !== 'simptomi'" padding="lg" class="tracking__placeholder">
+    <p class="text-soft">Ova sekcija je u pripremi.</p>
+  </ui-card>
+</div>

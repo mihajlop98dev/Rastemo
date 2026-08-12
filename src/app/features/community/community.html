@@ -1,0 +1,60 @@
+<div class="community">
+
+  <header class="community__header">
+    <div>
+      <h1>Zajednica</h1>
+      <p class="text-soft">Podeli iskustva i postavi pitanja drugim trudnicama.</p>
+    </div>
+    <ui-button variant="primary" size="md">
+      <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
+      Nova tema
+    </ui-button>
+  </header>
+
+  <div class="community__grid">
+
+    <div class="community__main">
+      <div class="community__toolbar">
+        <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
+        <div class="community__search">
+          <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
+          <input type="text" placeholder="Pretraži teme..." />
+        </div>
+      </div>
+
+      <ui-card padding="none" class="community__list">
+        <a class="community__topic" *ngFor="let t of topics">
+          <ui-avatar *ngIf="!t.pinned" [name]="t.author" size="md" />
+          <div class="community__topic-anon" *ngIf="t.pinned">
+            <lucide-icon [img]="AnonIcon" [size]="16"></lucide-icon>
+          </div>
+
+          <div class="community__topic-body">
+            <div class="community__topic-title">
+              <lucide-icon *ngIf="t.pinned" [img]="PinIcon" [size]="13" class="text-primary"></lucide-icon>
+              <strong>{{ t.title }}</strong>
+            </div>
+            <div class="community__topic-meta">
+              <ui-badge tone="lavender">{{ t.category }}</ui-badge>
+              <span class="text-muted">{{ t.author }} · {{ t.time }}</span>
+            </div>
+          </div>
+
+          <div class="community__topic-replies">
+            <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
+            {{ t.replies }}
+          </div>
+        </a>
+      </ui-card>
+    </div>
+
+    <ui-card padding="lg" class="community__categories">
+      <h2>Kategorije</h2>
+      <div class="community__category" *ngFor="let c of categories">
+        <span>{{ c.name }}</span>
+        <span class="text-muted">{{ c.count }}</span>
+      </div>
+    </ui-card>
+
+  </div>
+</div>

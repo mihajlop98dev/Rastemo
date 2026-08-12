@@ -1,0 +1,53 @@
+<div class="baby-visual" [ngClass]="'baby-visual--' + size">
+  <svg viewBox="0 0 240 240" class="baby-visual__backdrop">
+    <defs>
+      <radialGradient id="bvBackdrop" cx="50%" cy="42%" r="65%">
+        <stop offset="0%" [attr.stop-color]="'var(--color-peach-light)'" />
+        <stop offset="100%" [attr.stop-color]="'var(--color-primary-light)'" />
+      </radialGradient>
+    </defs>
+    <circle cx="120" cy="120" r="118" fill="url(#bvBackdrop)" />
+    <circle cx="46" cy="52" r="4" class="baby-visual__sparkle" />
+    <circle cx="196" cy="70" r="3" class="baby-visual__sparkle" />
+    <circle cx="204" cy="176" r="5" class="baby-visual__sparkle" />
+  </svg>
+
+  <svg viewBox="0 0 240 240" class="baby-visual__figure" [style.transform]="'scale(' + scale + ')'">
+    <defs>
+      <linearGradient id="bvBody" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--color-peach)" />
+        <stop offset="100%" stop-color="var(--color-primary)" />
+      </linearGradient>
+    </defs>
+
+    <!-- curled silhouette -->
+    <path
+      class="baby-visual__body"
+      fill="url(#bvBody)"
+      d="M148 36
+         C176 36 198 58 198 87
+         C198 108 187 124 169 132
+         C188 141 200 159 200 180
+         C200 208 175 229 143 229
+         C107 229 79 207 76 176
+         C74 159 81 144 94 135
+         C79 125 71 108 71 90
+         C71 60 100 36 130 36
+         Z" />
+
+    <!-- tucked arm -->
+    <path
+      class="baby-visual__detail"
+      d="M118 118 C126 126 130 138 126 150 C123 158 114 162 106 159"
+      fill="none" stroke-linecap="round" />
+
+    <!-- folded legs -->
+    <path
+      class="baby-visual__detail"
+      d="M96 178 C106 190 122 194 136 188 C146 184 152 175 151 166"
+      fill="none" stroke-linecap="round" />
+
+    <!-- face hint -->
+    <circle class="baby-visual__face" cx="160" cy="82" r="2.6" />
+  </svg>
+</div>

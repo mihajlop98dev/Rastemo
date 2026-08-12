@@ -1,0 +1,46 @@
+<div class="profile">
+
+  <header class="profile__header">
+    <h1>Profil i podešavanja</h1>
+  </header>
+
+  <div class="profile__grid">
+
+    <ui-card padding="sm" class="profile__menu">
+      <a *ngFor="let m of menu" class="profile__menu-item" [class.profile__menu-item--active]="m.active">
+        <lucide-icon [img]="m.icon" [size]="17"></lucide-icon>
+        {{ m.label }}
+      </a>
+    </ui-card>
+
+    <ui-card padding="lg" class="profile__content">
+      <div class="profile__top">
+        <ui-avatar [name]="user.fullName" size="xl" />
+        <div class="profile__top-info">
+          <h2>{{ user.fullName }}</h2>
+          <span class="text-soft">{{ user.city }}</span>
+        </div>
+        <ui-button variant="outline" size="sm">
+          <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
+          Uredi
+        </ui-button>
+      </div>
+
+      <div class="profile__divider"></div>
+
+      <h3>Osnovne informacije</h3>
+      <div class="profile__fields">
+        <div class="profile__field" *ngFor="let f of infoFields">
+          <span class="profile__field-icon">
+            <lucide-icon [img]="f.icon" [size]="15"></lucide-icon>
+          </span>
+          <div>
+            <span class="text-muted">{{ f.label }}</span>
+            <strong>{{ f.value }}</strong>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
+  </div>
+</div>

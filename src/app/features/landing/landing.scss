@@ -1,0 +1,74 @@
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  text-align: center;
+  padding: var(--space-8) var(--space-5);
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-peach-light) 140%);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: var(--space-2);
+
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+    }
+  }
+
+  &__brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-peach));
+    color: #fff;
+  }
+
+  &__tagline {
+    font-size: 16px;
+    color: var(--color-text-soft);
+    max-width: 320px;
+  }
+
+  &__shortcuts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3) var(--space-6);
+    margin: var(--space-3) 0 var(--space-4);
+
+    @media (max-width: 480px) { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  &__shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+
+    &:hover &-icon { transform: translateY(-2px); }
+  }
+
+  &__shortcut-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    color: var(--color-primary-dark);
+    box-shadow: var(--shadow-card);
+    transition: transform .15s ease;
+  }
+}

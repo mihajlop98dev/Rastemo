@@ -1,0 +1,10 @@
+<nav class="mobile-nav">
+  <a
+    *ngFor="let item of items"
+    [routerLink]="item.path"
+    routerLinkActive="mobile-nav__link--active"
+    class="mobile-nav__link">
+    <lucide-icon [img]="iconMap[item.icon]" [size]="21"></lucide-icon>
+    <span>{{ item.label }}</span>
+  </a>
+</nav>

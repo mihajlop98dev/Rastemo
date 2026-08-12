@@ -1,0 +1,67 @@
+<div class="doctors">
+
+  <header class="doctors__header">
+    <div>
+      <h1>Lekari</h1>
+      <p class="text-soft">Pronađi i oceni ginekologe, akušere i druge stručnjake.</p>
+    </div>
+    <ui-button variant="primary" size="md">
+      <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
+      Dodaj lekara
+    </ui-button>
+  </header>
+
+  <ui-card padding="md" class="doctors__filters">
+    <div class="doctors__search">
+      <lucide-icon [img]="SearchIcon" [size]="16"></lucide-icon>
+      <input type="text" placeholder="Pretraži lekare, klinike..." />
+    </div>
+    <button class="doctors__filter-btn">
+      <lucide-icon [img]="MapPinIcon" [size]="15"></lucide-icon>
+      Grad
+      <lucide-icon [img]="ChevronIcon" [size]="14"></lucide-icon>
+    </button>
+    <button class="doctors__filter-btn">
+      Specijalizacija
+      <lucide-icon [img]="ChevronIcon" [size]="14"></lucide-icon>
+    </button>
+    <button class="doctors__filter-btn doctors__filter-btn--icon">
+      <lucide-icon [img]="FilterIcon" [size]="15"></lucide-icon>
+      Filteri
+    </button>
+  </ui-card>
+
+  <div class="doctors__grid">
+
+    <ui-card padding="lg" class="doctors__list">
+      <h2>Preporučeni ginekolozi</h2>
+
+      <div class="doctors__row" *ngFor="let d of doctors">
+        <ui-avatar [name]="d.name" size="lg" />
+        <div class="doctors__row-info">
+          <strong>{{ d.name }}</strong>
+          <span class="text-soft">{{ d.specialty }}</span>
+        </div>
+        <div class="doctors__row-meta">
+          <span class="text-muted">{{ d.city }}</span>
+          <ui-rating [value]="d.rating" [count]="d.reviewCount" />
+        </div>
+        <button class="doctors__fav">
+          <lucide-icon [img]="HeartIcon" [size]="17"></lucide-icon>
+        </button>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg" class="doctors__top">
+      <h2>Najviše ocenjeni</h2>
+      <div class="doctors__top-row" *ngFor="let d of topRated">
+        <ui-avatar [name]="d.name" size="sm" />
+        <div class="doctors__top-info">
+          <strong>{{ d.name }}</strong>
+        </div>
+        <ui-rating [value]="d.rating" />
+      </div>
+    </ui-card>
+
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="prep">
+
+  <header class="prep__header">
+    <h1>Priprema</h1>
+    <p class="text-soft">Organizuj sve što ti je potrebno pre i posle porođaja.</p>
+  </header>
+
+  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
+
+  <div class="prep__grid">
+
+    <ui-card padding="lg" class="prep__checklist">
+      <div class="prep__progress-head">
+        <div>
+          <h2>Torba za porodilište</h2>
+          <span class="text-muted">{{ doneCount() }}/{{ totalCount() }} spakovano</span>
+        </div>
+        <span class="prep__progress-pct">{{ progress() }}%</span>
+      </div>
+      <ui-progress-bar [value]="progress()" tone="sage" />
+
+      <div class="prep__group" *ngFor="let group of groups()">
+        <h3>{{ group.title }}</h3>
+        <label class="prep__item" *ngFor="let item of group.items">
+          <input type="checkbox" [checked]="item.done" (change)="toggle(group, item)" />
+          <span class="prep__checkbox">
+            <lucide-icon *ngIf="item.done" [img]="CheckIcon" [size]="12"></lucide-icon>
+          </span>
+          <span [class.prep__item-label--done]="item.done" class="prep__item-label">{{ item.label }}</span>
+        </label>
+      </div>
+    </ui-card>
+
+    <div class="prep__side">
+      <div class="prep__illustration">
+        <lucide-icon [img]="BagIcon" [size]="52"></lucide-icon>
+      </div>
+
+      <ui-card padding="lg" class="prep__tip">
+        <div class="prep__tip-icon">
+          <lucide-icon [img]="SparklesIcon" [size]="16"></lucide-icon>
+        </div>
+        <div>
+          <strong>Savet</strong>
+          <p class="text-soft">Spakuj torbu na vreme, idealno 2–3 nedelje pre termina.</p>
+        </div>
+      </ui-card>
+    </div>
+
+  </div>
+</div>

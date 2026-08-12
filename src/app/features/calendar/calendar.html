@@ -1,0 +1,76 @@
+<div class="calpage">
+
+  <header class="calpage__header">
+    <div>
+      <h1>Kalendar</h1>
+      <p class="text-soft">Svi tvoji pregledi, analize i podsetnici na jednom mestu.</p>
+    </div>
+    <ui-button variant="primary" size="md">
+      <lucide-icon [img]="PlusIcon" [size]="17"></lucide-icon>
+      Novi događaj
+    </ui-button>
+  </header>
+
+  <div class="calpage__grid">
+
+    <ui-card class="calpage__month" padding="lg">
+      <div class="calpage__month-toolbar">
+        <ui-tabs [tabs]="viewTabs" [active]="activeView" (activeChange)="activeView = $event"></ui-tabs>
+
+        <div class="calpage__month-nav">
+          <button class="calpage__nav-btn"><lucide-icon [img]="ChevronLeftIcon" [size]="17"></lucide-icon></button>
+          <strong>{{ monthLabel }}</strong>
+          <button class="calpage__nav-btn"><lucide-icon [img]="ChevronRightIcon" [size]="17"></lucide-icon></button>
+        </div>
+
+        <ui-button variant="secondary" size="sm">Danas</ui-button>
+      </div>
+
+      <div class="calpage__weekdays">
+        <span *ngFor="let d of weekDayLabels">{{ d }}</span>
+      </div>
+
+      <div class="calpage__weeks">
+        <div class="calpage__week" *ngFor="let week of weeks">
+          <div
+            class="calpage__day"
+            *ngFor="let day of week"
+            [class.calpage__day--muted]="!day.inMonth"
+            [class.calpage__day--selected]="day.isSelected">
+            <span>{{ day.day }}</span>
+            <div class="calpage__day-dots" *ngIf="day.dots">
+              <i *ngFor="let dot of day.dots" [ngClass]="'calpage__dot calpage__dot--' + dot"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
+    <div class="calpage__side">
+      <ui-card padding="lg">
+        <h2>Predstojeći</h2>
+        <div class="calpage__upcoming-item" *ngFor="let apt of appointments">
+          <div class="calpage__upcoming-date">
+            <strong>{{ apt.day }}</strong>
+            <span>{{ apt.month }}</span>
+          </div>
+          <div class="calpage__upcoming-info">
+            <strong>{{ apt.title }}</strong>
+            <span class="text-soft">{{ apt.time }} · {{ apt.clinic }}</span>
+          </div>
+        </div>
+      </ui-card>
+
+      <ui-card padding="lg" class="calpage__tip">
+        <div class="calpage__tip-icon">
+          <lucide-icon [img]="SparklesIcon" [size]="17"></lucide-icon>
+        </div>
+        <div>
+          <strong>Savet dana</strong>
+          <p class="text-soft">Lagane šetnje na svežem vazduhu mogu pomoći boljem raspoloženju i snu.</p>
+        </div>
+      </ui-card>
+    </div>
+
+  </div>
+</div>

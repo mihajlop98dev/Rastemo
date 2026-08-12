@@ -1,0 +1,58 @@
+<div class="babydev">
+
+  <header class="babydev__header">
+    <div>
+      <h1>Razvoj bebe</h1>
+      <p class="text-soft">Prati kako se tvoja beba razvija iz nedelje u nedelju.</p>
+    </div>
+  </header>
+
+  <div class="babydev__weeks">
+    <button
+      *ngFor="let w of weeks"
+      class="babydev__week-pill"
+      [class.babydev__week-pill--active]="w === selectedWeek"
+      (click)="selectWeek(w)">
+      {{ w }}
+    </button>
+  </div>
+
+  <div class="babydev__grid">
+
+    <ui-card class="babydev__visual-card" padding="lg">
+      <span class="babydev__week-label">{{ selectedWeek }}. nedelja + 3 dana</span>
+      <app-baby-visual [week]="selectedWeek" size="lg" />
+      <div class="babydev__stats">
+        <div>
+          <strong>{{ length }} cm</strong>
+          <span>dužina</span>
+        </div>
+        <div class="babydev__stats-divider"></div>
+        <div>
+          <strong>{{ weight }} g</strong>
+          <span>težina</span>
+        </div>
+      </div>
+      <p class="babydev__comparison text-soft">Približno veličine {{ sizeLabel }}</p>
+    </ui-card>
+
+    <ui-card class="babydev__info-card" padding="lg">
+      <h2>Razvoj u ovoj nedelji</h2>
+      <div class="babydev__point" *ngFor="let p of devPoints">
+        <span class="babydev__point-icon">
+          <lucide-icon [img]="p.icon" [size]="16"></lucide-icon>
+        </span>
+        <p>{{ p.text }}</p>
+      </div>
+
+      <div class="babydev__divider"></div>
+
+      <h2>Pitanja za lekara</h2>
+      <ul class="babydev__questions">
+        <li>Da li su pokreti bebe u ovoj nedelji uobičajeni?</li>
+        <li>Na šta treba posebno da obratim pažnju do sledećeg pregleda?</li>
+      </ul>
+    </ui-card>
+
+  </div>
+</div>

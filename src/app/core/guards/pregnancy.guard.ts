@@ -14,6 +14,15 @@ export const pregnancyGuard: CanActivateFn = async () => {
     await pregnancy.load();
   }
 
+  // Immediately after an OAuth redirect, the Supabase client can briefly use a
+  // stale/not-yet-persisted session for the very first authenticated request,
+  // making a real active pregnancy look like it doesn't exist. Retry once
+  // before concluding the user needs onboarding.
+  if (!pregnancy.active()) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await pregnancy.load();
+  }
+
   if (pregnancy.active()) return true;
 
   router.navigate(['/pregnancy-setup']);

@@ -15,7 +15,7 @@
     padding: var(--space-3) var(--space-7) var(--space-9);
 
     @media (max-width: 1024px) {
-      padding: var(--space-3) var(--space-4) calc(var(--mobile-nav-height) + var(--space-6));
+      padding: var(--space-3) var(--space-4) calc(var(--mobile-nav-height) + env(safe-area-inset-bottom) + var(--space-6));
     }
   }
 }

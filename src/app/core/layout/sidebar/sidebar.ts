@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { LucideAngularModule, Heart, PhoneCall } from 'lucide-angular';
+import { LucideAngularModule, Heart, PhoneCall, X } from 'lucide-angular';
 import { navItems } from '../nav-items';
 import { iconMap } from '../icon-map';
+
+interface EmergencyNumber {
+  label: string;
+  number: string;
+}
 
 @Component({
   selector: 'app-sidebar',
@@ -15,6 +20,16 @@ import { iconMap } from '../icon-map';
 export class Sidebar {
   readonly navItems = navItems;
   readonly iconMap = iconMap;
+
+  readonly showEmergency = signal(false);
+
+  readonly emergencyNumbers: EmergencyNumber[] = [
+    { label: 'Hitna pomoć', number: '194' },
+    { label: 'Policija', number: '192' },
+    { label: 'Vatrogasci', number: '193' },
+  ];
+
   readonly HeartIcon = Heart;
   readonly PhoneIcon = PhoneCall;
+  readonly XIcon = X;
 }

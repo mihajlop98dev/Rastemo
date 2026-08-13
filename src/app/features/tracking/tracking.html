@@ -5,7 +5,7 @@
       <h1>Praćenje trudnoće</h1>
       <p class="text-soft">Prati kako se osećaš svakog dana.</p>
     </div>
-    <ui-avatar [name]="user.fullName" size="md" />
+    <ui-avatar [name]="profileSvc.profile()?.full_name ?? ''" size="md" />
   </header>
 
   <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
@@ -14,10 +14,10 @@
 
     <ui-card class="tracking__list" padding="lg">
       <div class="tracking__list-head">
-        <h2>Danas, 12. avgust</h2>
+        <h2>Danas, {{ todayLabel }}</h2>
       </div>
 
-      <div class="tracking__symptom" *ngFor="let s of symptoms">
+      <div class="tracking__symptom" *ngFor="let s of symptomCatalog">
         <div class="tracking__symptom-name">
           <span class="tracking__symptom-emoji">{{ s.emoji }}</span>
           {{ s.name }}
@@ -26,7 +26,8 @@
           <button
             *ngFor="let lvl of levels"
             class="tracking__level"
-            [class.tracking__level--active]="lvl === s.level"
+            (click)="setLevel(s.name, lvl)"
+            [class.tracking__level--active]="lvl === levelFor(s.name)"
             [class.tracking__level--l1]="lvl === 1"
             [class.tracking__level--l2]="lvl === 2"
             [class.tracking__level--l3]="lvl === 3">
@@ -34,21 +35,16 @@
           </button>
         </div>
       </div>
-
-      <ui-button variant="outline" size="md">
-        <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
-        Dodaj simptom
-      </ui-button>
     </ui-card>
 
     <div class="tracking__side">
       <ui-card padding="lg">
         <h2>Trend ove nedelje</h2>
         <svg viewBox="0 0 280 90" class="tracking__chart">
-          <polyline [attr.points]="trendPoints" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <polyline [attr.points]="trendPointsFor(trendValues, 3)" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
           <circle *ngFor="let v of trendValues; let i = index"
-                  [attr.cx]="10 + (i * 260 / (trendValues.length - 1))"
-                  [attr.cy]="80 - ((v - 1) / 2) * 70"
+                  [attr.cx]="trendCx(i, trendValues.length)"
+                  [attr.cy]="trendCy(v, 3)"
                   r="3.5" fill="var(--color-primary)" />
         </svg>
         <div class="tracking__chart-labels">
@@ -69,7 +65,112 @@
 
   </div>
 
-  <ui-card *ngIf="activeTab !== 'simptomi'" padding="lg" class="tracking__placeholder">
-    <p class="text-soft">Ova sekcija je u pripremi.</p>
-  </ui-card>
+  <div class="tracking__grid" *ngIf="activeTab === 'raspolozenje'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Kako se osećaš danas?</h2>
+      </div>
+
+      <div class="tracking__mood-picker">
+        <button
+          *ngFor="let lvl of moodLevels"
+          class="tracking__mood-btn"
+          [class.tracking__mood-btn--active]="lvl === moodSvc.today()?.mood"
+          (click)="setMood(lvl)">
+          {{ MOOD_EMOJI[lvl] }}
+        </button>
+      </div>
+
+      <label class="tracking__note-label">
+        <span>Beleška (opciono)</span>
+        <textarea [(ngModel)]="moodNote" rows="2" placeholder="Kako se osećaš, šta se dešava danas..."></textarea>
+      </label>
+      <ui-button variant="outline" size="sm" (click)="saveMoodNote()">Sačuvaj belešku</ui-button>
+    </ui-card>
+
+    <div class="tracking__side">
+      <ui-card padding="lg">
+        <h2>Trend ove nedelje</h2>
+        <svg viewBox="0 0 280 90" class="tracking__chart">
+          <polyline [attr.points]="trendPointsFor(moodTrendValues, 5)" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <circle *ngFor="let v of moodTrendValues; let i = index"
+                  [attr.cx]="trendCx(i, moodTrendValues.length)"
+                  [attr.cy]="trendCy(v, 5)"
+                  r="3.5" fill="var(--color-primary)" />
+        </svg>
+        <div class="tracking__chart-labels">
+          <span *ngFor="let d of trendDays">{{ d }}</span>
+        </div>
+      </ui-card>
+    </div>
+  </div>
+
+  <div class="tracking__grid" *ngIf="activeTab === 'tezina'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Unesi težinu za danas</h2>
+      </div>
+
+      <div class="tracking__weight-input">
+        <input type="number" step="0.1" [(ngModel)]="weightInput" placeholder="npr. 65" />
+        <span class="text-muted">kg</span>
+        <ui-button variant="primary" size="sm" [disabled]="!weightInput" (click)="saveWeight()">Sačuvaj</ui-button>
+      </div>
+
+      <div class="tracking__weight-history">
+        <div class="tracking__weight-row" *ngFor="let e of weightSvc.entries().slice().reverse()">
+          <span class="text-muted">{{ formatDate(e.logged_date) }}</span>
+          <strong>{{ e.weight_kg }} kg</strong>
+        </div>
+        <p class="text-soft" *ngIf="!weightSvc.entries().length">Još uvek nema unosa težine.</p>
+      </div>
+    </ui-card>
+
+    <div class="tracking__side">
+      <ui-card padding="lg">
+        <h2>Trend težine</h2>
+        <svg viewBox="0 0 280 90" class="tracking__chart" *ngIf="weightSeries.length; else weightNoTrend">
+          <polyline [attr.points]="weightPointsStr" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <circle *ngFor="let p of weightSeries" [attr.cx]="p.x" [attr.cy]="p.y" r="3.5" fill="var(--color-primary)" />
+        </svg>
+        <ng-template #weightNoTrend>
+          <p class="text-soft">Unesi bar dva merenja da vidiš trend.</p>
+        </ng-template>
+      </ui-card>
+    </div>
+  </div>
+
+  <div class="tracking__grid" *ngIf="activeTab === 'beleske'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Nova beleška</h2>
+      </div>
+
+      <form class="tracking__diary-form" (ngSubmit)="saveDiaryEntry()">
+        <input type="text" [(ngModel)]="diaryTitle" name="diaryTitle" placeholder="Naslov (npr. Prvi pokreti bebe)" />
+        <textarea [(ngModel)]="diaryContent" name="diaryContent" rows="3" placeholder="Zapiši šta ti je važno da zapamtiš..."></textarea>
+        <ui-button variant="primary" size="sm" type="submit" [disabled]="!diaryTitle.trim() || !diaryContent.trim()">Sačuvaj belešku</ui-button>
+      </form>
+    </ui-card>
+
+    <div class="tracking__side">
+      <ui-card padding="lg" class="tracking__diary-list">
+        <h2>Tvoje beleške</h2>
+        <div class="tracking__diary-entry" *ngFor="let e of diaryEntriesDesc">
+          <div class="tracking__diary-entry-head">
+            <strong>{{ e.title }}</strong>
+            <button type="button" (click)="removeDiaryEntry(e.id)">
+              <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+            </button>
+          </div>
+          <span class="text-muted">{{ formatDate(e.created_at) }}</span>
+          <p>{{ e.content }}</p>
+        </div>
+        <p class="text-soft" *ngIf="!diaryEntriesDesc.length">Još uvek nema beležaka.</p>
+      </ui-card>
+    </div>
+  </div>
 </div>

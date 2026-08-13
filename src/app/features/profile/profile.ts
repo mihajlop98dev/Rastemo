@@ -1,36 +1,205 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, User, Baby, Heart, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
+import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale, Check, X, Download } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
-import { currentUser } from '../../core/data/mock-data';
+import { AuthService } from '../../core/services/auth.service';
+import { ProfileService } from '../../core/services/profile.service';
+import { PregnancyService } from '../../core/services/pregnancy.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { SupabaseService } from '../../core/services/supabase.service';
+
+type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'izvestaj';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, UiCard, UiButton, UiAvatar],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })
-export class Profile {
-  readonly user = currentUser;
-
-  readonly menu = [
-    { label: 'Moj profil', icon: User, active: true },
-    { label: 'Trudnoća', icon: Baby, active: false },
-    { label: 'Partner', icon: Heart, active: false },
-    { label: 'Notifikacije', icon: Bell, active: false },
-    { label: 'Privatnost', icon: Shield, active: false },
-    { label: 'Izveštaj podataka', icon: FileDown, active: false },
+export class Profile implements OnInit {
+  readonly menu: { id: Section; label: string; icon: any }[] = [
+    { id: 'profil', label: 'Moj profil', icon: User },
+    { id: 'trudnoca', label: 'Trudnoća', icon: Baby },
+    { id: 'notifikacije', label: 'Notifikacije', icon: Bell },
+    { id: 'privatnost', label: 'Privatnost', icon: Shield },
+    { id: 'izvestaj', label: 'Izveštaj podataka', icon: FileDown },
   ];
 
-  readonly infoFields = [
-    { icon: MapPin, label: 'Lokacija', value: this.user.city },
-    { icon: Mail, label: 'Email', value: this.user.email },
-    { icon: Cake, label: 'Datum rođenja', value: this.user.birthDate },
-    { icon: Scale, label: 'Visina / Težina', value: '168 cm / ' + this.user.weight },
-  ];
+  activeSection: Section = 'profil';
 
+  readonly editing = signal(false);
+  readonly saving = signal(false);
+
+  editName = '';
+  editCity = '';
+  editBirthDate = '';
+  editHeight: number | null = null;
+  editWeight: number | null = null;
+
+  readonly editingPregnancy = signal(false);
+  readonly savingPregnancy = signal(false);
+  editDueDate = '';
+  editLastPeriod = '';
+  editConceptionMethod: 'natural' | 'ivf' = 'natural';
+
+  readonly exporting = signal(false);
+
+  constructor(
+    private auth: AuthService,
+    private supabase: SupabaseService,
+    readonly profileSvc: ProfileService,
+    readonly pregnancy: PregnancyService,
+    readonly notifications: NotificationService,
+  ) {}
+
+  async ngOnInit() {
+    if (!this.profileSvc.profile()) await this.profileSvc.load();
+    await this.notifications.load();
+  }
+
+  selectSection(id: Section) {
+    this.activeSection = id;
+  }
+
+  get email(): string {
+    return this.auth.user()?.email ?? '';
+  }
+
+  startEdit() {
+    const p = this.profileSvc.profile();
+    this.editName = p?.full_name ?? '';
+    this.editCity = p?.city ?? '';
+    this.editBirthDate = p?.birth_date ?? '';
+    this.editHeight = p?.height_cm ?? null;
+    this.editWeight = p?.weight_kg ?? null;
+    this.editing.set(true);
+  }
+
+  cancelEdit() {
+    this.editing.set(false);
+  }
+
+  async saveEdit() {
+    this.saving.set(true);
+    try {
+      await this.profileSvc.update({
+        full_name: this.editName,
+        city: this.editCity || null,
+        birth_date: this.editBirthDate || null,
+        height_cm: this.editHeight,
+        weight_kg: this.editWeight,
+      });
+      this.editing.set(false);
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  startEditPregnancy() {
+    const p = this.pregnancy.active();
+    this.editDueDate = p?.due_date ?? '';
+    this.editLastPeriod = p?.last_period_date ?? '';
+    this.editConceptionMethod = p?.conception_method ?? 'natural';
+    this.editingPregnancy.set(true);
+  }
+
+  cancelEditPregnancy() {
+    this.editingPregnancy.set(false);
+  }
+
+  async savePregnancy() {
+    if (!this.editDueDate) return;
+    this.savingPregnancy.set(true);
+    try {
+      await this.pregnancy.update({
+        due_date: this.editDueDate,
+        last_period_date: this.editLastPeriod || null,
+        conception_method: this.editConceptionMethod,
+      });
+      this.editingPregnancy.set(false);
+    } finally {
+      this.savingPregnancy.set(false);
+    }
+  }
+
+  formatDate(iso: string | null): string {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('sr-RS', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  timeAgo(iso: string): string {
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const hours = Math.floor(diffMs / 3_600_000);
+    if (hours < 1) return 'upravo sada';
+    if (hours < 24) return `pre ${hours}h`;
+    const days = Math.floor(hours / 24);
+    return `pre ${days}d`;
+  }
+
+  async markNotificationRead(id: string) {
+    await this.notifications.markRead(id);
+  }
+
+  async markAllNotificationsRead() {
+    await this.notifications.markAllRead();
+  }
+
+  async toggleDefaultAnonymous() {
+    const current = this.profileSvc.profile()?.default_anonymous ?? false;
+    await this.profileSvc.update({ default_anonymous: !current });
+  }
+
+  async downloadReport() {
+    const userId = this.auth.user()?.id;
+    if (!userId) return;
+
+    this.exporting.set(true);
+    try {
+      const pregnancyId = this.pregnancy.active()?.id;
+
+      const [symptoms, moods, weights, diary, appointments, topics] = await Promise.all([
+        pregnancyId ? this.supabase.client.from('symptom_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
+        pregnancyId ? this.supabase.client.from('mood_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
+        pregnancyId ? this.supabase.client.from('weight_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
+        pregnancyId ? this.supabase.client.from('diary_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
+        pregnancyId ? this.supabase.client.from('appointments').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
+        this.supabase.client.from('forum_topics').select('*').eq('author_id', userId),
+      ]);
+
+      const report = {
+        exported_at: new Date().toISOString(),
+        profile: this.profileSvc.profile(),
+        pregnancy: this.pregnancy.active(),
+        symptoms: symptoms.data,
+        moods: moods.data,
+        weights: weights.data,
+        diary_entries: diary.data,
+        appointments: appointments.data,
+        forum_topics: topics.data,
+      };
+
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rastemo-podaci-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      this.exporting.set(false);
+    }
+  }
+
+  readonly MapPinIcon = MapPin;
+  readonly MailIcon = Mail;
+  readonly CakeIcon = Cake;
+  readonly ScaleIcon = Scale;
   readonly PencilIcon = Pencil;
+  readonly CheckIcon = Check;
+  readonly XIcon = X;
+  readonly DownloadIcon = Download;
 }

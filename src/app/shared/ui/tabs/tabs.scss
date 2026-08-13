@@ -1,14 +1,21 @@
 .ui-tabs {
-  display: inline-flex;
+  display: flex;
   gap: 4px;
   padding: 4px;
   background: var(--color-bg-soft);
   border-radius: var(--radius-pill);
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
 
   &__item {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
     border: none;
     background: transparent;
     padding: 8px 18px;
@@ -16,6 +23,7 @@
     font-size: 13.5px;
     font-weight: 600;
     color: var(--color-text-soft);
+    white-space: nowrap;
     transition: all .15s ease;
 
     &:hover { color: var(--color-text); }

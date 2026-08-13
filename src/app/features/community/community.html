@@ -5,7 +5,7 @@
       <h1>Zajednica</h1>
       <p class="text-soft">Podeli iskustva i postavi pitanja drugim trudnicama.</p>
     </div>
-    <ui-button variant="primary" size="md">
+    <ui-button variant="primary" size="md" (click)="openCreate()">
       <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
       Nova tema
     </ui-button>
@@ -16,45 +16,86 @@
     <div class="community__main">
       <div class="community__toolbar">
         <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
-        <div class="community__search">
-          <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
-          <input type="text" placeholder="Pretraži teme..." />
-        </div>
       </div>
 
       <ui-card padding="none" class="community__list">
-        <a class="community__topic" *ngFor="let t of topics">
-          <ui-avatar *ngIf="!t.pinned" [name]="t.author" size="md" />
-          <div class="community__topic-anon" *ngIf="t.pinned">
+        <a class="community__topic" *ngFor="let t of visibleTopics" [routerLink]="['/community/topic', t.id]">
+          <ui-avatar *ngIf="!t.is_anonymous" [name]="authorLabel(t)" size="md" />
+          <div class="community__topic-anon" *ngIf="t.is_anonymous">
             <lucide-icon [img]="AnonIcon" [size]="16"></lucide-icon>
           </div>
 
           <div class="community__topic-body">
             <div class="community__topic-title">
-              <lucide-icon *ngIf="t.pinned" [img]="PinIcon" [size]="13" class="text-primary"></lucide-icon>
+              <lucide-icon *ngIf="t.is_pinned" [img]="PinIcon" [size]="13" class="text-primary"></lucide-icon>
               <strong>{{ t.title }}</strong>
             </div>
             <div class="community__topic-meta">
-              <ui-badge tone="lavender">{{ t.category }}</ui-badge>
-              <span class="text-muted">{{ t.author }} · {{ t.time }}</span>
+              <ui-badge tone="lavender" *ngIf="t.forum_categories">{{ t.forum_categories.name }}</ui-badge>
+              <span class="text-muted">{{ authorLabel(t) }} · {{ timeAgo(t.created_at) }}</span>
             </div>
           </div>
 
+          <button class="community__topic-save" [class.community__topic-save--active]="isSaved(t.id)" (click)="toggleSaved($event, t.id)">
+            <lucide-icon [img]="SaveIcon" [size]="15"></lucide-icon>
+          </button>
+
           <div class="community__topic-replies">
             <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
-            {{ t.replies }}
+            {{ t.reply_count }}
           </div>
         </a>
+
+        <p class="text-soft community__empty" *ngIf="!visibleTopics.length">
+          {{ activeTab === 'forumi' ? 'Još uvek nema tema. Otvori prvu!' : activeTab === 'pratim' ? 'Nisi sačuvala nijednu temu.' : 'Još uvek nisi otvorila nijednu temu.' }}
+        </p>
       </ui-card>
     </div>
 
     <ui-card padding="lg" class="community__categories">
       <h2>Kategorije</h2>
-      <div class="community__category" *ngFor="let c of categories">
+      <div class="community__category" *ngFor="let c of forumSvc.categories()">
         <span>{{ c.name }}</span>
-        <span class="text-muted">{{ c.count }}</span>
+        <span class="text-muted">{{ forumSvc.categoryCount(c.id) }}</span>
       </div>
     </ui-card>
 
+  </div>
+
+  <div class="community__modal-backdrop" *ngIf="showCreate()" (click)="closeCreate()">
+    <div class="community__modal" (click)="$event.stopPropagation()">
+      <div class="community__modal-head">
+        <h2>Nova tema</h2>
+        <button class="community__modal-close" (click)="closeCreate()">
+          <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
+        </button>
+      </div>
+
+      <label class="community__field">
+        <span>Kategorija</span>
+        <select [(ngModel)]="newCategoryId">
+          <option *ngFor="let c of forumSvc.categories()" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </label>
+
+      <label class="community__field">
+        <span>Naslov</span>
+        <input type="text" [(ngModel)]="newTitle" placeholder="O čemu želiš da pričaš?" />
+      </label>
+
+      <label class="community__field">
+        <span>Poruka</span>
+        <textarea [(ngModel)]="newBody" rows="4" placeholder="Napiši svoju poruku..."></textarea>
+      </label>
+
+      <label class="community__checkbox">
+        <input type="checkbox" [(ngModel)]="newAnonymous" />
+        <span>Objavi anonimno</span>
+      </label>
+
+      <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="saving() || !newTitle || !newBody" (click)="submitCreate()">
+        {{ saving() ? 'Objavljivanje...' : 'Objavi temu' }}
+      </ui-button>
+    </div>
   </div>
 </div>

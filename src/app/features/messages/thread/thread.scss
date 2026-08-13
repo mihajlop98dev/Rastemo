@@ -1,0 +1,132 @@
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+  margin: 0 auto;
+  height: calc(100dvh - var(--topbar-height) - var(--space-9));
+
+  @media (max-width: 1024px) {
+    height: calc(100dvh - var(--topbar-height) - var(--mobile-nav-height) - var(--space-7));
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-1);
+
+    strong { font-size: 15px; }
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+  }
+
+  &__chat {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+
+    ::ng-deep .ui-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+  }
+
+  &__messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  &__message {
+    display: flex;
+
+    &--mine { justify-content: flex-end; }
+  }
+
+  &__bubble {
+    max-width: 74%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__time {
+    font-size: 10.5px;
+    opacity: .65;
+    align-self: flex-end;
+  }
+
+  &__message--theirs &__bubble {
+    background: var(--color-bg-soft);
+    color: var(--color-text);
+    border-bottom-left-radius: 4px;
+  }
+
+  &__message--mine &__bubble {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  &__empty {
+    text-align: center;
+    margin: auto;
+  }
+
+  &__composer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--color-border-soft);
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: var(--color-bg-soft);
+      border-radius: var(--radius-pill);
+      padding: 12px 18px;
+      font-size: 13.5px;
+      color: var(--color-text);
+
+      &::placeholder { color: var(--color-text-muted); }
+    }
+  }
+
+  &__send {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    flex-shrink: 0;
+    background: var(--color-primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:disabled { opacity: .4; }
+    &:not(:disabled):hover { background: var(--color-primary-dark); }
+  }
+}

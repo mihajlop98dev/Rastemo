@@ -5,7 +5,7 @@
       <h1>Kalendar</h1>
       <p class="text-soft">Svi tvoji pregledi, analize i podsetnici na jednom mestu.</p>
     </div>
-    <ui-button variant="primary" size="md">
+    <ui-button variant="primary" size="md" (click)="openCreate()">
       <lucide-icon [img]="PlusIcon" [size]="17"></lucide-icon>
       Novi događaj
     </ui-button>
@@ -17,48 +17,81 @@
       <div class="calpage__month-toolbar">
         <ui-tabs [tabs]="viewTabs" [active]="activeView" (activeChange)="activeView = $event"></ui-tabs>
 
-        <div class="calpage__month-nav">
-          <button class="calpage__nav-btn"><lucide-icon [img]="ChevronLeftIcon" [size]="17"></lucide-icon></button>
-          <strong>{{ monthLabel }}</strong>
-          <button class="calpage__nav-btn"><lucide-icon [img]="ChevronRightIcon" [size]="17"></lucide-icon></button>
+        <div class="calpage__month-nav" *ngIf="activeView !== 'planer'">
+          <button class="calpage__nav-btn" (click)="prevPeriod()"><lucide-icon [img]="ChevronLeftIcon" [size]="17"></lucide-icon></button>
+          <strong>{{ periodLabel }}</strong>
+          <button class="calpage__nav-btn" (click)="nextPeriod()"><lucide-icon [img]="ChevronRightIcon" [size]="17"></lucide-icon></button>
         </div>
 
-        <ui-button variant="secondary" size="sm">Danas</ui-button>
+        <ui-button variant="secondary" size="sm" (click)="goToday()" *ngIf="activeView !== 'planer'">Danas</ui-button>
       </div>
 
-      <div class="calpage__weekdays">
-        <span *ngFor="let d of weekDayLabels">{{ d }}</span>
-      </div>
+      <ng-container *ngIf="activeView === 'month'">
+        <div class="calpage__weekdays">
+          <span *ngFor="let d of weekDayLabels">{{ d }}</span>
+        </div>
 
-      <div class="calpage__weeks">
-        <div class="calpage__week" *ngFor="let week of weeks">
-          <div
-            class="calpage__day"
-            *ngFor="let day of week"
-            [class.calpage__day--muted]="!day.inMonth"
-            [class.calpage__day--selected]="day.isSelected">
-            <span>{{ day.day }}</span>
-            <div class="calpage__day-dots" *ngIf="day.dots">
-              <i *ngFor="let dot of day.dots" [ngClass]="'calpage__dot calpage__dot--' + dot"></i>
+        <div class="calpage__weeks">
+          <div class="calpage__week" *ngFor="let week of weeks">
+            <div
+              class="calpage__day"
+              *ngFor="let day of week"
+              [class.calpage__day--muted]="!day.inMonth"
+              [class.calpage__day--selected]="day.isToday">
+              <span>{{ day.day }}</span>
+              <div class="calpage__day-dots" *ngIf="day.appointments.length">
+                <i class="calpage__dot calpage__dot--primary" *ngFor="let a of day.appointments"></i>
+              </div>
             </div>
           </div>
         </div>
+      </ng-container>
+
+      <div class="calpage__week-view" *ngIf="activeView === 'week'">
+        <div class="calpage__week-day" *ngFor="let day of currentWeekDays; let i = index" [class.calpage__week-day--today]="day.isToday">
+          <div class="calpage__week-day-head">
+            <span class="text-muted">{{ weekDayLabels[i] }}</span>
+            <strong>{{ day.day }}</strong>
+          </div>
+          <div class="calpage__week-day-apts">
+            <div class="calpage__week-apt" *ngFor="let a of day.appointments">
+              <strong>{{ formatTime(a.scheduled_at) }}</strong>
+              <span>{{ a.title }}</span>
+            </div>
+            <p class="text-soft calpage__week-empty" *ngIf="!day.appointments.length">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="calpage__planner" *ngIf="activeView === 'planer'">
+        <div class="calpage__planner-group" *ngFor="let group of plannerGroups">
+          <h3>{{ group.dateLabel }}</h3>
+          <div class="calpage__planner-item" *ngFor="let a of group.items">
+            <div class="calpage__planner-time">{{ formatTime(a.scheduled_at) }}</div>
+            <div class="calpage__planner-body">
+              <strong>{{ a.title }}</strong>
+              <span class="text-soft" *ngIf="a.clinics"> · {{ a.clinics.name }}</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-soft calpage__empty" *ngIf="!plannerGroups.length">Nemaš zakazanih događaja.</p>
       </div>
     </ui-card>
 
     <div class="calpage__side">
       <ui-card padding="lg">
         <h2>Predstojeći</h2>
-        <div class="calpage__upcoming-item" *ngFor="let apt of appointments">
+        <div class="calpage__upcoming-item" *ngFor="let apt of appointments.upcoming">
           <div class="calpage__upcoming-date">
-            <strong>{{ apt.day }}</strong>
-            <span>{{ apt.month }}</span>
+            <strong>{{ formatDay(apt.scheduled_at) }}</strong>
+            <span>{{ formatMonth(apt.scheduled_at) }}</span>
           </div>
           <div class="calpage__upcoming-info">
             <strong>{{ apt.title }}</strong>
-            <span class="text-soft">{{ apt.time }} · {{ apt.clinic }}</span>
+            <span class="text-soft">{{ formatTime(apt.scheduled_at) }} <ng-container *ngIf="apt.clinics"> · {{ apt.clinics.name }}</ng-container></span>
           </div>
         </div>
+        <p class="text-soft calpage__empty" *ngIf="!appointments.upcoming.length">Nemaš zakazanih događaja.</p>
       </ui-card>
 
       <ui-card padding="lg" class="calpage__tip">
@@ -72,5 +105,46 @@
       </ui-card>
     </div>
 
+  </div>
+
+  <div class="calpage__modal-backdrop" *ngIf="showCreate()" (click)="closeCreate()">
+    <div class="calpage__modal" (click)="$event.stopPropagation()">
+      <div class="calpage__modal-head">
+        <h2>Novi događaj</h2>
+        <button class="calpage__modal-close" (click)="closeCreate()">
+          <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
+        </button>
+      </div>
+
+      <label class="calpage__field">
+        <span>Naziv</span>
+        <input type="text" [(ngModel)]="newTitle" placeholder="Npr. Kontrola kod ginekologa" />
+      </label>
+
+      <label class="calpage__field">
+        <span>Tip</span>
+        <select [(ngModel)]="newType">
+          <option value="pregled">Pregled</option>
+          <option value="analize">Analize</option>
+          <option value="ultrazvuk">Ultrazvuk</option>
+          <option value="ostalo">Ostalo</option>
+        </select>
+      </label>
+
+      <div class="calpage__field-row">
+        <label class="calpage__field">
+          <span>Datum</span>
+          <input type="date" [(ngModel)]="newDate" />
+        </label>
+        <label class="calpage__field">
+          <span>Vreme</span>
+          <input type="time" [(ngModel)]="newTime" />
+        </label>
+      </div>
+
+      <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newTitle || !newDate" (click)="submitCreate()">
+        {{ creating() ? 'Čuvanje...' : 'Sačuvaj događaj' }}
+      </ui-button>
+    </div>
   </div>
 </div>

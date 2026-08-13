@@ -14,6 +14,13 @@
     h1 { font-size: 24px; margin-bottom: 4px; }
 
     ui-button ::ng-deep .ui-btn { display: inline-flex; }
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      ui-button ::ng-deep .ui-btn { width: 100%; }
+    }
   }
 
   &__grid {
@@ -125,6 +132,92 @@
     background: #fff;
   }
 
+  &__week-view {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--space-2);
+  }
+
+  &__week-day {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-soft);
+    min-height: 180px;
+
+    &--today { background: var(--color-primary-soft); }
+  }
+
+  &__week-day-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+
+    strong { font-size: 15px; font-family: var(--font-heading); }
+  }
+
+  &__week-day-apts {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__week-apt {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: var(--color-surface);
+    font-size: 11px;
+
+    strong { font-size: 11px; color: var(--color-primary-dark); }
+    span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
+  &__week-empty {
+    text-align: center;
+    font-size: 12px;
+  }
+
+  &__planner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__planner-group h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: capitalize;
+    margin-bottom: var(--space-3);
+  }
+
+  &__planner-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border-soft);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__planner-time {
+    width: 52px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+
+  &__planner-body strong { font-size: 13.5px; }
+
   &__side {
     display: flex;
     flex-direction: column;
@@ -190,5 +283,81 @@
     justify-content: center;
     background: var(--color-sage-light);
     color: #4F7856;
+  }
+
+  &__empty {
+    font-size: 13px;
+  }
+
+  &__modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(55, 46, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: var(--space-5);
+  }
+
+  &__modal {
+    width: 100%;
+    max-width: 420px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 { margin: 0; }
+  }
+
+  &__modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-bg-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-soft);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+
+    input, select {
+      height: 42px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-soft);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-text);
+      outline: none;
+
+      &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+    }
+  }
+
+  &__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
   }
 }

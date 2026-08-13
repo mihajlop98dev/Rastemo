@@ -1,0 +1,35 @@
+.pregsetup__toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: var(--space-5) 0;
+}
+
+.pregsetup__toggle-btn {
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+
+  &:hover { background: var(--color-bg-soft); }
+
+  &--active {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+  }
+}
+
+.pregsetup__preview {
+  font-size: 13px;
+  color: var(--color-text-soft);
+  background: var(--color-sage-light);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+
+  strong { color: #4F7856; }
+}

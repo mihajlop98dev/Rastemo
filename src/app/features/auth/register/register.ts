@@ -48,7 +48,7 @@ export class Register {
       return;
     }
 
-    this.router.navigateByUrl('/podesavanje-trudnoce');
+    this.router.navigateByUrl('/pregnancy-setup');
   }
 
   async withGoogle() {

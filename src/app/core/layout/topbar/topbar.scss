@@ -11,7 +11,36 @@
   background: rgba(251, 244, 236, 0.86);
   backdrop-filter: blur(10px);
 
+  &__brand {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    strong {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    @media (max-width: 1024px) { display: flex; }
+  }
+
+  &__brand-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-peach));
+    color: #fff;
+    flex-shrink: 0;
+  }
+
   &__search {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -36,6 +65,72 @@
     }
 
     @media (max-width: 720px) { display: none; }
+  }
+
+  &__notif {
+    position: relative;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-2);
+    z-index: 20;
+
+    &--notif {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  &__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    text-align: left;
+    background: transparent;
+
+    &:hover { background: var(--color-bg-soft); }
+
+    &--unread { background: var(--color-bg-soft); }
+  }
+
+  &__dropdown-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-bg-soft);
+    flex-shrink: 0;
+    color: var(--color-primary);
+  }
+
+  &__dropdown-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+
+    span { font-size: 12px; }
+  }
+
+  &__dropdown-empty {
+    padding: var(--space-3);
+    font-size: 13px;
+    text-align: center;
   }
 
   &__actions {

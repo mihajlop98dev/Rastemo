@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Heart, Activity, Users, Stethoscope, Sparkles, ShoppingBag } from 'lucide-angular';
+import { LucideAngularModule, Heart, Activity, Users, Stethoscope, ShoppingBag, ClipboardList } from 'lucide-angular';
 import { UiButton } from '../../shared/ui/button/button';
 import { MomVisual } from '../../shared/illustrations/mom-visual/mom-visual';
 
@@ -14,12 +14,11 @@ import { MomVisual } from '../../shared/illustrations/mom-visual/mom-visual';
 })
 export class Landing {
   readonly shortcuts = [
-    { label: 'Praćenje', icon: Activity, path: '/pracenje' },
-    { label: 'Zajednica', icon: Users, path: '/zajednica' },
-    { label: 'Lekari', icon: Stethoscope, path: '/lekari' },
-    { label: 'AI pomoćnik', icon: Sparkles, path: '/ai' },
-    { label: 'Priprema', icon: ShoppingBag, path: '/priprema' },
-    { label: 'Partner', icon: Heart, path: '/pocetna' },
+    { label: 'Praćenje', icon: Activity, path: '/tracking' },
+    { label: 'Zajednica', icon: Users, path: '/community' },
+    { label: 'Lekari', icon: Stethoscope, path: '/doctors' },
+    { label: 'Kalendar', icon: ClipboardList, path: '/calendar' },
+    { label: 'Priprema', icon: ShoppingBag, path: '/preparation' },
   ];
 
   readonly HeartIcon = Heart;

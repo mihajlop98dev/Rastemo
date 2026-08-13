@@ -7,39 +7,202 @@
   <div class="profile__grid">
 
     <ui-card padding="sm" class="profile__menu">
-      <a *ngFor="let m of menu" class="profile__menu-item" [class.profile__menu-item--active]="m.active">
+      <a *ngFor="let m of menu" class="profile__menu-item" [class.profile__menu-item--active]="activeSection === m.id" (click)="selectSection(m.id)">
         <lucide-icon [img]="m.icon" [size]="17"></lucide-icon>
         {{ m.label }}
       </a>
     </ui-card>
 
-    <ui-card padding="lg" class="profile__content">
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'profil'">
       <div class="profile__top">
-        <ui-avatar [name]="user.fullName" size="xl" />
-        <div class="profile__top-info">
-          <h2>{{ user.fullName }}</h2>
-          <span class="text-soft">{{ user.city }}</span>
+        <ui-avatar [name]="profileSvc.profile()?.full_name ?? ''" size="xl" />
+        <div class="profile__top-info" *ngIf="!editing()">
+          <h2>{{ profileSvc.profile()?.full_name || 'Bez imena' }}</h2>
+          <span class="text-soft">{{ profileSvc.profile()?.city || 'Grad nije podešen' }}</span>
         </div>
-        <ui-button variant="outline" size="sm">
+        <input *ngIf="editing()" type="text" class="profile__name-input" [(ngModel)]="editName" placeholder="Ime i prezime" />
+
+        <ui-button *ngIf="!editing()" variant="outline" size="sm" (click)="startEdit()">
           <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
           Uredi
         </ui-button>
+        <div class="profile__edit-actions" *ngIf="editing()">
+          <ui-button variant="secondary" size="sm" (click)="cancelEdit()">
+            <lucide-icon [img]="XIcon" [size]="14"></lucide-icon>
+          </ui-button>
+          <ui-button variant="primary" size="sm" [disabled]="saving()" (click)="saveEdit()">
+            <lucide-icon [img]="CheckIcon" [size]="14"></lucide-icon>
+            {{ saving() ? 'Čuvanje...' : 'Sačuvaj' }}
+          </ui-button>
+        </div>
       </div>
 
       <div class="profile__divider"></div>
 
       <h3>Osnovne informacije</h3>
-      <div class="profile__fields">
-        <div class="profile__field" *ngFor="let f of infoFields">
-          <span class="profile__field-icon">
-            <lucide-icon [img]="f.icon" [size]="15"></lucide-icon>
-          </span>
+
+      <div class="profile__fields" *ngIf="!editing()">
+        <div class="profile__field">
+          <span class="profile__field-icon"><lucide-icon [img]="MapPinIcon" [size]="15"></lucide-icon></span>
           <div>
-            <span class="text-muted">{{ f.label }}</span>
-            <strong>{{ f.value }}</strong>
+            <span class="text-muted">Lokacija</span>
+            <strong>{{ profileSvc.profile()?.city || '—' }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <span class="profile__field-icon"><lucide-icon [img]="MailIcon" [size]="15"></lucide-icon></span>
+          <div>
+            <span class="text-muted">Email</span>
+            <strong>{{ email }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <span class="profile__field-icon"><lucide-icon [img]="CakeIcon" [size]="15"></lucide-icon></span>
+          <div>
+            <span class="text-muted">Datum rođenja</span>
+            <strong>{{ profileSvc.profile()?.birth_date || '—' }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <span class="profile__field-icon"><lucide-icon [img]="ScaleIcon" [size]="15"></lucide-icon></span>
+          <div>
+            <span class="text-muted">Visina / Težina</span>
+            <strong>
+              <ng-container *ngIf="profileSvc.profile()?.height_cm">{{ profileSvc.profile()?.height_cm }} cm</ng-container>
+              <ng-container *ngIf="profileSvc.profile()?.height_cm && profileSvc.profile()?.weight_kg"> / </ng-container>
+              <ng-container *ngIf="profileSvc.profile()?.weight_kg">{{ profileSvc.profile()?.weight_kg }} kg</ng-container>
+              <ng-container *ngIf="!profileSvc.profile()?.height_cm && !profileSvc.profile()?.weight_kg">—</ng-container>
+            </strong>
           </div>
         </div>
       </div>
+
+      <form class="profile__edit-fields" *ngIf="editing()">
+        <label>
+          <span>Grad</span>
+          <input type="text" [(ngModel)]="editCity" name="editCity" placeholder="Beograd, Srbija" />
+        </label>
+        <label>
+          <span>Datum rođenja</span>
+          <input type="date" [(ngModel)]="editBirthDate" name="editBirthDate" />
+        </label>
+        <label>
+          <span>Visina (cm)</span>
+          <input type="number" [(ngModel)]="editHeight" name="editHeight" placeholder="168" />
+        </label>
+        <label>
+          <span>Težina (kg)</span>
+          <input type="number" [(ngModel)]="editWeight" name="editWeight" placeholder="68" />
+        </label>
+      </form>
+    </ui-card>
+
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'trudnoca'">
+      <div class="profile__section-head">
+        <h2>Trudnoća</h2>
+        <ui-button *ngIf="!editingPregnancy()" variant="outline" size="sm" (click)="startEditPregnancy()">
+          <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
+          Uredi
+        </ui-button>
+      </div>
+
+      <div class="profile__fields" *ngIf="!editingPregnancy()">
+        <div class="profile__field">
+          <div>
+            <span class="text-muted">Očekivani termin</span>
+            <strong>{{ formatDate(pregnancy.active()?.due_date ?? null) }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <div>
+            <span class="text-muted">Poslednja menstruacija</span>
+            <strong>{{ formatDate(pregnancy.active()?.last_period_date ?? null) }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <div>
+            <span class="text-muted">Trenutna nedelja</span>
+            <strong>{{ pregnancy.weekNumber() }}. nedelja</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <div>
+            <span class="text-muted">Način začeća</span>
+            <strong>{{ pregnancy.active()?.conception_method === 'ivf' ? 'IVF' : 'Prirodno' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <form class="profile__edit-fields" *ngIf="editingPregnancy()">
+        <label>
+          <span>Očekivani termin</span>
+          <input type="date" [(ngModel)]="editDueDate" name="editDueDate" />
+        </label>
+        <label>
+          <span>Poslednja menstruacija</span>
+          <input type="date" [(ngModel)]="editLastPeriod" name="editLastPeriod" />
+        </label>
+        <label>
+          <span>Način začeća</span>
+          <select [(ngModel)]="editConceptionMethod" name="editConceptionMethod">
+            <option value="natural">Prirodno</option>
+            <option value="ivf">IVF</option>
+          </select>
+        </label>
+      </form>
+
+      <div class="profile__edit-actions" *ngIf="editingPregnancy()" style="margin-top: var(--space-4)">
+        <ui-button variant="secondary" size="sm" (click)="cancelEditPregnancy()">Otkaži</ui-button>
+        <ui-button variant="primary" size="sm" [disabled]="savingPregnancy() || !editDueDate" (click)="savePregnancy()">
+          {{ savingPregnancy() ? 'Čuvanje...' : 'Sačuvaj' }}
+        </ui-button>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'notifikacije'">
+      <div class="profile__section-head">
+        <h2>Notifikacije</h2>
+        <ui-button variant="outline" size="sm" (click)="markAllNotificationsRead()" [disabled]="!notifications.unreadCount()">
+          Označi sve kao pročitano
+        </ui-button>
+      </div>
+
+      <div class="profile__notif-row" *ngFor="let n of notifications.items()" [class.profile__notif-row--unread]="!n.is_read" (click)="markNotificationRead(n.id)">
+        <div>
+          <strong>{{ n.title }}</strong>
+          <p class="text-soft" *ngIf="n.body">{{ n.body }}</p>
+        </div>
+        <span class="text-muted">{{ timeAgo(n.created_at) }}</span>
+      </div>
+
+      <p class="text-soft" *ngIf="!notifications.items().length">Nemaš notifikacija.</p>
+    </ui-card>
+
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'privatnost'">
+      <h2>Privatnost</h2>
+      <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">
+        Podesi kako se tvoje ime prikazuje drugima na Zajednici.
+      </p>
+
+      <label class="profile__toggle">
+        <input type="checkbox" [checked]="profileSvc.profile()?.default_anonymous" (change)="toggleDefaultAnonymous()" />
+        <span>
+          <strong>Objavljuj anonimno po podrazumevanoj vrednosti</strong>
+          <span class="text-soft">Nove teme i odgovori na forumu će podrazumevano biti anonimni. Ovo uvek možeš promeniti pri objavljivanju.</span>
+        </span>
+      </label>
+    </ui-card>
+
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'izvestaj'">
+      <h2>Izveštaj podataka</h2>
+      <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">
+        Preuzmi kopiju svih svojih podataka (profil, trudnoća, praćenje, termini, teme na forumu) u JSON formatu.
+      </p>
+
+      <ui-button variant="primary" size="md" [disabled]="exporting()" (click)="downloadReport()">
+        <lucide-icon [img]="DownloadIcon" [size]="16"></lucide-icon>
+        {{ exporting() ? 'Pripremanje...' : 'Preuzmi moje podatke' }}
+      </ui-button>
     </ui-card>
 
   </div>

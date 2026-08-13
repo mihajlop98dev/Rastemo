@@ -1,56 +1,65 @@
-<div class="apt">
+<div class="apt" *ngIf="!loading()">
 
-  <header class="apt__header">
-    <a routerLink="/kalendar" class="text-muted apt__back">← Nazad na kalendar</a>
-    <h1>Pregled — {{ appointment.title }}</h1>
-    <p class="text-soft" *ngIf="appointment.doctor">Povezano sa: {{ appointment.doctor }}</p>
-  </header>
+  <ng-container *ngIf="appointment() as apt; else notFound">
+    <header class="apt__header">
+      <a routerLink="/calendar" class="text-muted apt__back">← Nazad na kalendar</a>
+      <h1>Pregled — {{ apt.title }}</h1>
+      <p class="text-soft" *ngIf="apt.doctors">Povezano sa: {{ apt.doctors.full_name }}</p>
+    </header>
 
-  <div class="apt__grid">
+    <div class="apt__grid">
 
-    <ui-card padding="lg" class="apt__main">
-      <div class="apt__week">
-        <span class="text-muted">{{ user.weekNumber }}. nedelja + {{ user.weekDays }} dana</span>
-        <ui-progress-bar [value]="weekProgress" tone="primary" />
-        <div class="apt__week-range">
-          <span>Termin porođaja</span>
-          <span>{{ user.dueDate }}</span>
-        </div>
-      </div>
-
-      <div class="apt__divider"></div>
-
-      <h2>Sledeći pregled</h2>
-      <div class="apt__info-row">
-        <div class="apt__info-date">
-          <strong>{{ appointment.day }}</strong>
-          <span>{{ appointment.month }}</span>
-        </div>
-        <div class="apt__info-body">
-          <strong>{{ appointment.subtitle }}</strong>
-          <div class="apt__info-meta text-soft">
-            <span><lucide-icon [img]="ClockIcon" [size]="13"></lucide-icon> {{ appointment.time }}</span>
-            <span *ngIf="appointment.clinic"><lucide-icon [img]="MapPinIcon" [size]="13"></lucide-icon> {{ appointment.clinic }}</span>
+      <ui-card padding="lg" class="apt__main">
+        <div class="apt__week">
+          <span class="text-muted">{{ pregnancy.weekNumber() }}. nedelja + {{ pregnancy.weekDay() }} dana</span>
+          <ui-progress-bar [value]="weekProgress" tone="primary" />
+          <div class="apt__week-range">
+            <span>Termin porođaja</span>
+            <span>{{ dueDateLabel }}</span>
           </div>
         </div>
-      </div>
 
-      <div class="apt__actions">
-        <ui-button variant="primary" size="md">Dodaj u kalendar</ui-button>
-        <ui-button variant="secondary" size="md">Izmeni termin</ui-button>
-      </div>
+        <div class="apt__divider"></div>
+
+        <h2>Detalji pregleda</h2>
+        <div class="apt__info-row">
+          <div class="apt__info-date">
+            <strong>{{ formatDay(apt.scheduled_at) }}</strong>
+            <span>{{ formatMonth(apt.scheduled_at) }}</span>
+          </div>
+          <div class="apt__info-body">
+            <strong>{{ apt.subtitle || apt.title }}</strong>
+            <div class="apt__info-meta text-soft">
+              <span><lucide-icon [img]="ClockIcon" [size]="13"></lucide-icon> {{ formatTime(apt.scheduled_at) }}</span>
+              <span *ngIf="apt.clinics"><lucide-icon [img]="MapPinIcon" [size]="13"></lucide-icon> {{ apt.clinics.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="apt__actions">
+          <ui-button variant="primary" size="md" (click)="addToCalendar()">Dodaj u kalendar</ui-button>
+          <ui-button variant="secondary" size="md" routerLink="/calendar">Izmeni termin</ui-button>
+        </div>
+      </ui-card>
+
+      <ui-card padding="lg" class="apt__partner">
+        <div class="apt__partner-illustration">💞</div>
+        <h2>Kako možeš pomoći?</h2>
+        <div class="apt__tip" *ngFor="let tip of partnerTips">
+          <span class="apt__tip-icon">
+            <lucide-icon [img]="tip.icon" [size]="15"></lucide-icon>
+          </span>
+          <p>{{ tip.text }}</p>
+        </div>
+      </ui-card>
+
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <ui-card padding="lg" class="apt__not-found">
+      <p class="text-soft">Ovaj pregled ne postoji ili je uklonjen.</p>
+      <ui-button routerLink="/calendar" variant="outline" size="md">Nazad na kalendar</ui-button>
     </ui-card>
-
-    <ui-card padding="lg" class="apt__partner">
-      <div class="apt__partner-illustration">💞</div>
-      <h2>Kako možeš pomoći?</h2>
-      <div class="apt__tip" *ngFor="let tip of partnerTips">
-        <span class="apt__tip-icon">
-          <lucide-icon [img]="tip.icon" [size]="15"></lucide-icon>
-        </span>
-        <p>{{ tip.text }}</p>
-      </div>
-    </ui-card>
-
-  </div>
+  </ng-template>
 </div>

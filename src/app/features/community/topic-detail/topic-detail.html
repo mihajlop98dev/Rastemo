@@ -1,0 +1,80 @@
+<div class="topicdetail" *ngIf="!loading()">
+
+  <ng-container *ngIf="topic() as t; else notFound">
+    <a routerLink="/community" class="text-muted topicdetail__back">
+      <lucide-icon [img]="BackIcon" [size]="15"></lucide-icon>
+      Nazad na zajednicu
+    </a>
+
+    <ui-card padding="lg" class="topicdetail__topic">
+      <div class="topicdetail__head">
+        <ui-avatar *ngIf="!t.is_anonymous" [name]="authorLabel(t)" size="md" />
+        <div class="topicdetail__anon" *ngIf="t.is_anonymous">
+          <lucide-icon [img]="AnonIcon" [size]="16"></lucide-icon>
+        </div>
+
+        <div class="topicdetail__head-body">
+          <div class="topicdetail__title-row">
+            <lucide-icon *ngIf="t.is_pinned" [img]="PinIcon" [size]="13" class="text-primary"></lucide-icon>
+            <h1>{{ t.title }}</h1>
+          </div>
+          <div class="topicdetail__meta">
+            <ui-badge tone="lavender" *ngIf="t.forum_categories">{{ t.forum_categories.name }}</ui-badge>
+            <span class="text-muted">{{ authorLabel(t) }} · {{ timeAgo(t.created_at) }}</span>
+          </div>
+        </div>
+
+        <button class="topicdetail__save" [class.topicdetail__save--active]="isSaved()" (click)="toggleSave()">
+          <lucide-icon [img]="SaveIcon" [size]="17"></lucide-icon>
+        </button>
+      </div>
+
+      <p class="topicdetail__body">{{ t.body }}</p>
+
+      <ui-button *ngIf="!isMyTopic()" variant="outline" size="sm" (click)="messageAuthor()">
+        <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
+        Pošalji poruku
+      </ui-button>
+    </ui-card>
+
+    <ui-card padding="lg" class="topicdetail__replies">
+      <h2>Odgovori ({{ forumSvc.posts().length }})</h2>
+
+      <div class="topicdetail__reply" *ngFor="let p of forumSvc.posts()">
+        <ui-avatar *ngIf="!p.is_anonymous" [name]="authorLabel(p)" size="sm" />
+        <div class="topicdetail__anon topicdetail__anon--sm" *ngIf="p.is_anonymous">
+          <lucide-icon [img]="AnonIcon" [size]="13"></lucide-icon>
+        </div>
+        <div class="topicdetail__reply-body">
+          <div class="topicdetail__reply-meta">
+            <strong>{{ authorLabel(p) }}</strong>
+            <span class="text-muted">{{ timeAgo(p.created_at) }}</span>
+          </div>
+          <p>{{ p.body }}</p>
+        </div>
+      </div>
+
+      <p class="text-soft topicdetail__empty" *ngIf="!forumSvc.posts().length">Budi prva koja odgovara.</p>
+
+      <form class="topicdetail__form" (ngSubmit)="submitReply()">
+        <textarea [(ngModel)]="reply" name="reply" rows="3" placeholder="Napiši odgovor..."></textarea>
+        <div class="topicdetail__form-actions">
+          <label class="topicdetail__checkbox">
+            <input type="checkbox" [(ngModel)]="replyAnonymous" name="replyAnonymous" />
+            <span>Anonimno</span>
+          </label>
+          <ui-button variant="primary" size="sm" type="submit" [disabled]="sending() || !reply.trim()">
+            {{ sending() ? 'Slanje...' : 'Odgovori' }}
+          </ui-button>
+        </div>
+      </form>
+    </ui-card>
+  </ng-container>
+
+  <ng-template #notFound>
+    <ui-card padding="lg">
+      <p class="text-soft">Ova tema ne postoji ili je uklonjena.</p>
+      <ui-button routerLink="/community" variant="outline" size="md">Nazad na zajednicu</ui-button>
+    </ui-card>
+  </ng-template>
+</div>

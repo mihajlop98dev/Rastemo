@@ -10,31 +10,15 @@
     </div>
   </header>
 
-  <div class="ai__suggestions">
-    <button class="ai__suggestion" *ngFor="let s of suggestions" (click)="useSuggestion(s.label)">
-      <lucide-icon [img]="s.icon" [size]="15"></lucide-icon>
-      {{ s.label }}
-    </button>
-  </div>
-
-  <ui-card padding="none" class="ai__chat">
-    <div class="ai__messages">
-      <div *ngFor="let m of messages()" class="ai__message" [ngClass]="'ai__message--' + m.role">
-        <div class="ai__bubble">{{ m.text }}</div>
-      </div>
+  <ui-card padding="lg" class="ai__soon">
+    <div class="ai__soon-icon">
+      <lucide-icon [img]="ClockIcon" [size]="26"></lucide-icon>
     </div>
-
-    <form class="ai__composer" (ngSubmit)="send()">
-      <input
-        type="text"
-        [(ngModel)]="draft"
-        name="draft"
-        placeholder="Postavi pitanje..." />
-      <button type="submit" class="ai__send" [disabled]="!draft.trim()">
-        <lucide-icon [img]="SendIcon" [size]="17"></lucide-icon>
-      </button>
-    </form>
+    <h2>Uskoro stiže</h2>
+    <p class="text-soft">
+      Radimo na personalizovanom AI asistentu koji će ti pomoći sa pitanjima o trudnoći,
+      simptomima i pripremama. Neće postavljati dijagnoze — samo podrška i informacije,
+      uz preporuku da se za medicinske nedoumice uvek obratiš svom lekaru.
+    </p>
   </ui-card>
-
-  <p class="ai__disclaimer text-muted">AI pomoćnik ne postavlja dijagnoze i ne menja lekara.</p>
 </div>

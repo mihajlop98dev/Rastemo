@@ -1,5 +1,5 @@
 <aside class="sidebar">
-  <a routerLink="/pocetna" class="sidebar__brand">
+  <a routerLink="/home" class="sidebar__brand">
     <span class="sidebar__brand-icon">
       <lucide-icon [img]="HeartIcon" [size]="18"></lucide-icon>
     </span>
@@ -17,11 +17,30 @@
       class="sidebar__link">
       <lucide-icon [img]="iconMap[item.icon]" [size]="19"></lucide-icon>
       <span>{{ item.label }}</span>
+      <span class="sidebar__badge" *ngIf="item.badge">{{ item.badge }}</span>
     </a>
   </nav>
 
-  <button class="sidebar__emergency">
+  <button class="sidebar__emergency" (click)="showEmergency.set(true)">
     <lucide-icon [img]="PhoneIcon" [size]="17"></lucide-icon>
     Hitna pomoć
   </button>
 </aside>
+
+<div class="sidebar__modal-backdrop" *ngIf="showEmergency()" (click)="showEmergency.set(false)">
+  <div class="sidebar__modal" (click)="$event.stopPropagation()">
+    <div class="sidebar__modal-head">
+      <h2>Hitni brojevi</h2>
+      <button class="sidebar__modal-close" (click)="showEmergency.set(false)">
+        <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
+      </button>
+    </div>
+
+    <a class="sidebar__modal-row" *ngFor="let e of emergencyNumbers" [href]="'tel:' + e.number">
+      <span>{{ e.label }}</span>
+      <strong>{{ e.number }}</strong>
+    </a>
+
+    <p class="sidebar__modal-hint text-soft">Ako imaš medicinsku hitnu situaciju, pozovi 194 ili se obrati svom lekaru.</p>
+  </div>
+</div>

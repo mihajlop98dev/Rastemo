@@ -1,20 +1,67 @@
 <header class="topbar">
+  <a routerLink="/home" class="topbar__brand">
+    <span class="topbar__brand-icon">
+      <lucide-icon [img]="HeartIcon" [size]="16"></lucide-icon>
+    </span>
+    <strong>rastemo</strong>
+  </a>
+
   <div class="topbar__search">
     <lucide-icon [img]="SearchIcon" [size]="17"></lucide-icon>
-    <input type="text" placeholder="Pretraži članke, lekare, teme..." />
+    <input
+      type="text"
+      placeholder="Pretraži lekare, teme..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearchInput()"
+      (focus)="searchResults().length && searchOpen.set(true)" />
+
+    <div class="topbar__dropdown" *ngIf="searchOpen()">
+      <button
+        *ngFor="let r of searchResults()"
+        class="topbar__dropdown-item"
+        (click)="selectResult(r)">
+        <span class="topbar__dropdown-icon">
+          <lucide-icon [img]="r.kind === 'doctor' ? DoctorIcon : TopicIcon" [size]="15"></lucide-icon>
+        </span>
+        <span class="topbar__dropdown-text">
+          <strong>{{ r.label }}</strong>
+          <span class="text-muted">{{ r.sublabel }}</span>
+        </span>
+      </button>
+      <p class="topbar__dropdown-empty text-soft" *ngIf="!searchResults().length">Nema rezultata.</p>
+    </div>
   </div>
 
   <div class="topbar__actions">
-    <button class="topbar__icon-btn" aria-label="Poruke">
+    <a routerLink="/messages" class="topbar__icon-btn" aria-label="Poruke">
       <lucide-icon [img]="MessageIcon" [size]="19"></lucide-icon>
-    </button>
-    <button class="topbar__icon-btn" aria-label="Notifikacije">
-      <lucide-icon [img]="BellIcon" [size]="19"></lucide-icon>
-      <span class="topbar__dot"></span>
-    </button>
-    <a routerLink="/profil" class="topbar__profile">
-      <ui-avatar [name]="user.fullName" size="md" />
-      <span class="topbar__profile-name">{{ user.name }}</span>
+      <span class="topbar__dot" *ngIf="messages.unreadCount() > 0"></span>
+    </a>
+
+    <div class="topbar__notif">
+      <button class="topbar__icon-btn" aria-label="Notifikacije" (click)="toggleNotifications()">
+        <lucide-icon [img]="BellIcon" [size]="19"></lucide-icon>
+        <span class="topbar__dot" *ngIf="notifications.unreadCount() > 0"></span>
+      </button>
+
+      <div class="topbar__dropdown topbar__dropdown--notif" *ngIf="notifOpen()">
+        <button
+          *ngFor="let n of notifications.items()"
+          class="topbar__dropdown-item"
+          [class.topbar__dropdown-item--unread]="!n.is_read"
+          (click)="openNotification(n.id)">
+          <span class="topbar__dropdown-text">
+            <strong>{{ n.title }}</strong>
+            <span class="text-muted" *ngIf="n.body">{{ n.body }}</span>
+          </span>
+        </button>
+        <p class="topbar__dropdown-empty text-soft" *ngIf="!notifications.items().length">Nemaš notifikacija.</p>
+      </div>
+    </div>
+
+    <a routerLink="/profile" class="topbar__profile">
+      <ui-avatar [name]="userName" size="md" />
+      <span class="topbar__profile-name">{{ userName }}</span>
       <lucide-icon [img]="ChevronIcon" [size]="15" class="text-muted"></lucide-icon>
     </a>
   </div>

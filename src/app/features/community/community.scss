@@ -8,9 +8,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-3);
     padding: var(--space-4) var(--space-1) var(--space-2);
 
     h1 { font-size: 24px; margin-bottom: 4px; }
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      ui-button ::ng-deep .ui-btn { width: 100%; }
+    }
   }
 
   &__grid {
@@ -121,6 +129,21 @@
     flex-shrink: 0;
   }
 
+  &__topic-save {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+
+    &--active { color: var(--color-primary); border-color: transparent; background: var(--color-primary-soft); }
+  }
+
   h2 { font-size: 16px; margin-bottom: var(--space-4); }
 
   &__category {
@@ -133,5 +156,88 @@
     font-weight: 600;
 
     &:last-child { border-bottom: none; padding-bottom: 0; }
+  }
+
+  &__empty {
+    font-size: 13px;
+    padding: var(--space-5);
+  }
+
+  &__modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(55, 46, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: var(--space-5);
+  }
+
+  &__modal {
+    width: 100%;
+    max-width: 460px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 { margin: 0; }
+  }
+
+  &__modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-bg-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-soft);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+
+    input, select, textarea {
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-soft);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-text);
+      outline: none;
+      font-family: inherit;
+
+      &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+    }
+
+    input, select { height: 42px; }
+    textarea { padding: var(--space-3) var(--space-4); resize: vertical; }
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-soft);
   }
 }

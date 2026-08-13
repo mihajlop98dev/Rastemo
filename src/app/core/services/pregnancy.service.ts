@@ -55,6 +55,22 @@ export class PregnancyService {
     return data as Pregnancy;
   }
 
+  async update(patch: { due_date?: string; last_period_date?: string | null; conception_method?: 'natural' | 'ivf' }) {
+    const current = this.active();
+    if (!current) throw new Error('No active pregnancy');
+
+    const { data, error } = await this.supabase.client
+      .from('pregnancies')
+      .update(patch)
+      .eq('id', current.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    this.active.set(data as Pregnancy);
+    return data as Pregnancy;
+  }
+
   readonly gestationDays = computed(() => {
     const p = this.active();
     if (!p) return 0;

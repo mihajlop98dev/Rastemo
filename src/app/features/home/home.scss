@@ -148,6 +148,11 @@
     span { font-size: 12.5px; }
   }
 
+  &__appointment-empty {
+    font-size: 13px;
+    margin-bottom: var(--space-4);
+  }
+
   &__appointment-meta {
     display: flex;
     gap: var(--space-4);

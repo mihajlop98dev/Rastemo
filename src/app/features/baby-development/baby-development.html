@@ -20,7 +20,7 @@
   <div class="babydev__grid">
 
     <ui-card class="babydev__visual-card" padding="lg">
-      <span class="babydev__week-label">{{ selectedWeek }}. nedelja + 3 dana</span>
+      <span class="babydev__week-label">{{ selectedWeek }}. nedelja<ng-container *ngIf="isCurrentWeek"> + {{ currentWeekDay }} dana</ng-container></span>
       <app-baby-visual [week]="selectedWeek" size="lg" />
       <div class="babydev__stats">
         <div>

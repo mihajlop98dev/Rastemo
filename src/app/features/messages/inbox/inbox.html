@@ -1,0 +1,30 @@
+<div class="inbox">
+
+  <header class="inbox__header">
+    <h1>Poruke</h1>
+    <p class="text-soft">Razgovori sa drugim korisnicama.</p>
+  </header>
+
+  <ui-card padding="none" class="inbox__list">
+    <a
+      *ngFor="let c of messagesSvc.conversations()"
+      [routerLink]="['/messages', c.id]"
+      class="inbox__row"
+      [class.inbox__row--unread]="c.unreadCount > 0">
+      <ui-avatar [name]="c.otherName" size="lg" />
+      <div class="inbox__row-body">
+        <strong>{{ c.otherName }}</strong>
+        <span class="text-soft">{{ c.lastMessage || 'Započni razgovor' }}</span>
+      </div>
+      <div class="inbox__row-meta">
+        <span class="text-muted" *ngIf="c.lastMessageAt">{{ timeAgo(c.lastMessageAt) }}</span>
+        <span class="inbox__badge" *ngIf="c.unreadCount > 0">{{ c.unreadCount }}</span>
+      </div>
+    </a>
+
+    <div class="inbox__empty" *ngIf="!messagesSvc.conversations().length">
+      <lucide-icon [img]="MessageIcon" [size]="28"></lucide-icon>
+      <p class="text-soft">Još uvek nemaš razgovora. Otvori temu na Zajednici i pošalji poruku autorki.</p>
+    </div>
+  </ui-card>
+</div>

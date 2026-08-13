@@ -1,0 +1,37 @@
+<div class="authpage">
+  <div class="authpage__brand">
+    <span class="authpage__brand-icon"><lucide-icon [img]="HeartIcon" [size]="20"></lucide-icon></span>
+    <strong>rastemo</strong>
+  </div>
+
+  <ui-card padding="lg" class="authpage__card">
+    <h1>Recimo ti dobrodošlicu na pravi način</h1>
+    <p class="text-soft">Da bismo ti pokazali tačno gde si u trudnoći, treba nam jedan datum.</p>
+
+    <div class="pregsetup__toggle">
+      <button [class.pregsetup__toggle-btn--active]="mode() === 'lmp'" class="pregsetup__toggle-btn" (click)="setMode('lmp')">
+        Znam datum poslednje menstruacije
+      </button>
+      <button [class.pregsetup__toggle-btn--active]="mode() === 'due-date'" class="pregsetup__toggle-btn" (click)="setMode('due-date')">
+        Znam očekivani termin
+      </button>
+    </div>
+
+    <form (ngSubmit)="submit()" class="authpage__form">
+      <label>
+        <span>{{ mode() === 'lmp' ? 'Prvi dan poslednje menstruacije' : 'Očekivani termin porođaja' }}</span>
+        <input type="date" [(ngModel)]="dateInput" name="dateInput" />
+      </label>
+
+      <p class="pregsetup__preview" *ngIf="formattedDueDate">
+        Tvoj očekivani termin: <strong>{{ formattedDueDate }}</strong>
+      </p>
+
+      <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
+
+      <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading()">
+        {{ loading() ? 'Čuvanje...' : 'Nastavi' }}
+      </ui-button>
+    </form>
+  </ui-card>
+</div>

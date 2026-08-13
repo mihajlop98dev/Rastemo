@@ -8,8 +8,10 @@ export class AuthService {
   readonly user = signal<User | null>(null);
   readonly ready = signal(false);
 
+  private readonly initPromise: Promise<void>;
+
   constructor(private supabase: SupabaseService) {
-    this.supabase.client.auth.getSession().then(({ data }) => {
+    this.initPromise = this.supabase.client.auth.getSession().then(({ data }) => {
       this.session.set(data.session);
       this.user.set(data.session?.user ?? null);
       this.ready.set(true);
@@ -19,6 +21,12 @@ export class AuthService {
       this.session.set(session);
       this.user.set(session?.user ?? null);
     });
+  }
+
+  /** Resolves once the initial session restore (from storage) has completed. */
+  async waitUntilReady(): Promise<void> {
+    if (this.ready()) return;
+    await this.initPromise;
   }
 
   async signUp(email: string, password: string, fullName: string) {
@@ -36,7 +44,7 @@ export class AuthService {
   async signInWithGoogle() {
     return this.supabase.client.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/pocetna' },
+      options: { redirectTo: window.location.origin + '/home' },
     });
   }
 

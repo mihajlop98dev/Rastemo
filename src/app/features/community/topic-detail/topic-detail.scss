@@ -1,0 +1,133 @@
+.topicdetail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 720px;
+  margin: 0 auto;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  &__head-body { flex: 1; min-width: 0; }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    h1 { font-size: 20px; }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: 4px;
+    font-size: 12.5px;
+  }
+
+  &__anon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-bg-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+
+    &--sm { width: 32px; height: 32px; }
+  }
+
+  &__save {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+
+    &--active { color: var(--color-primary); border-color: transparent; background: var(--color-primary-soft); }
+  }
+
+  &__body {
+    margin: var(--space-4) 0;
+    line-height: 1.65;
+    white-space: pre-wrap;
+  }
+
+  &__replies h2 { margin-bottom: var(--space-4); }
+
+  &__reply {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border-soft);
+
+    &:last-of-type { border-bottom: none; }
+  }
+
+  &__reply-body { flex: 1; }
+
+  &__reply-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    margin-bottom: 4px;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: var(--space-5) 0;
+  }
+
+  &__form {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    textarea {
+      resize: vertical;
+      border: 1px solid var(--color-border-soft);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+
+      &:focus { border-color: var(--color-primary); }
+    }
+  }
+
+  &__form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--color-text-soft);
+  }
+}

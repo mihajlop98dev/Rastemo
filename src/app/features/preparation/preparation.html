@@ -5,28 +5,28 @@
     <p class="text-soft">Organizuj sve što ti je potrebno pre i posle porođaja.</p>
   </header>
 
-  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
+  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="selectTab($event)"></ui-tabs>
 
   <div class="prep__grid">
 
     <ui-card padding="lg" class="prep__checklist">
       <div class="prep__progress-head">
         <div>
-          <h2>Torba za porodilište</h2>
+          <h2>{{ currentTitle }}</h2>
           <span class="text-muted">{{ doneCount() }}/{{ totalCount() }} spakovano</span>
         </div>
         <span class="prep__progress-pct">{{ progress() }}%</span>
       </div>
       <ui-progress-bar [value]="progress()" tone="sage" />
 
-      <div class="prep__group" *ngFor="let group of groups()">
+      <div class="prep__group" *ngFor="let group of checklistSvc.groups">
         <h3>{{ group.title }}</h3>
         <label class="prep__item" *ngFor="let item of group.items">
-          <input type="checkbox" [checked]="item.done" (change)="toggle(group, item)" />
+          <input type="checkbox" [checked]="item.is_done" (change)="toggle(item)" />
           <span class="prep__checkbox">
-            <lucide-icon *ngIf="item.done" [img]="CheckIcon" [size]="12"></lucide-icon>
+            <lucide-icon *ngIf="item.is_done" [img]="CheckIcon" [size]="12"></lucide-icon>
           </span>
-          <span [class.prep__item-label--done]="item.done" class="prep__item-label">{{ item.label }}</span>
+          <span [class.prep__item-label--done]="item.is_done" class="prep__item-label">{{ item.label }}</span>
         </label>
       </div>
     </ui-card>

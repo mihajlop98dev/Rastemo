@@ -4,6 +4,6 @@
  * client-side and is constrained by the RLS policies in supabase/schema.sql.
  */
 export const supabaseConfig = {
-  url: 'https://YOUR-PROJECT-REF.supabase.co',
-  anonKey: 'YOUR-ANON-PUBLIC-KEY',
+  url: 'https://wwippvsdyoexnheihzqg.supabase.co',
+  anonKey: 'sb_publishable_qYRPGyR1HHGqqI-IC_Yj_w_NzHgIALb',
 };

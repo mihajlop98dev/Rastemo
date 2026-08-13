@@ -26,107 +26,26 @@
     color: #fff;
   }
 
-  &__suggestions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  &__suggestion {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 16px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--color-text-soft);
-
-    &:hover { background: var(--color-primary-soft); color: var(--color-primary-dark); border-color: transparent; }
-  }
-
-  &__chat {
+  &__soon {
     display: flex;
     flex-direction: column;
-    height: 480px;
-  }
-
-  &__messages {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-5);
-  }
-
-  &__message {
-    display: flex;
-
-    &--user { justify-content: flex-end; }
-  }
-
-  &__bubble {
-    max-width: 74%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 13.5px;
-    line-height: 1.55;
-  }
-
-  &__message--ai &__bubble {
-    background: var(--color-bg-soft);
-    color: var(--color-text);
-    border-bottom-left-radius: 4px;
-  }
-
-  &__message--user &__bubble {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: #fff;
-    border-bottom-right-radius: 4px;
-  }
-
-  &__composer {
-    display: flex;
     align-items: center;
+    text-align: center;
     gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    border-top: 1px solid var(--color-border-soft);
+    padding: var(--space-9) var(--space-6);
 
-    input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: var(--color-bg-soft);
-      border-radius: var(--radius-pill);
-      padding: 12px 18px;
-      font-size: 13.5px;
-      color: var(--color-text);
-
-      &::placeholder { color: var(--color-text-muted); }
-    }
+    h2 { font-size: 19px; }
+    p { max-width: 440px; line-height: 1.6; }
   }
 
-  &__send {
-    width: 42px;
-    height: 42px;
+  &__soon-icon {
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    border: none;
-    flex-shrink: 0;
-    background: var(--color-primary);
-    color: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    &:disabled { opacity: .4; }
-    &:not(:disabled):hover { background: var(--color-primary-dark); }
-  }
-
-  &__disclaimer {
-    text-align: center;
-    font-size: 11.5px;
+    background: var(--color-gold-light);
+    color: #A6752A;
   }
 }

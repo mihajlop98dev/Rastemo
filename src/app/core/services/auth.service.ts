@@ -11,15 +11,21 @@ export class AuthService {
   private readonly initPromise: Promise<void>;
 
   constructor(private supabase: SupabaseService) {
-    this.initPromise = this.supabase.client.auth.getSession().then(({ data }) => {
-      this.session.set(data.session);
-      this.user.set(data.session?.user ?? null);
-      this.ready.set(true);
-    });
+    // Wait for onAuthStateChange's first event rather than calling getSession()
+    // independently: on an OAuth redirect, supabase-js parses the access token out
+    // of the URL asynchronously, and the first auth event is only fired once that
+    // finishes. Resolving readiness from a separate getSession() call can race
+    // ahead of that and briefly report "no session" right after Google login.
+    let resolveReady!: () => void;
+    this.initPromise = new Promise<void>((resolve) => { resolveReady = resolve; });
 
     this.supabase.client.auth.onAuthStateChange((_event, session) => {
       this.session.set(session);
       this.user.set(session?.user ?? null);
+      if (!this.ready()) {
+        this.ready.set(true);
+        resolveReady();
+      }
     });
   }
 

@@ -44,6 +44,15 @@ export class PregnancyService {
     const userId = this.auth.user()?.id;
     if (!userId) throw new Error('Not authenticated');
 
+    // Guard against ever ending up with two active pregnancies for the same user
+    // (e.g. if this screen is reached twice) — the "active" query elsewhere assumes
+    // there's at most one.
+    await this.supabase.client
+      .from('pregnancies')
+      .update({ is_active: false })
+      .eq('user_id', userId)
+      .eq('is_active', true);
+
     const { data, error } = await this.supabase.client
       .from('pregnancies')
       .insert({ ...dto, user_id: userId })

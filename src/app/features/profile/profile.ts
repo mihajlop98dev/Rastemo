@@ -1,7 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale, Check, X, Download } from 'lucide-angular';
+import { Router } from '@angular/router';
+import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale, Check, X, Download, LogOut } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
@@ -47,10 +48,12 @@ export class Profile implements OnInit {
   editConceptionMethod: 'natural' | 'ivf' = 'natural';
 
   readonly exporting = signal(false);
+  readonly loggingOut = signal(false);
 
   constructor(
     private auth: AuthService,
     private supabase: SupabaseService,
+    private router: Router,
     readonly profileSvc: ProfileService,
     readonly pregnancy: PregnancyService,
     readonly notifications: NotificationService,
@@ -194,6 +197,16 @@ export class Profile implements OnInit {
     }
   }
 
+  async logOut() {
+    this.loggingOut.set(true);
+    try {
+      await this.auth.signOut();
+      this.router.navigateByUrl('/login');
+    } finally {
+      this.loggingOut.set(false);
+    }
+  }
+
   readonly MapPinIcon = MapPin;
   readonly MailIcon = Mail;
   readonly CakeIcon = Cake;
@@ -202,4 +215,5 @@ export class Profile implements OnInit {
   readonly CheckIcon = Check;
   readonly XIcon = X;
   readonly DownloadIcon = Download;
+  readonly LogOutIcon = LogOut;
 }

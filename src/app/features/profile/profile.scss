@@ -42,6 +42,18 @@
       color: var(--color-primary-dark);
       font-weight: 600;
     }
+
+    &--danger {
+      color: var(--color-danger);
+
+      &:hover { background: var(--color-danger-light); }
+    }
+  }
+
+  &__menu-divider {
+    height: 1px;
+    background: var(--color-border-soft);
+    margin: var(--space-2) 0;
   }
 
   &__top {

@@ -11,6 +11,11 @@
         <lucide-icon [img]="m.icon" [size]="17"></lucide-icon>
         {{ m.label }}
       </a>
+      <div class="profile__menu-divider"></div>
+      <a class="profile__menu-item profile__menu-item--danger" (click)="!loggingOut() && logOut()">
+        <lucide-icon [img]="LogOutIcon" [size]="17"></lucide-icon>
+        {{ loggingOut() ? 'Odjavljivanje...' : 'Odjavi se' }}
+      </a>
     </ui-card>
 
     <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'profil'">

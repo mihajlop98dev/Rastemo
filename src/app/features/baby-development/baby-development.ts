@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Check, Brain, Bone, Ear, Move } from 'lucide-angular';
+import { LucideAngularModule, Check, Brain, Bone, Ear, Move, CalendarCheck } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { BabyVisual } from '../../shared/illustrations/baby-visual/baby-visual';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { babyComparisonForWeek, babyLengthForWeek, babyWeightForWeek, devPointsForWeek } from '../../core/data/baby-growth';
+import { PREGNANCY_MILESTONES, milestoneStatus, MilestoneStatus } from '../../core/data/milestones';
+import { NUTRITION_GUIDE } from '../../core/data/nutrition-guide';
 
 const DEV_ICONS: Record<string, any> = { brain: Brain, bone: Bone, ear: Ear, move: Move };
 
@@ -49,5 +51,13 @@ export class BabyDevelopment {
 
   selectWeek(w: number) { this.selectedWeek = w; }
 
+  readonly milestones = PREGNANCY_MILESTONES;
+  readonly nutritionGuide = NUTRITION_GUIDE;
+
+  statusFor(week: number): MilestoneStatus {
+    return milestoneStatus(week, this.pregnancy.weekNumber());
+  }
+
   readonly CheckIcon = Check;
+  readonly CalendarCheckIcon = CalendarCheck;
 }

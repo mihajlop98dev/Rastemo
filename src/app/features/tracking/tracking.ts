@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, Plus, AlertTriangle, Search, Trash2 } from 'lucide-angular';
+import { LucideAngularModule, Plus, AlertTriangle, Search, Trash2, Timer, Pill, Minus } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiButton } from '../../shared/ui/button/button';
@@ -14,6 +14,9 @@ import { SymptomService } from '../../core/services/symptom.service';
 import { MoodService } from '../../core/services/mood.service';
 import { WeightService } from '../../core/services/weight.service';
 import { DiaryService } from '../../core/services/diary.service';
+import { ContractionService } from '../../core/services/contraction.service';
+import { MedicationService } from '../../core/services/medication.service';
+import { bmiCategoryFor, recommendedWeightRangeForWeek, BMI_CATEGORY_LABELS } from '../../core/data/weight-guidance';
 
 interface SymptomDef {
   name: string;
@@ -29,11 +32,13 @@ const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '🙁', 3: '😐', 4:
   templateUrl: './tracking.html',
   styleUrl: './tracking.scss'
 })
-export class Tracking implements OnInit {
+export class Tracking implements OnInit, OnDestroy {
   readonly tabs: UiTabItem[] = [
     { id: 'simptomi', label: 'Simptomi' },
     { id: 'raspolozenje', label: 'Raspoloženje' },
     { id: 'tezina', label: 'Težina' },
+    { id: 'kontrakcije', label: 'Kontrakcije' },
+    { id: 'terapija', label: 'Terapija' },
     { id: 'beleske', label: 'Beleške' },
   ];
   activeTab = 'simptomi';
@@ -53,18 +58,28 @@ export class Tracking implements OnInit {
 
   moodNote = '';
   weightInput: number | null = null;
+  prePregnancyWeightInput: number | null = null;
   diaryTitle = '';
   diaryContent = '';
+
+  readonly elapsedSeconds = signal(0);
+  private timerInterval: ReturnType<typeof setInterval> | null = null;
+
+  newMedName = '';
+  newMedType: 'terapija' | 'suplement' = 'terapija';
+  newMedDose = 1;
 
   constructor(
     private route: ActivatedRoute,
     private auth: AuthService,
     readonly profileSvc: ProfileService,
-    private pregnancy: PregnancyService,
+    readonly pregnancy: PregnancyService,
     readonly symptomSvc: SymptomService,
     readonly moodSvc: MoodService,
     readonly weightSvc: WeightService,
     readonly diarySvc: DiaryService,
+    readonly contractionSvc: ContractionService,
+    readonly medicationSvc: MedicationService,
   ) {}
 
   async ngOnInit() {
@@ -81,10 +96,17 @@ export class Tracking implements OnInit {
         this.moodSvc.loadLastWeek(p.id),
         this.weightSvc.loadAll(p.id),
         this.diarySvc.loadAll(p.id),
+        this.contractionSvc.loadAll(p.id),
+        this.medicationSvc.loadAll(p.id),
       ]);
       this.moodNote = this.moodSvc.today()?.note ?? '';
       this.weightInput = this.weightSvc.latest?.weight_kg ?? this.profileSvc.profile()?.weight_kg ?? null;
+      this.prePregnancyWeightInput = p.pre_pregnancy_weight_kg;
     }
+  }
+
+  ngOnDestroy() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
   }
 
   levelFor(name: string): number {
@@ -107,6 +129,106 @@ export class Tracking implements OnInit {
     const p = this.pregnancy.active();
     if (!p || !this.weightInput) return;
     await this.weightSvc.logToday(p.id, this.weightInput);
+  }
+
+  async savePrePregnancyWeight() {
+    if (!this.prePregnancyWeightInput) return;
+    await this.pregnancy.update({ pre_pregnancy_weight_kg: this.prePregnancyWeightInput });
+  }
+
+  get prePregnancyWeight(): number | null {
+    return this.pregnancy.active()?.pre_pregnancy_weight_kg ?? null;
+  }
+
+  get currentWeight(): number | null {
+    return this.weightSvc.latest?.weight_kg ?? this.profileSvc.profile()?.weight_kg ?? null;
+  }
+
+  get bmiCategoryLabel(): string | null {
+    const height = this.profileSvc.profile()?.height_cm;
+    const preWeight = this.prePregnancyWeight;
+    if (!height || !preWeight) return null;
+    return BMI_CATEGORY_LABELS[bmiCategoryFor(height, preWeight)];
+  }
+
+  get weightRangeNow(): [number, number] | null {
+    return this.weightRangeForWeek(this.pregnancy.weekNumber());
+  }
+
+  get weightRangeExpected(): [number, number] | null {
+    return this.weightRangeForWeek(40);
+  }
+
+  private weightRangeForWeek(week: number): [number, number] | null {
+    const height = this.profileSvc.profile()?.height_cm;
+    const preWeight = this.prePregnancyWeight;
+    if (!height || !preWeight) return null;
+    const category = bmiCategoryFor(height, preWeight);
+    return recommendedWeightRangeForWeek(category, preWeight, week);
+  }
+
+  // --- Kontrakcije ---
+
+  startContractionTimer() {
+    this.contractionSvc.startTimer();
+    this.elapsedSeconds.set(0);
+    this.timerInterval = setInterval(() => this.elapsedSeconds.update(s => s + 1), 1000);
+  }
+
+  async stopContractionTimer() {
+    const p = this.pregnancy.active();
+    if (!p) return;
+    if (this.timerInterval) { clearInterval(this.timerInterval); this.timerInterval = null; }
+    await this.contractionSvc.stopTimer(p.id);
+    this.elapsedSeconds.set(0);
+  }
+
+  cancelContractionTimer() {
+    if (this.timerInterval) { clearInterval(this.timerInterval); this.timerInterval = null; }
+    this.contractionSvc.cancelTimer();
+    this.elapsedSeconds.set(0);
+  }
+
+  async removeContraction(id: string) {
+    await this.contractionSvc.remove(id);
+  }
+
+  formatDuration(sec: number): string {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  formatDateTime(iso: string): string {
+    return new Date(iso).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  intervalLabel(index: number): string {
+    const sec = this.contractionSvc.intervalSecondsFor(index);
+    return sec === null ? '—' : this.formatDuration(sec);
+  }
+
+  // --- Terapija / suplementi ---
+
+  async addMedication() {
+    const p = this.pregnancy.active();
+    if (!p || !this.newMedName.trim()) return;
+    await this.medicationSvc.add(p.id, this.newMedName.trim(), this.newMedType, this.newMedDose);
+    this.newMedName = '';
+    this.newMedType = 'terapija';
+    this.newMedDose = 1;
+  }
+
+  async removeMedication(id: string) {
+    await this.medicationSvc.remove(id);
+  }
+
+  async logDose(id: string) {
+    await this.medicationSvc.logDose(id);
+  }
+
+  async undoDose(id: string) {
+    await this.medicationSvc.undoDose(id);
   }
 
   async saveDiaryEntry() {
@@ -216,4 +338,7 @@ export class Tracking implements OnInit {
   readonly AlertIcon = AlertTriangle;
   readonly SearchIcon = Search;
   readonly TrashIcon = Trash2;
+  readonly TimerIcon = Timer;
+  readonly PillIcon = Pill;
+  readonly MinusIcon = Minus;
 }

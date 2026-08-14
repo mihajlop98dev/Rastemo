@@ -8,7 +8,7 @@ import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
-import { PregnancyService } from '../../core/services/pregnancy.service';
+import { PregnancyService, BabyGender } from '../../core/services/pregnancy.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 
@@ -46,6 +46,9 @@ export class Profile implements OnInit {
   editDueDate = '';
   editLastPeriod = '';
   editConceptionMethod: 'natural' | 'ivf' = 'natural';
+  editBabyName = '';
+  editBabyGender: BabyGender = 'nepoznato';
+  editPrePregnancyWeight: number | null = null;
 
   readonly exporting = signal(false);
   readonly loggingOut = signal(false);
@@ -107,6 +110,9 @@ export class Profile implements OnInit {
     this.editDueDate = p?.due_date ?? '';
     this.editLastPeriod = p?.last_period_date ?? '';
     this.editConceptionMethod = p?.conception_method ?? 'natural';
+    this.editBabyName = p?.baby_name ?? '';
+    this.editBabyGender = p?.baby_gender ?? 'nepoznato';
+    this.editPrePregnancyWeight = p?.pre_pregnancy_weight_kg ?? null;
     this.editingPregnancy.set(true);
   }
 
@@ -122,6 +128,9 @@ export class Profile implements OnInit {
         due_date: this.editDueDate,
         last_period_date: this.editLastPeriod || null,
         conception_method: this.editConceptionMethod,
+        baby_name: this.editBabyName.trim() || null,
+        baby_gender: this.editBabyGender,
+        pre_pregnancy_weight_kg: this.editPrePregnancyWeight,
       });
       this.editingPregnancy.set(false);
     } finally {

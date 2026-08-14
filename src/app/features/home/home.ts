@@ -1,7 +1,7 @@
-import { Component, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, Baby, Heart, Info, Smile, Scale, PenLine, Stethoscope, ChevronRight, CalendarPlus } from 'lucide-angular';
+import { LucideAngularModule, Baby, Heart, Info, Smile, Scale, PenLine, Stethoscope, ChevronRight, CalendarPlus, X, ChevronLeft } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiBadge } from '../../shared/ui/badge/badge';
@@ -32,6 +32,13 @@ export class Home implements OnInit {
   ];
 
   readonly ChevronIcon = ChevronRight;
+  readonly ChevronLeftIcon = ChevronLeft;
+  readonly XIcon = X;
+
+  readonly viewerOpen = signal(false);
+  readonly viewerWeek = signal(8);
+  readonly VIEWER_MIN_WEEK = 8;
+  readonly VIEWER_MAX_WEEK = 40;
 
   constructor(
     private auth: AuthService,
@@ -67,6 +74,35 @@ export class Home implements OnInit {
     const full = this.profileSvc.profile()?.full_name ?? '';
     return full.split(' ')[0] || 'trudnice';
   }
+
+  get babyName(): string | null {
+    return this.pregnancy.active()?.baby_name ?? null;
+  }
+
+  get greeting(): string {
+    return this.babyName ? `Ćao, ${this.firstName} i ${this.babyName}!` : `Ćao, ${this.firstName}!`;
+  }
+
+  openViewer() {
+    this.viewerWeek.set(Math.min(Math.max(this.weekNumber, this.VIEWER_MIN_WEEK), this.VIEWER_MAX_WEEK));
+    this.viewerOpen.set(true);
+  }
+
+  closeViewer() {
+    this.viewerOpen.set(false);
+  }
+
+  prevViewerWeek() {
+    this.viewerWeek.update(w => Math.max(w - 1, this.VIEWER_MIN_WEEK));
+  }
+
+  nextViewerWeek() {
+    this.viewerWeek.update(w => Math.min(w + 1, this.VIEWER_MAX_WEEK));
+  }
+
+  get viewerLength() { return babyLengthForWeek(this.viewerWeek()); }
+  get viewerWeight() { return babyWeightForWeek(this.viewerWeek()); }
+  get viewerComparison() { return babyComparisonForWeek(this.viewerWeek()); }
 
   get weekNumber() { return this.pregnancy.weekNumber(); }
   get weekDay() { return this.pregnancy.weekDay(); }

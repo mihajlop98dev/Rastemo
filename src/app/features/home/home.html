@@ -1,7 +1,7 @@
 <div class="home">
 
   <header class="home__header">
-    <h1>Ćao, {{ firstName }}! 👋</h1>
+    <h1>{{ greeting }} 👋</h1>
     <p class="home__header-week">{{ weekNumber }}. nedelja + {{ weekDay }} dana</p>
     <p class="home__header-due text-soft">Termin porođaja: {{ dueDateLabel }}</p>
   </header>
@@ -15,7 +15,9 @@
       </div>
 
       <div class="home__baby-card-body">
-        <app-baby-visual [week]="weekNumber" size="lg" />
+        <button type="button" class="home__baby-visual-btn" (click)="openViewer()" aria-label="Otvori prikaz bebe kroz nedelje">
+          <app-baby-visual [week]="weekNumber" size="lg" />
+        </button>
 
         <div class="home__baby-stats">
           <div class="home__baby-stat">
@@ -122,5 +124,27 @@
       </a>
     </ui-card>
 
+  </div>
+
+  <div class="home__viewer" *ngIf="viewerOpen()">
+    <button type="button" class="home__viewer-close" (click)="closeViewer()">
+      <lucide-icon [img]="XIcon" [size]="20"></lucide-icon>
+    </button>
+
+    <app-baby-visual [week]="viewerWeek()" size="lg" />
+
+    <div class="home__viewer-info">
+      <strong>{{ viewerLength }} cm · {{ viewerWeight }} g</strong>
+      <span>Približno veličine {{ viewerComparison }}</span>
+    </div>
+
+    <button type="button" class="home__viewer-arrow home__viewer-arrow--left" (click)="prevViewerWeek()" [disabled]="viewerWeek() <= VIEWER_MIN_WEEK">
+      <lucide-icon [img]="ChevronLeftIcon" [size]="22"></lucide-icon>
+    </button>
+    <button type="button" class="home__viewer-arrow home__viewer-arrow--right" (click)="nextViewerWeek()" [disabled]="viewerWeek() >= VIEWER_MAX_WEEK">
+      <lucide-icon [img]="ChevronIcon" [size]="22"></lucide-icon>
+    </button>
+
+    <div class="home__viewer-week">{{ viewerWeek() }} nedelja</div>
   </div>
 </div>

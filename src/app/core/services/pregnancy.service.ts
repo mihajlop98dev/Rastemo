@@ -2,6 +2,8 @@ import { Injectable, computed, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 
+export type BabyGender = 'musko' | 'zensko' | 'nepoznato';
+
 export interface Pregnancy {
   id: string;
   user_id: string;
@@ -11,6 +13,9 @@ export interface Pregnancy {
   conception_method: 'natural' | 'ivf';
   is_active: boolean;
   created_at: string;
+  baby_name: string | null;
+  baby_gender: BabyGender | null;
+  pre_pregnancy_weight_kg: number | null;
 }
 
 const TOTAL_GESTATION_DAYS = 280;
@@ -64,7 +69,14 @@ export class PregnancyService {
     return data as Pregnancy;
   }
 
-  async update(patch: { due_date?: string; last_period_date?: string | null; conception_method?: 'natural' | 'ivf' }) {
+  async update(patch: {
+    due_date?: string;
+    last_period_date?: string | null;
+    conception_method?: 'natural' | 'ivf';
+    baby_name?: string | null;
+    baby_gender?: BabyGender | null;
+    pre_pregnancy_weight_kg?: number | null;
+  }) {
     const current = this.active();
     if (!current) throw new Error('No active pregnancy');
 

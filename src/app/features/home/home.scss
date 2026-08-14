@@ -274,4 +274,86 @@
     font-weight: 600;
     color: var(--color-primary-dark);
   }
+
+  &__baby-visual-btn {
+    border-radius: 50%;
+    transition: transform .15s ease;
+    cursor: pointer;
+
+    &:hover { transform: scale(1.03); }
+    &:active { transform: scale(0.98); }
+  }
+
+  &__viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+    background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
+  }
+
+  &__viewer-close {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--color-text);
+  }
+
+  &__viewer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+
+    strong { font-family: var(--font-heading); font-size: 18px; }
+    span { font-size: 13px; color: var(--color-text-soft); }
+  }
+
+  &__viewer-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--color-text);
+
+    &:disabled { opacity: .3; }
+    &--left { left: var(--space-5); }
+    &--right { right: var(--space-5); }
+
+    @media (max-width: 640px) {
+      width: 38px;
+      height: 38px;
+      &--left { left: var(--space-3); }
+      &--right { right: var(--space-3); }
+    }
+  }
+
+  &__viewer-week {
+    position: absolute;
+    bottom: var(--space-6);
+    padding: 8px 20px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.7);
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--color-primary-dark);
+  }
 }

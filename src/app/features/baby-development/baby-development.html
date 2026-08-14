@@ -55,4 +55,30 @@
     </ui-card>
 
   </div>
+
+  <ui-card padding="lg">
+    <h2>Važni datumi</h2>
+    <div class="babydev__milestone" *ngFor="let m of milestones" [class.babydev__milestone--past]="statusFor(m.week) === 'proslo'" [class.babydev__milestone--now]="statusFor(m.week) === 'sada'">
+      <div class="babydev__milestone-week">
+        <lucide-icon *ngIf="statusFor(m.week) === 'proslo'" [img]="CheckIcon" [size]="14"></lucide-icon>
+        <span *ngIf="statusFor(m.week) !== 'proslo'">{{ m.week }}.</span>
+      </div>
+      <div class="babydev__milestone-body">
+        <strong>{{ m.title }}</strong>
+        <p>{{ m.text }}</p>
+      </div>
+      <span class="babydev__milestone-badge" *ngIf="statusFor(m.week) === 'sada'">Sada</span>
+    </div>
+  </ui-card>
+
+  <ui-card padding="lg">
+    <h2>Ishrana u trudnoći</h2>
+    <div class="babydev__nutrition-group" *ngFor="let group of nutritionGuide" [class.babydev__nutrition-group--avoid]="group.level === 'izbegavati'" [class.babydev__nutrition-group--limit]="group.level === 'ograniciti'" [class.babydev__nutrition-group--ok]="group.level === 'preporucljivo'">
+      <h3>{{ group.title }}</h3>
+      <div class="babydev__nutrition-item" *ngFor="let item of group.items">
+        <strong>{{ item.name }}</strong>
+        <span>{{ item.note }}</span>
+      </div>
+    </div>
+  </ui-card>
 </div>

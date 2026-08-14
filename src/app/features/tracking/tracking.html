@@ -119,6 +119,30 @@
         <ui-button variant="primary" size="sm" [disabled]="!weightInput" (click)="saveWeight()">Sačuvaj</ui-button>
       </div>
 
+      <div class="tracking__weight-summary">
+        <div class="tracking__weight-summary-item">
+          <span class="text-muted">Početna</span>
+          <strong>{{ prePregnancyWeight ? (prePregnancyWeight + ' kg') : '—' }}</strong>
+        </div>
+        <div class="tracking__weight-summary-item">
+          <span class="text-muted">Trenutna</span>
+          <strong>{{ currentWeight ? (currentWeight + ' kg') : '—' }}</strong>
+        </div>
+        <div class="tracking__weight-summary-item">
+          <span class="text-muted">Očekivana do kraja</span>
+          <strong>{{ weightRangeExpected ? (weightRangeExpected[0] | number:'1.0-1') + '–' + (weightRangeExpected[1] | number:'1.0-1') + ' kg' : '—' }}</strong>
+        </div>
+      </div>
+
+      <div class="tracking__weight-baseline" *ngIf="!prePregnancyWeight">
+        <span class="text-soft">Unesi težinu pre trudnoće da vidimo preporučeni opseg dobijanja na težini.</span>
+        <div class="tracking__weight-input">
+          <input type="number" step="0.1" [(ngModel)]="prePregnancyWeightInput" placeholder="npr. 62" />
+          <span class="text-muted">kg</span>
+          <ui-button variant="outline" size="sm" [disabled]="!prePregnancyWeightInput" (click)="savePrePregnancyWeight()">Sačuvaj</ui-button>
+        </div>
+      </div>
+
       <div class="tracking__weight-history">
         <div class="tracking__weight-row" *ngFor="let e of weightSvc.entries().slice().reverse()">
           <span class="text-muted">{{ formatDate(e.logged_date) }}</span>
@@ -139,7 +163,103 @@
           <p class="text-soft">Unesi bar dva merenja da vidiš trend.</p>
         </ng-template>
       </ui-card>
+
+      <ui-card padding="lg" *ngIf="bmiCategoryLabel && weightRangeNow as range">
+        <h2>Preporučeni opseg</h2>
+        <p class="text-soft" style="margin-bottom: var(--space-3)">{{ bmiCategoryLabel }} — za {{ pregnancy.weekNumber() }}. nedelju</p>
+        <strong style="font-size: 20px;">{{ range[0] | number:'1.0-1' }}–{{ range[1] | number:'1.0-1' }} kg</strong>
+      </ui-card>
     </div>
+  </div>
+
+  <div class="tracking__grid" *ngIf="activeTab === 'kontrakcije'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Merenje kontrakcija</h2>
+      </div>
+
+      <div class="tracking__timer">
+        <div class="tracking__timer-display" [class.tracking__timer-display--active]="contractionSvc.timing()">
+          <lucide-icon [img]="TimerIcon" [size]="22"></lucide-icon>
+          {{ formatDuration(elapsedSeconds()) }}
+        </div>
+        <div class="tracking__timer-actions" *ngIf="!contractionSvc.timing()">
+          <ui-button variant="primary" size="md" (click)="startContractionTimer()">Počni kontrakciju</ui-button>
+        </div>
+        <div class="tracking__timer-actions" *ngIf="contractionSvc.timing()">
+          <ui-button variant="secondary" size="md" (click)="cancelContractionTimer()">Otkaži</ui-button>
+          <ui-button variant="primary" size="md" (click)="stopContractionTimer()">Zaustavi i sačuvaj</ui-button>
+        </div>
+      </div>
+
+      <div class="tracking__weight-history">
+        <div class="tracking__contraction-row" *ngFor="let c of contractionSvc.entries(); let i = index">
+          <span class="text-muted">{{ formatDateTime(c.started_at) }}</span>
+          <strong>{{ formatDuration(c.duration_seconds) }}</strong>
+          <span class="text-muted">razmak {{ intervalLabel(i) }}</span>
+          <button type="button" (click)="removeContraction(c.id)">
+            <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+          </button>
+        </div>
+        <p class="text-soft" *ngIf="!contractionSvc.entries().length">Još uvek nema zabeleženih kontrakcija.</p>
+      </div>
+    </ui-card>
+
+    <div class="tracking__side">
+      <ui-card padding="lg" class="tracking__warning">
+        <div class="tracking__warning-icon">
+          <lucide-icon [img]="AlertIcon" [size]="16"></lucide-icon>
+        </div>
+        <div>
+          <strong>Kada da pozoveš lekara</strong>
+          <p class="text-soft">Ako su kontrakcije redovne, razmak im je 5 minuta ili manje i traju bar 60 sekundi tokom sat vremena, javi se svom lekaru ili porodilištu.</p>
+        </div>
+      </ui-card>
+    </div>
+  </div>
+
+  <div class="tracking__grid" *ngIf="activeTab === 'terapija'">
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Terapija i suplementi</h2>
+      </div>
+
+      <div class="tracking__med-row" *ngFor="let m of medicationSvc.medications()">
+        <div class="tracking__med-info">
+          <span class="tracking__med-icon"><lucide-icon [img]="PillIcon" [size]="15"></lucide-icon></span>
+          <div>
+            <strong>{{ m.name }}</strong>
+            <span class="text-muted">{{ m.type === 'terapija' ? 'Terapija' : 'Suplement' }} · {{ medicationSvc.takenCountToday(m.id) }}/{{ m.dose_per_day }} danas</span>
+          </div>
+        </div>
+        <div class="tracking__med-actions">
+          <button type="button" (click)="undoDose(m.id)" [disabled]="!medicationSvc.takenCountToday(m.id)">
+            <lucide-icon [img]="MinusIcon" [size]="14"></lucide-icon>
+          </button>
+          <button type="button" class="tracking__med-add" (click)="logDose(m.id)" [disabled]="medicationSvc.takenCountToday(m.id) >= m.dose_per_day">
+            <lucide-icon [img]="PlusIcon" [size]="14"></lucide-icon>
+          </button>
+          <button type="button" (click)="removeMedication(m.id)">
+            <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+          </button>
+        </div>
+      </div>
+      <p class="text-soft" *ngIf="!medicationSvc.medications().length">Još uvek nema dodate terapije ili suplemenata.</p>
+
+      <form class="tracking__diary-form" style="margin-top: var(--space-5)" (ngSubmit)="addMedication()">
+        <input type="text" [(ngModel)]="newMedName" name="newMedName" placeholder="Naziv (npr. Folna kiselina)" />
+        <div class="tracking__med-form-row">
+          <select [(ngModel)]="newMedType" name="newMedType">
+            <option value="terapija">Terapija</option>
+            <option value="suplement">Suplement</option>
+          </select>
+          <input type="number" min="1" [(ngModel)]="newMedDose" name="newMedDose" placeholder="Puta dnevno" />
+        </div>
+        <ui-button variant="primary" size="sm" type="submit" [disabled]="!newMedName.trim()">Dodaj</ui-button>
+      </form>
+    </ui-card>
   </div>
 
   <div class="tracking__grid" *ngIf="activeTab === 'beleske'">

@@ -74,7 +74,7 @@
           <span class="profile__field-icon"><lucide-icon [img]="CakeIcon" [size]="15"></lucide-icon></span>
           <div>
             <span class="text-muted">Datum rođenja</span>
-            <strong>{{ profileSvc.profile()?.birth_date || '—' }}</strong>
+            <strong>{{ formatDateShort(profileSvc.profile()?.birth_date ?? null) }}</strong>
           </div>
         </div>
         <div class="profile__field">

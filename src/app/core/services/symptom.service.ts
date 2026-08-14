@@ -20,13 +20,54 @@ function daysAgoIso(n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+export interface CustomSymptomRow {
+  id: string;
+  pregnancy_id: string;
+  name: string;
+  emoji: string;
+  created_at: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SymptomService {
   readonly today = signal<SymptomEntryRow[]>([]);
   readonly lastWeek = signal<SymptomEntryRow[]>([]);
+  readonly custom = signal<CustomSymptomRow[]>([]);
   readonly loading = signal(false);
 
   constructor(private supabase: SupabaseService) {}
+
+  async loadCustom(pregnancyId: string) {
+    const { data } = await this.supabase.client
+      .from('custom_symptoms')
+      .select('*')
+      .eq('pregnancy_id', pregnancyId)
+      .order('created_at', { ascending: true });
+
+    this.custom.set((data as CustomSymptomRow[]) ?? []);
+  }
+
+  async addCustom(pregnancyId: string, name: string, emoji: string) {
+    const { data, error } = await this.supabase.client
+      .from('custom_symptoms')
+      .insert({ pregnancy_id: pregnancyId, name, emoji })
+      .select()
+      .single();
+
+    if (error) throw error;
+    this.custom.update(list => [...list, data as CustomSymptomRow]);
+    return data as CustomSymptomRow;
+  }
+
+  /**
+   * Briše samo definiciju simptoma; već upisani unosi ostaju u istoriji da
+   * trend za prošle dane ne bi promenio oblik unazad.
+   */
+  async removeCustom(id: string) {
+    const { error } = await this.supabase.client.from('custom_symptoms').delete().eq('id', id);
+    if (error) throw error;
+    this.custom.update(list => list.filter(s => s.id !== id));
+  }
 
   async loadToday(pregnancyId: string) {
     this.loading.set(true);

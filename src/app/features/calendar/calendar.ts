@@ -11,11 +11,22 @@ import { AppointmentService, AppointmentRow } from '../../core/services/appointm
 
 interface CalendarDay {
   date: Date;
+  iso: string;
   day: number;
   inMonth: boolean;
   isToday: boolean;
-  isSelected: boolean;
   appointments: AppointmentRow[];
+}
+
+/**
+ * Datum ćelije u kalendaru je ponoć po lokalnom vremenu; toISOString() bi ga
+ * prebacio u UTC i za Beograd vratio prethodni dan. Zato se ISO ključ pravi
+ * iz lokalnih komponenti.
+ */
+function toLocalIso(d: Date): string {
+  const m = `${d.getMonth() + 1}`.padStart(2, '0');
+  const day = `${d.getDate()}`.padStart(2, '0');
+  return `${d.getFullYear()}-${m}-${day}`;
 }
 
 @Component({
@@ -37,6 +48,9 @@ export class CalendarPage implements OnInit {
 
   viewDate = new Date();
   weeks: CalendarDay[][] = [];
+
+  /** Dan koji je korisnica izabrala klikom; null dok ne klikne. */
+  readonly selectedIso = signal<string | null>(null);
 
   readonly showCreate = signal(false);
   readonly creating = signal(false);
@@ -103,7 +117,9 @@ export class CalendarPage implements OnInit {
   private appointmentsByDate(): Map<string, AppointmentRow[]> {
     const byDate = new Map<string, AppointmentRow[]>();
     for (const apt of this.appointments.all()) {
-      const iso = apt.scheduled_at.slice(0, 10);
+      // scheduled_at je UTC; dan se određuje po lokalnom vremenu da termin rano
+      // ujutru ne bi ispao u prethodnom danu.
+      const iso = toLocalIso(new Date(apt.scheduled_at));
       const arr = byDate.get(iso) ?? [];
       arr.push(apt);
       byDate.set(iso, arr);
@@ -118,21 +134,20 @@ export class CalendarPage implements OnInit {
     const firstWeekday = (firstOfMonth.getDay() + 6) % 7; // Monday = 0
     const startDate = new Date(year, month, 1 - firstWeekday);
 
-    const today = new Date();
-    const todayIso = today.toISOString().slice(0, 10);
+    const todayIso = toLocalIso(new Date());
     const byDate = this.appointmentsByDate();
 
     const days: CalendarDay[] = [];
     for (let i = 0; i < 42; i++) {
       const d = new Date(startDate);
       d.setDate(startDate.getDate() + i);
-      const iso = d.toISOString().slice(0, 10);
+      const iso = toLocalIso(d);
       days.push({
         date: d,
+        iso,
         day: d.getDate(),
         inMonth: d.getMonth() === month,
         isToday: iso === todayIso,
-        isSelected: false,
         appointments: byDate.get(iso) ?? [],
       });
     }
@@ -147,21 +162,20 @@ export class CalendarPage implements OnInit {
     const weekday = (start.getDay() + 6) % 7; // Monday = 0
     start.setDate(start.getDate() - weekday);
 
-    const today = new Date();
-    const todayIso = today.toISOString().slice(0, 10);
+    const todayIso = toLocalIso(new Date());
     const byDate = this.appointmentsByDate();
 
     const days: CalendarDay[] = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date(start);
       d.setDate(start.getDate() + i);
-      const iso = d.toISOString().slice(0, 10);
+      const iso = toLocalIso(d);
       days.push({
         date: d,
+        iso,
         day: d.getDate(),
         inMonth: true,
         isToday: iso === todayIso,
-        isSelected: false,
         appointments: byDate.get(iso) ?? [],
       });
     }
@@ -182,12 +196,30 @@ export class CalendarPage implements OnInit {
     return groups;
   }
 
+  selectDay(day: CalendarDay) {
+    this.selectedIso.set(this.selectedIso() === day.iso ? null : day.iso);
+  }
+
+  /** Događaj se podrazumevano zakazuje za izabrani dan, a ne za danas. */
   openCreate() {
     this.newTitle = '';
     this.newType = 'pregled';
-    this.newDate = new Date().toISOString().slice(0, 10);
+    this.newDate = this.selectedIso() ?? toLocalIso(new Date());
     this.newTime = '10:00';
     this.showCreate.set(true);
+  }
+
+  get selectedDayLabel(): string {
+    const iso = this.selectedIso();
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('sr-RS', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+
+  get selectedDayAppointments(): AppointmentRow[] {
+    const iso = this.selectedIso();
+    if (!iso) return [];
+    return this.appointmentsByDate().get(iso) ?? [];
   }
 
   closeCreate() {
@@ -207,6 +239,7 @@ export class CalendarPage implements OnInit {
         appointment_type: this.newType,
         scheduled_at: scheduledAt,
       });
+      this.selectedIso.set(this.newDate);
       this.buildMonth();
       this.showCreate.set(false);
     } finally {

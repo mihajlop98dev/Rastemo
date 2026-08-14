@@ -426,3 +426,88 @@
     }
   }
 }
+
+.tracking {
+  &__symptom-remove {
+    margin-left: 6px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover { background: var(--color-danger-light); color: var(--color-danger); }
+  }
+
+  &__add-symptom { margin-top: var(--space-4); }
+
+  &__add-symptom-form {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__add-symptom-actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+
+    input {
+      height: 40px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-soft);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text);
+      outline: none;
+
+      &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+      &::placeholder { color: var(--color-text-muted); }
+    }
+  }
+
+  &__emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__emoji-option {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    font-size: 16px;
+    cursor: pointer;
+
+    &--active {
+      border-color: var(--color-primary);
+      background: var(--color-primary-soft);
+    }
+  }
+
+  &__error {
+    font-size: 12.5px;
+    color: var(--color-danger);
+  }
+}

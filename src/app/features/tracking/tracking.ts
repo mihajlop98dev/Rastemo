@@ -22,6 +22,8 @@ import { bmiCategoryFor, recommendedWeightRangeForWeek, BMI_CATEGORY_LABELS } fr
 interface SymptomDef {
   name: string;
   emoji: string;
+  /** Postoji samo za simptome koje je korisnica sama dodala. */
+  customId?: string;
 }
 
 const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '🙁', 3: '😐', 4: '🙂', 5: '😄' };
@@ -44,12 +46,29 @@ export class Tracking implements OnInit, OnDestroy {
   ];
   activeTab = 'simptomi';
 
-  readonly symptomCatalog: SymptomDef[] = [
+  /** Podrazumevani simptomi; korisnica ispod njih dodaje svoje. */
+  readonly defaultSymptoms: SymptomDef[] = [
     { name: 'Mučnina', emoji: '🤢' },
     { name: 'Umor', emoji: '😴' },
     { name: 'Bol u leđima', emoji: '🦴' },
     { name: 'Nadutost', emoji: '🌾' },
   ];
+
+  /** Emoji ponuđeni pri dodavanju — kucanje emojija na desktopu je nezgodno. */
+  readonly symptomEmojis = ['🩺', '🤕', '🌙', '💧', '🔥', '😵‍💫', '🦵', '🫃', '🤧', '💤'];
+
+  readonly showAddSymptom = signal(false);
+  readonly addingSymptom = signal(false);
+  readonly symptomError = signal('');
+  newSymptomName = '';
+  newSymptomEmoji = '🩺';
+
+  get symptomCatalog(): SymptomDef[] {
+    return [
+      ...this.defaultSymptoms,
+      ...this.symptomSvc.custom().map(c => ({ name: c.name, emoji: c.emoji, customId: c.id })),
+    ];
+  }
 
   readonly levels = [1, 2, 3] as const;
   readonly moodLevels = [1, 2, 3, 4, 5] as const;
@@ -93,6 +112,7 @@ export class Tracking implements OnInit, OnDestroy {
       await Promise.all([
         this.symptomSvc.loadToday(p.id),
         this.symptomSvc.loadLastWeek(p.id),
+        this.symptomSvc.loadCustom(p.id),
         this.moodSvc.loadToday(p.id),
         this.moodSvc.loadLastWeek(p.id),
         this.weightSvc.loadAll(p.id),
@@ -112,6 +132,45 @@ export class Tracking implements OnInit, OnDestroy {
 
   levelFor(name: string): number {
     return this.symptomSvc.today().find(e => e.name === name)?.level ?? 0;
+  }
+
+
+  openAddSymptom() {
+    this.newSymptomName = '';
+    this.newSymptomEmoji = '🩺';
+    this.symptomError.set('');
+    this.showAddSymptom.set(true);
+  }
+
+  closeAddSymptom() {
+    this.showAddSymptom.set(false);
+  }
+
+  async submitAddSymptom() {
+    const p = this.pregnancy.active();
+    const name = this.newSymptomName.trim();
+    if (!p || !name) return;
+
+    const exists = this.symptomCatalog.some(s => s.name.toLowerCase() === name.toLowerCase());
+    if (exists) {
+      this.symptomError.set('Taj simptom već postoji na listi.');
+      return;
+    }
+
+    this.addingSymptom.set(true);
+    this.symptomError.set('');
+    try {
+      await this.symptomSvc.addCustom(p.id, name, this.newSymptomEmoji);
+      this.showAddSymptom.set(false);
+    } catch {
+      this.symptomError.set('Nismo uspeli da sačuvamo simptom. Pokušaj ponovo.');
+    } finally {
+      this.addingSymptom.set(false);
+    }
+  }
+
+  async removeCustomSymptom(customId: string) {
+    await this.symptomSvc.removeCustom(customId);
   }
 
   async setLevel(name: string, level: 1 | 2 | 3) {

@@ -138,6 +138,15 @@ export class Profile implements OnInit {
     }
   }
 
+  /** Evropski brojčani zapis: 12.03.1998. */
+  formatDateShort(iso: string | null): string {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const day = `${d.getDate()}`.padStart(2, '0');
+    const month = `${d.getMonth() + 1}`.padStart(2, '0');
+    return `${day}.${month}.${d.getFullYear()}.`;
+  }
+
   formatDate(iso: string | null): string {
     if (!iso) return '—';
     return new Date(iso).toLocaleDateString('sr-RS', { day: 'numeric', month: 'long', year: 'numeric' });

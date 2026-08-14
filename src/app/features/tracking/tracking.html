@@ -24,6 +24,14 @@
         <div class="tracking__symptom-name">
           <span class="tracking__symptom-emoji">{{ s.emoji }}</span>
           {{ s.name }}
+          <button
+            *ngIf="s.customId"
+            type="button"
+            class="tracking__symptom-remove"
+            title="Ukloni simptom"
+            (click)="removeCustomSymptom(s.customId!)">
+            <lucide-icon [img]="TrashIcon" [size]="13"></lucide-icon>
+          </button>
         </div>
         <div class="tracking__symptom-levels">
           <button
@@ -36,6 +44,40 @@
             [class.tracking__level--l3]="lvl === 3">
             {{ lvl === 1 ? '🙂' : lvl === 2 ? '😐' : '😣' }}
           </button>
+        </div>
+      </div>
+
+      <div class="tracking__add-symptom" *ngIf="!showAddSymptom()">
+        <ui-button variant="outline" size="sm" [fullWidth]="true" (click)="openAddSymptom()">
+          <lucide-icon [img]="PlusIcon" [size]="15"></lucide-icon>
+          Dodaj svoj simptom
+        </ui-button>
+      </div>
+
+      <div class="tracking__add-symptom-form" *ngIf="showAddSymptom()">
+        <label class="tracking__field">
+          <span>Naziv simptoma</span>
+          <input type="text" [(ngModel)]="newSymptomName" name="newSymptomName" placeholder="npr. Glavobolja" />
+        </label>
+
+        <div class="tracking__emoji-picker">
+          <button
+            type="button"
+            *ngFor="let e of symptomEmojis"
+            class="tracking__emoji-option"
+            [class.tracking__emoji-option--active]="e === newSymptomEmoji"
+            (click)="newSymptomEmoji = e">
+            {{ e }}
+          </button>
+        </div>
+
+        <p class="tracking__error" *ngIf="symptomError()">{{ symptomError() }}</p>
+
+        <div class="tracking__add-symptom-actions">
+          <ui-button variant="primary" size="sm" [disabled]="addingSymptom() || !newSymptomName.trim()" (click)="submitAddSymptom()">
+            {{ addingSymptom() ? 'Čuvanje...' : 'Sačuvaj' }}
+          </ui-button>
+          <ui-button variant="secondary" size="sm" (click)="closeAddSymptom()">Otkaži</ui-button>
         </div>
       </div>
     </ui-card>

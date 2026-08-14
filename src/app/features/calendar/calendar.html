@@ -33,22 +33,28 @@
 
         <div class="calpage__weeks">
           <div class="calpage__week" *ngFor="let week of weeks">
-            <div
+            <button
+              type="button"
               class="calpage__day"
               *ngFor="let day of week"
+              (click)="selectDay(day)"
               [class.calpage__day--muted]="!day.inMonth"
-              [class.calpage__day--selected]="day.isToday">
+              [class.calpage__day--today]="day.isToday"
+              [class.calpage__day--selected]="day.iso === selectedIso()">
               <span>{{ day.day }}</span>
               <div class="calpage__day-dots" *ngIf="day.appointments.length">
                 <i class="calpage__dot calpage__dot--primary" *ngFor="let a of day.appointments"></i>
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </ng-container>
 
       <div class="calpage__week-view" *ngIf="activeView === 'week'">
-        <div class="calpage__week-day" *ngFor="let day of currentWeekDays; let i = index" [class.calpage__week-day--today]="day.isToday">
+        <div class="calpage__week-day" *ngFor="let day of currentWeekDays; let i = index"
+             [class.calpage__week-day--today]="day.isToday"
+             [class.calpage__week-day--selected]="day.iso === selectedIso()"
+             (click)="selectDay(day)">
           <div class="calpage__week-day-head">
             <span class="text-muted">{{ weekDayLabels[i] }}</span>
             <strong>{{ day.day }}</strong>
@@ -79,6 +85,25 @@
     </ui-card>
 
     <div class="calpage__side">
+      <ui-card padding="lg" class="calpage__selected" *ngIf="selectedIso()">
+        <h2>{{ selectedDayLabel }}</h2>
+        <div class="calpage__upcoming-item" *ngFor="let apt of selectedDayAppointments">
+          <div class="calpage__upcoming-date">
+            <strong>{{ formatDay(apt.scheduled_at) }}</strong>
+            <span>{{ formatMonth(apt.scheduled_at) }}</span>
+          </div>
+          <div class="calpage__upcoming-info">
+            <strong>{{ apt.title }}</strong>
+            <span class="text-soft">{{ formatTime(apt.scheduled_at) }}</span>
+          </div>
+        </div>
+        <p class="text-soft calpage__empty" *ngIf="!selectedDayAppointments.length">Nema događaja ovog dana.</p>
+        <ui-button variant="outline" size="sm" [fullWidth]="true" (click)="openCreate()">
+          <lucide-icon [img]="PlusIcon" [size]="15"></lucide-icon>
+          Dodaj događaj ovog dana
+        </ui-button>
+      </ui-card>
+
       <ui-card padding="lg">
         <h2>Predstojeći</h2>
         <div class="calpage__upcoming-item" *ngFor="let apt of appointments.upcoming">

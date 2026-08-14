@@ -11,7 +11,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { AppointmentService } from '../../core/services/appointment.service';
-import { babyComparisonForWeek, babyLengthForWeek, babyWeightForWeek, homeHighlightsForWeek } from '../../core/data/baby-growth';
+import { babyComparisonForWeek, babyLengthForWeek, babyWeightForWeek, babyLengthLabelForWeek, homeHighlightsForWeek } from '../../core/data/baby-growth';
+
+/** Pre 8. nedelje beba je lakša od grama, pa "0 g" ne bi bilo tačno. */
+function formatGrams(g: number): string {
+  return g < 1 ? 'manje od 1' : String(g);
+}
 
 @Component({
   selector: 'app-home',
@@ -37,8 +42,8 @@ export class Home implements OnInit {
 
   readonly viewerOpen = signal(false);
   readonly viewerWeek = signal(8);
-  readonly VIEWER_MIN_WEEK = 8;
-  readonly VIEWER_MAX_WEEK = 40;
+  readonly VIEWER_MIN_WEEK = 4;
+  readonly VIEWER_MAX_WEEK = 42;
 
   constructor(
     private auth: AuthService,
@@ -101,7 +106,7 @@ export class Home implements OnInit {
   }
 
   get viewerLength() { return babyLengthForWeek(this.viewerWeek()); }
-  get viewerWeight() { return babyWeightForWeek(this.viewerWeek()); }
+  get viewerWeight() { return formatGrams(babyWeightForWeek(this.viewerWeek())); }
   get viewerComparison() { return babyComparisonForWeek(this.viewerWeek()); }
 
   get weekNumber() { return this.pregnancy.weekNumber(); }
@@ -114,7 +119,8 @@ export class Home implements OnInit {
   }
 
   get babyLength() { return babyLengthForWeek(this.weekNumber); }
-  get babyWeight() { return babyWeightForWeek(this.weekNumber); }
+  get babyWeight() { return formatGrams(babyWeightForWeek(this.weekNumber)); }
+  get babyLengthLabel() { return babyLengthLabelForWeek(this.weekNumber); }
   get babyComparison() { return babyComparisonForWeek(this.weekNumber); }
 
   readonly weekProgress = computed(() => Math.round((this.pregnancy.weekNumber() / this.pregnancy.totalWeeks) * 100));

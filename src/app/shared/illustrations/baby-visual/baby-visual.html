@@ -20,34 +20,17 @@
       </linearGradient>
     </defs>
 
-    <!-- curled silhouette -->
-    <path
-      class="baby-visual__body"
-      fill="url(#bvBody)"
-      d="M148 36
-         C176 36 198 58 198 87
-         C198 108 187 124 169 132
-         C188 141 200 159 200 180
-         C200 208 175 229 143 229
-         C107 229 79 207 76 176
-         C74 159 81 144 94 135
-         C79 125 71 108 71 90
-         C71 60 100 36 130 36
-         Z" />
+    <!-- curled baby silhouette built from two overlapping rounded shapes: big head, curled body/legs below -->
+    <circle class="baby-visual__body" fill="url(#bvBody)" cx="112" cy="80" r="44" />
+    <circle class="baby-visual__body" fill="url(#bvBody)" cx="138" cy="160" r="56" />
 
-    <!-- tucked arm -->
+    <!-- tucked knees curve -->
     <path
       class="baby-visual__detail"
-      d="M118 118 C126 126 130 138 126 150 C123 158 114 162 106 159"
-      fill="none" stroke-linecap="round" />
-
-    <!-- folded legs -->
-    <path
-      class="baby-visual__detail"
-      d="M96 178 C106 190 122 194 136 188 C146 184 152 175 151 166"
+      d="M96 130 C88 150 90 172 104 186"
       fill="none" stroke-linecap="round" />
 
     <!-- face hint -->
-    <circle class="baby-visual__face" cx="160" cy="82" r="2.6" />
+    <circle class="baby-visual__face" cx="128" cy="72" r="2.8" />
   </svg>
 </div>

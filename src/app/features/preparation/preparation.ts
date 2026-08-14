@@ -1,6 +1,6 @@
 import { Component, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, ShoppingBag, Sparkles, Check } from 'lucide-angular';
+import { LucideAngularModule, Sparkles, Check } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiProgressBar } from '../../shared/ui/progress-bar/progress-bar';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
@@ -110,7 +110,6 @@ export class Preparation implements OnInit {
     this.checklistSvc.toggle(item);
   }
 
-  readonly BagIcon = ShoppingBag;
   readonly SparklesIcon = Sparkles;
   readonly CheckIcon = Check;
 }

@@ -100,8 +100,18 @@
     justify-content: center;
     height: 180px;
     border-radius: var(--radius-lg);
-    background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
+    background: linear-gradient(160deg, #FFFDFC, var(--color-peach-light));
     color: var(--color-primary-dark);
+    overflow: hidden;
+
+    img {
+      max-width: 92%;
+      max-height: 88%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
   }
 
   &__tip {

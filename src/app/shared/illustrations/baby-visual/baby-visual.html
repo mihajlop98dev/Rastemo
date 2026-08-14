@@ -12,25 +12,9 @@
     <circle cx="204" cy="176" r="5" class="baby-visual__sparkle" />
   </svg>
 
-  <svg viewBox="0 0 240 240" class="baby-visual__figure" [style.transform]="'scale(' + scale + ')'">
-    <defs>
-      <linearGradient id="bvBody" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="var(--color-peach)" />
-        <stop offset="100%" stop-color="var(--color-primary)" />
-      </linearGradient>
-    </defs>
-
-    <!-- curled baby silhouette built from two overlapping rounded shapes: big head, curled body/legs below -->
-    <circle class="baby-visual__body" fill="url(#bvBody)" cx="112" cy="80" r="44" />
-    <circle class="baby-visual__body" fill="url(#bvBody)" cx="138" cy="160" r="56" />
-
-    <!-- tucked knees curve -->
-    <path
-      class="baby-visual__detail"
-      d="M96 130 C88 150 90 172 104 186"
-      fill="none" stroke-linecap="round" />
-
-    <!-- face hint -->
-    <circle class="baby-visual__face" cx="128" cy="72" r="2.8" />
-  </svg>
+  <img
+    class="baby-visual__figure"
+    src="/illustrations/baby-womb.png"
+    alt="Ilustracija bebe u stomaku"
+    [style.transform]="'scale(' + scale + ')'" />
 </div>

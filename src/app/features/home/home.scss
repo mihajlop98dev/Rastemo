@@ -208,11 +208,32 @@
 
   /* Reminder card */
   &__reminder-card {
+    background: linear-gradient(160deg, var(--color-surface) 40%, var(--color-peach-light) 160%);
+
+    // The card's inner element holds the projected content, so the row layout
+    // has to be applied there rather than on the <ui-card> host.
+    ::ng-deep .ui-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+  }
+
+  &__reminder-copy {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-3);
-    background: linear-gradient(160deg, var(--color-surface) 40%, var(--color-peach-light) 160%);
+    min-width: 0;
+  }
+
+  &__reminder-art {
+    width: 110px;
+    height: auto;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+
+    @media (max-width: 520px) { display: none; }
   }
 
   &__reminder-text {
@@ -294,6 +315,11 @@
     justify-content: center;
     gap: var(--space-5);
     background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
+
+    ::ng-deep .baby-visual {
+      width: min(78vw, 380px);
+      height: min(78vw, 380px);
+    }
   }
 
   &__viewer-close {

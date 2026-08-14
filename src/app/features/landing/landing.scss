@@ -77,4 +77,26 @@
     box-shadow: var(--shadow-card);
     transition: transform .15s ease;
   }
+
+  &__legal {
+    margin-top: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+
+    p {
+      font-size: 11.5px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--color-text-soft);
+      text-decoration: underline;
+    }
+
+    span { margin: 0 6px; color: var(--color-text-muted); }
+  }
 }

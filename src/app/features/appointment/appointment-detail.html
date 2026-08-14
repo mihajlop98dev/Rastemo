@@ -43,9 +43,22 @@
       </ui-card>
 
       <ui-card padding="lg" class="apt__partner">
-        <div class="apt__partner-illustration">💞</div>
-        <h2>Kako možeš pomoći?</h2>
-        <div class="apt__tip" *ngFor="let tip of partnerTips">
+        <div class="apt__partner-illustration">
+          <svg viewBox="0 0 120 120" role="img" aria-label="Ilustracija beležnice sa čekliranim stavkama">
+            <rect x="30" y="20" width="60" height="80" rx="10" fill="#F4B49C" />
+            <rect x="36" y="26" width="48" height="68" rx="7" fill="#FFF6F0" />
+            <rect x="48" y="12" width="24" height="16" rx="6" fill="#BE7159" />
+            <path d="M44 46 L50 52 L60 40" fill="none" stroke="#E5677E" stroke-width="4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M64 47 L78 47" stroke="#E9BBA9" stroke-width="4" stroke-linecap="round" />
+            <path d="M44 66 L50 72 L60 60" fill="none" stroke="#E5677E" stroke-width="4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M64 67 L78 67" stroke="#E9BBA9" stroke-width="4" stroke-linecap="round" />
+            <path d="M44 84 L58 84" stroke="#E9BBA9" stroke-width="4" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h2>Kako da se spremiš?</h2>
+        <div class="apt__tip" *ngFor="let tip of prepTips">
           <span class="apt__tip-icon">
             <lucide-icon [img]="tip.icon" [size]="15"></lucide-icon>
           </span>

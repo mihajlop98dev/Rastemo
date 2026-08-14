@@ -22,6 +22,16 @@
         <input type="password" [(ngModel)]="password" name="password" placeholder="Minimum 6 karaktera" />
       </label>
 
+      <label class="authpage__consent">
+        <input type="checkbox" [(ngModel)]="acceptedTerms" name="acceptedTerms" />
+        <span>
+          Pročitala sam i prihvatam
+          <a routerLink="/uslovi-koriscenja" target="_blank">Uslove korišćenja</a> i
+          <a routerLink="/politika-privatnosti" target="_blank">Politiku privatnosti</a>.
+          Razumem da je Rastemo informativnog karaktera i da ne zamenjuje savet lekara.
+        </span>
+      </label>
+
       <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
 
       <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading()">

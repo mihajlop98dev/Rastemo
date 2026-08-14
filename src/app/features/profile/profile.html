@@ -12,6 +12,15 @@
         {{ m.label }}
       </a>
       <div class="profile__menu-divider"></div>
+      <a class="profile__menu-item" routerLink="/uslovi-koriscenja">
+        <lucide-icon [img]="ScrollIcon" [size]="17"></lucide-icon>
+        Uslovi korišćenja
+      </a>
+      <a class="profile__menu-item" routerLink="/politika-privatnosti">
+        <lucide-icon [img]="LockIcon" [size]="17"></lucide-icon>
+        Politika privatnosti
+      </a>
+      <div class="profile__menu-divider"></div>
       <a class="profile__menu-item profile__menu-item--danger" (click)="!loggingOut() && logOut()">
         <lucide-icon [img]="LogOutIcon" [size]="17"></lucide-icon>
         {{ loggingOut() ? 'Odjavljivanje...' : 'Odjavi se' }}

@@ -33,7 +33,42 @@
 
     <div class="prep__side">
       <div class="prep__illustration">
-        <lucide-icon [img]="BagIcon" [size]="52"></lucide-icon>
+        <svg viewBox="0 0 260 190" role="img" aria-label="Ilustracija torbe za porodilište">
+          <ellipse cx="130" cy="166" rx="74" ry="8" fill="#D98D74" opacity="0.2" />
+
+          <!-- handle: one continuous strap, anchored into the bag -->
+          <path d="M100 88 C100 52 122 46 130 46 C138 46 160 52 160 88"
+                fill="none" stroke="#BE7159" stroke-width="7" stroke-linecap="round" />
+          <path d="M108 88 C108 62 122 56 130 56 C138 56 152 62 152 88"
+                fill="none" stroke="#D08A6F" stroke-width="6" stroke-linecap="round" />
+
+          <!-- side pockets -->
+          <path d="M60 104 C44 106 38 122 45 138 C49 147 58 149 64 146 Z" fill="#DE8A6E" />
+          <path d="M196 104 C212 106 218 122 211 138 C207 147 198 149 192 146 Z" fill="#DE8A6E" />
+
+          <rect x="58" y="82" width="144" height="76" rx="26" fill="#F4B49C" />
+
+          <!-- lid seam and zip pull -->
+          <path d="M58 108 L202 108" stroke="#FFF3EA" stroke-width="5" stroke-linecap="round" opacity="0.9" />
+          <rect x="122" y="101" width="16" height="14" rx="5" fill="#FFF3EA" />
+
+          <path d="M58 134 C92 144 168 144 202 134 L202 132 C202 147 192 158 178 158 L82 158
+                   C68 158 58 147 58 132 Z" fill="#E5896D" opacity="0.4" />
+
+          <!-- clasp -->
+          <circle cx="130" cy="133" r="14" fill="#FFF6F0" />
+          <path d="M130 139 C124.5 134.5 122.5 131.5 122.5 129 C122.5 126.8 124.3 125.4 126.2 125.4
+                   C127.6 125.4 128.9 126.3 130 127.6 C131.1 126.3 132.4 125.4 133.8 125.4
+                   C135.7 125.4 137.5 126.8 137.5 129 C137.5 131.5 135.5 134.5 130 139 Z" fill="#E5677E" />
+
+          <rect x="78" y="156" width="18" height="7" rx="3.5" fill="#BE7159" />
+          <rect x="164" y="156" width="18" height="7" rx="3.5" fill="#BE7159" />
+
+          <path d="M208 66 C211 61 218 61 220 66 C222 61 229 61 231 67 C233 75 221 82 220 83
+                   C219 82 206 75 208 66 Z" fill="#F2A9B4" opacity="0.85" />
+          <circle cx="44" cy="70" r="5.5" fill="#F2A9B4" opacity="0.7" />
+          <circle cx="224" cy="124" r="4" fill="#F2A9B4" opacity="0.55" />
+        </svg>
       </div>
 
       <ui-card padding="lg" class="prep__tip">

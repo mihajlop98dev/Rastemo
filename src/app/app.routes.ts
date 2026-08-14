@@ -17,6 +17,7 @@ import { Profile } from './features/profile/profile';
 import { Register } from './features/auth/register/register';
 import { Login } from './features/auth/login/login';
 import { PregnancySetup } from './features/onboarding/pregnancy-setup/pregnancy-setup';
+import { LegalPage } from './features/legal/legal-page';
 import { authGuard } from './core/guards/auth.guard';
 import { pregnancyGuard } from './core/guards/pregnancy.guard';
 
@@ -24,6 +25,8 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', component: Landing },
   { path: 'register', component: Register },
   { path: 'login', component: Login },
+  { path: 'uslovi-koriscenja', component: LegalPage, data: { doc: 'terms' } },
+  { path: 'politika-privatnosti', component: LegalPage, data: { doc: 'privacy' } },
   { path: 'pregnancy-setup', component: PregnancySetup, canActivate: [authGuard] },
   {
     path: '',

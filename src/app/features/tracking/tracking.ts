@@ -7,6 +7,7 @@ import { UiCard } from '../../shared/ui/card/card';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
+import { UiMedicalNotice } from '../../shared/ui/medical-notice/medical-notice';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { PregnancyService } from '../../core/services/pregnancy.service';
@@ -28,7 +29,7 @@ const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '🙁', 3: '😐', 4:
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiAvatar, UiButton, UiTabs],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiAvatar, UiButton, UiTabs, UiMedicalNotice],
   templateUrl: './tracking.html',
   styleUrl: './tracking.scss'
 })

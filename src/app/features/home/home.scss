@@ -37,10 +37,25 @@
     margin-bottom: var(--space-4);
   }
 
+  /* <ui-card> projects its content into an inner .ui-card element, so layout
+     meant for the card's contents has to target that element. Putting it on the
+     host instead makes the inner card shrink to its content width, which pulled
+     the reminder and progress cards out of the grid column. */
+  &__baby-card,
+  &__week-card,
+  &__appointment-card,
+  &__reminder-card,
+  &__progress-card {
+    ::ng-deep .ui-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+
   /* Baby card */
   &__baby-card {
-    display: flex;
-    flex-direction: column;
+    display: block;
   }
 
   &__baby-card-head {
@@ -87,8 +102,7 @@
 
   /* Ove nedelje card */
   &__week-card {
-    display: flex;
-    flex-direction: column;
+    display: block;
   }
 
   &__highlight {
@@ -114,8 +128,7 @@
 
   /* Appointment card */
   &__appointment-card {
-    display: flex;
-    flex-direction: column;
+    display: block;
   }
 
   &__appointment-date {
@@ -208,11 +221,13 @@
 
   /* Reminder card */
   &__reminder-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
+    display: block;
     background: linear-gradient(160deg, var(--color-surface) 40%, var(--color-peach-light) 160%);
+
+    ::ng-deep .ui-card {
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
   }
 
   &__reminder-text {
@@ -223,12 +238,14 @@
 
   /* Progress card */
   &__progress-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    display: block;
 
-    h2 { align-self: flex-start; }
+    ::ng-deep .ui-card {
+      align-items: center;
+      text-align: center;
+    }
+
+    h2 { align-self: stretch; }
   }
 
   &__progress-ring {

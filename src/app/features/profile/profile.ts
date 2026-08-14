@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale, Check, X, Download, LogOut } from 'lucide-angular';
+import { Router, RouterLink } from '@angular/router';
+import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin, Mail, Cake, Scale, Check, X, Download, LogOut, ScrollText, Lock } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
@@ -17,7 +17,7 @@ type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'izvestaj
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiAvatar],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })
@@ -225,4 +225,6 @@ export class Profile implements OnInit {
   readonly XIcon = X;
   readonly DownloadIcon = Download;
   readonly LogOutIcon = LogOut;
+  readonly ScrollIcon = ScrollText;
+  readonly LockIcon = Lock;
 }

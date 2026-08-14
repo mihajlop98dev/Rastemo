@@ -10,6 +10,9 @@
 
   <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
 
+  <ui-medical-notice
+    text="Unosi i preporučeni rasponi ovde su orijentacioni i ne zamenjuju pregled kod lekara. Kod krvarenja, jakog bola, curenja plodove vode ili izostanka pokreta bebe odmah pozovi 194." />
+
   <div class="tracking__grid" *ngIf="activeTab === 'simptomi'">
 
     <ui-card class="tracking__list" padding="lg">

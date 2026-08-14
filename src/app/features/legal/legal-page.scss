@@ -1,0 +1,113 @@
+.legal {
+  min-height: 100vh;
+  padding: var(--space-5) var(--space-5) var(--space-8);
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-peach-light) 220%);
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    max-width: 760px;
+    margin: 0 auto var(--space-5);
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--color-text);
+
+    strong { font-family: var(--font-heading); font-size: 19px; }
+  }
+
+  &__brand-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-peach));
+    color: #fff;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+  }
+
+  &__card {
+    display: block;
+    max-width: 760px;
+    margin: 0 auto;
+
+    h1 { font-size: 25px; margin-bottom: 4px; }
+  }
+
+  &__updated {
+    font-size: 12.5px;
+    margin-bottom: var(--space-5);
+  }
+
+  &__intro {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--color-text-soft);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+  }
+
+  &__section {
+    margin-top: var(--space-6);
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: var(--space-3);
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-text-soft);
+
+      + p { margin-top: var(--space-3); }
+    }
+
+    ul {
+      margin: var(--space-3) 0 0;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--color-text-soft);
+    }
+
+    p + ul { margin-top: var(--space-3); }
+    ul + p { margin-top: var(--space-3); }
+  }
+
+  &__other {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-soft);
+    font-size: 13.5px;
+    color: var(--color-text-soft);
+
+    a { color: var(--color-primary-dark); font-weight: 600; }
+  }
+
+  @media (max-width: 640px) {
+    padding: var(--space-4) var(--space-3) var(--space-7);
+  }
+}

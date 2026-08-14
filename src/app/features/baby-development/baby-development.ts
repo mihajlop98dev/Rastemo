@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Check, Brain, Bone, Ear, Move, CalendarCheck } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
+import { UiMedicalNotice } from '../../shared/ui/medical-notice/medical-notice';
 import { BabyVisual } from '../../shared/illustrations/baby-visual/baby-visual';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { babyComparisonForWeek, babyLengthForWeek, babyWeightForWeek, devPointsForWeek } from '../../core/data/baby-growth';
@@ -13,7 +14,7 @@ const DEV_ICONS: Record<string, any> = { brain: Brain, bone: Bone, ear: Ear, mov
 @Component({
   selector: 'app-baby-development',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, UiCard, BabyVisual],
+  imports: [CommonModule, LucideAngularModule, UiCard, BabyVisual, UiMedicalNotice],
   templateUrl: './baby-development.html',
   styleUrl: './baby-development.scss'
 })

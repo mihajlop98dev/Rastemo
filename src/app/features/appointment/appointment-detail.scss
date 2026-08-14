@@ -101,15 +101,16 @@
   }
 
   &__partner-illustration {
-    width: 72px;
-    height: 72px;
+    width: 78px;
+    height: 78px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
     background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
     margin-bottom: var(--space-4);
+
+    svg { width: 68%; height: 68%; }
   }
 
   &__tip {

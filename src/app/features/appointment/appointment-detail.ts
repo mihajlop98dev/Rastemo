@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { LucideAngularModule, Bell, ShoppingCart, CircleHelp, Heart, MapPin, Clock } from 'lucide-angular';
+import { LucideAngularModule, Bell, FileText, CircleHelp, NotebookPen, MapPin, Clock } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiProgressBar } from '../../shared/ui/progress-bar/progress-bar';
@@ -19,11 +19,13 @@ export class AppointmentDetail implements OnInit {
   readonly appointment = signal<AppointmentRow | null>(null);
   readonly loading = signal(true);
 
-  readonly partnerTips = [
-    { icon: Bell, text: 'Podseti je na pregled dan ranije.' },
-    { icon: ShoppingCart, text: 'Pomozi oko kupovine za bebu.' },
-    { icon: CircleHelp, text: 'Pripremi zajedno pitanja za lekara.' },
-    { icon: Heart, text: 'Pročitaj šta se ove nedelje dešava sa bebom.' },
+  // Addressed to the pregnant user herself — the old copy spoke to a partner,
+  // which no longer matches the app now that the Partner feature is gone.
+  readonly prepTips = [
+    { icon: FileText, text: 'Ponesi zdravstvenu knjižicu i prethodne nalaze.' },
+    { icon: CircleHelp, text: 'Zapiši pitanja koja želiš da postaviš lekaru.' },
+    { icon: Bell, text: 'Dođi 10-15 minuta ranije, bez žurbe.' },
+    { icon: NotebookPen, text: 'Posle pregleda zabeleži šta ti je lekar rekao.' },
   ];
 
   readonly MapPinIcon = MapPin;

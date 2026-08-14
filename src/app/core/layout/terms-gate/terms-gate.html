@@ -1,0 +1,32 @@
+<div class="terms-gate" *ngIf="open()">
+  <div class="terms-gate__box">
+    <h2>Pre nego što nastaviš</h2>
+    <p class="terms-gate__lead">
+      Dopunili smo pravila korišćenja. Molimo te da ih prihvatiš da bi nastavila da koristiš Rastemo.
+    </p>
+
+    <div class="terms-gate__note">
+      Rastemo je informativnog karaktera. Aplikacija ne pruža zdravstvenu uslugu, ne postavlja dijagnozu
+      i ne zamenjuje pregled kod lekara. U hitnim slučajevima pozovi <strong>194</strong>.
+    </div>
+
+    <label class="terms-gate__consent">
+      <input type="checkbox" [(ngModel)]="accepted" name="accepted" />
+      <span>
+        Pročitala sam i prihvatam
+        <a routerLink="/uslovi-koriscenja" target="_blank">Uslove korišćenja</a> i
+        <a routerLink="/politika-privatnosti" target="_blank">Politiku privatnosti</a>,
+        uključujući obradu mojih zdravstvenih podataka.
+      </span>
+    </label>
+
+    <p class="terms-gate__error" *ngIf="error()">{{ error() }}</p>
+
+    <div class="terms-gate__actions">
+      <ui-button variant="primary" size="lg" [fullWidth]="true" [disabled]="saving()" (click)="confirm()">
+        {{ saving() ? 'Čuvanje...' : 'Prihvatam i nastavljam' }}
+      </ui-button>
+      <button type="button" class="terms-gate__logout" (click)="logOut()">Odjavi se</button>
+    </div>
+  </div>
+</div>

@@ -6,13 +6,14 @@ import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiRating } from '../../shared/ui/rating/rating';
+import { UiMedicalNotice } from '../../shared/ui/medical-notice/medical-notice';
 import { DoctorService } from '../../core/services/doctor.service';
 import { FavoriteDoctorService } from '../../core/services/favorite-doctor.service';
 
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating, UiMedicalNotice],
   templateUrl: './doctors.html',
   styleUrl: './doctors.scss'
 })

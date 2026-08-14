@@ -1,0 +1,30 @@
+<div class="legal">
+  <header class="legal__top">
+    <a routerLink="/" class="legal__brand">
+      <span class="legal__brand-icon"><lucide-icon [img]="HeartIcon" [size]="18"></lucide-icon></span>
+      <strong>rastemo</strong>
+    </a>
+    <a routerLink="/" class="legal__back">
+      <lucide-icon [img]="BackIcon" [size]="15"></lucide-icon>
+      Nazad
+    </a>
+  </header>
+
+  <ui-card padding="lg" class="legal__card">
+    <h1>{{ doc.title }}</h1>
+    <p class="legal__updated text-muted">Poslednja izmena: {{ doc.updated }}</p>
+    <p class="legal__intro">{{ doc.intro }}</p>
+
+    <section class="legal__section" *ngFor="let s of doc.sections">
+      <h2>{{ s.heading }}</h2>
+      <p *ngFor="let p of s.paragraphs">{{ p }}</p>
+      <ul *ngIf="s.bullets">
+        <li *ngFor="let b of s.bullets">{{ b }}</li>
+      </ul>
+    </section>
+
+    <p class="legal__other">
+      Pročitaj i: <a [routerLink]="otherLink.path">{{ otherLink.label }}</a>
+    </p>
+  </ui-card>
+</div>

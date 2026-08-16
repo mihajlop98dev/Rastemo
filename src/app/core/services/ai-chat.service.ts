@@ -20,9 +20,11 @@ export interface AiMessageRow {
 }
 
 const WELCOME_TEXT =
-  'Ćao! 👋 Tu sam da ti objasnim ono što piše u našoj proverenoj bazi znanja o trudnoći.\n\n' +
-  'Ne postavljam dijagnoze, ne preporučujem lekove i ne tumačim nalaze — to radi tvoj lekar. ' +
-  'Ako opišeš nešto hitno, uputiću te pravo na hitnu pomoć.';
+  'Ćao! 👋 Prepričavam ti ono što piše u zvaničnim izvorima o trudnoći — ispod svakog ' +
+  'odgovora vidiš iz kog izvora dolazi.\n\n' +
+  'Ne poznajem tvoju trudnoću, ne postavljam dijagnoze i ne preporučujem lekove. ' +
+  'Sve što ti kažem proveri sa svojim ginekologom. Ako opišeš nešto hitno, uputiću te ' +
+  'pravo na hitnu pomoć.';
 
 @Injectable({ providedIn: 'root' })
 export class AiChatService {

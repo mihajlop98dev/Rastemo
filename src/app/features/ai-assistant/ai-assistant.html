@@ -6,19 +6,51 @@
     </div>
     <div>
       <h1>AI pomoćnik</h1>
-      <p class="text-soft">Pitaj bilo šta o trudnoći — bez dijagnoza, samo podrška i informacije.</p>
+      <p class="text-soft">Objašnjava ono što piše u našoj proverenoj bazi znanja.</p>
     </div>
   </header>
 
-  <ui-card padding="lg" class="ai__soon">
-    <div class="ai__soon-icon">
-      <lucide-icon [img]="ClockIcon" [size]="26"></lucide-icon>
+  <ui-medical-notice
+    text="Ovaj pomoćnik ne postavlja dijagnoze, ne preporučuje lekove i ne tumači nalaze. Odgovara samo iz provereg sadržaja i ne zamenjuje pregled kod lekara. Kod krvarenja, jakog bola, curenja plodove vode ili izostanka pokreta bebe odmah pozovi 194." />
+
+  <ui-card padding="lg" class="ai__chat">
+    <div class="ai__messages">
+      <div
+        class="ai__message"
+        *ngFor="let m of chat.messages()"
+        [class.ai__message--user]="m.role === 'user'"
+        [class.ai__message--alert]="m.was_red_flag">
+        <p>{{ m.content }}</p>
+
+        <div class="ai__sources" *ngIf="m.used_sources?.length">
+          <span>Izvor:</span>
+          <span *ngFor="let s of m.used_sources; let last = last">
+            {{ s.source }}<ng-container *ngIf="s.section"> — {{ s.section }}</ng-container><ng-container *ngIf="!last">, </ng-container>
+          </span>
+        </div>
+      </div>
+
+      <div class="ai__message ai__message--typing" *ngIf="chat.sending()">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-    <h2>Uskoro stiže</h2>
-    <p class="text-soft">
-      Radimo na personalizovanom AI asistentu koji će ti pomoći sa pitanjima o trudnoći,
-      simptomima i pripremama. Neće postavljati dijagnoze — samo podrška i informacije,
-      uz preporuku da se za medicinske nedoumice uvek obratiš svom lekaru.
-    </p>
+
+    <p class="ai__error" *ngIf="chat.error()">{{ chat.error() }}</p>
+
+    <div class="ai__suggestions" *ngIf="chat.messages().length <= 1">
+      <button type="button" *ngFor="let s of suggestions" (click)="ask(s)">{{ s }}</button>
+    </div>
+
+    <form class="ai__form" (ngSubmit)="submit()">
+      <input
+        type="text"
+        [(ngModel)]="draft"
+        name="draft"
+        placeholder="Pitaj nešto o trudnoći..."
+        [disabled]="chat.sending()" />
+      <ui-button type="submit" variant="primary" size="md" [disabled]="chat.sending() || !draft.trim()">
+        <lucide-icon [img]="SendIcon" [size]="16"></lucide-icon>
+      </ui-button>
+    </form>
   </ui-card>
 </div>

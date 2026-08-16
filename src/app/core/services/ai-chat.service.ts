@@ -1,6 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
+import { isRedFlag, RED_FLAG_ANSWER } from '../data/red-flags';
+
+export interface AiSource {
+  source: string;
+  url: string | null;
+  section: string | null;
+}
 
 export interface AiMessageRow {
   id: string;
@@ -8,9 +15,14 @@ export interface AiMessageRow {
   role: 'user' | 'ai';
   content: string;
   created_at: string;
+  used_sources: AiSource[] | null;
+  was_red_flag: boolean;
 }
 
-const WELCOME_TEXT = 'Ćao! 👋 Kako mogu da ti pomognem danas? Slobodno pitaj bilo šta o trudnoći, simptomima ili pripremama.';
+const WELCOME_TEXT =
+  'Ćao! 👋 Tu sam da ti objasnim ono što piše u našoj proverenoj bazi znanja o trudnoći.\n\n' +
+  'Ne postavljam dijagnoze, ne preporučujem lekove i ne tumačim nalaze — to radi tvoj lekar. ' +
+  'Ako opišeš nešto hitno, uputiću te pravo na hitnu pomoć.';
 
 @Injectable({ providedIn: 'root' })
 export class AiChatService {
@@ -18,6 +30,7 @@ export class AiChatService {
   readonly messages = signal<AiMessageRow[]>([]);
   readonly loading = signal(false);
   readonly sending = signal(false);
+  readonly error = signal('');
 
   constructor(private supabase: SupabaseService, private auth: AuthService) {}
 
@@ -65,10 +78,15 @@ export class AiChatService {
     this.loading.set(false);
   }
 
-  private async insertMessage(conversationId: string, role: 'user' | 'ai', content: string) {
+  private async insertMessage(
+    conversationId: string,
+    role: 'user' | 'ai',
+    content: string,
+    extra: { used_sources?: AiSource[] | null; was_red_flag?: boolean } = {},
+  ) {
     const { data, error } = await this.supabase.client
       .from('ai_messages')
-      .insert({ conversation_id: conversationId, role, content })
+      .insert({ conversation_id: conversationId, role, content, ...extra })
       .select()
       .single();
     if (error) throw error;
@@ -80,12 +98,35 @@ export class AiChatService {
     if (!convId || !text.trim()) return;
 
     this.sending.set(true);
+    this.error.set('');
+
     try {
       const userMsg = await this.insertMessage(convId, 'user', text);
       this.messages.update(list => [...list, userMsg]);
 
-      const reply = 'Hvala na pitanju! Ovo je demo odgovor — ovde bi stigao personalizovani AI odgovor zasnovan na tvojoj trudnoći. Za konkretne medicinske nedoumice uvek se obrati svom lekaru.';
-      const aiMsg = await this.insertMessage(convId, 'ai', reply);
+      // Hitno se prepoznaje i ovde, da odgovor stigne odmah bez čekanja mreže.
+      // Serverska provera svejedno postoji, jer se aplikacija može zaobići.
+      if (isRedFlag(text)) {
+        const msg = await this.insertMessage(convId, 'ai', RED_FLAG_ANSWER, { was_red_flag: true });
+        this.messages.update(list => [...list, msg]);
+        return;
+      }
+
+      const { data, error } = await this.supabase.client.functions.invoke('ai-asistent', {
+        body: { question: text },
+      });
+
+      if (error || !data?.answer) {
+        this.error.set(
+          'Asistent trenutno nije dostupan. Pitanje možeš da postaviš u Zajednici ili svom lekaru.',
+        );
+        return;
+      }
+
+      const aiMsg = await this.insertMessage(convId, 'ai', data.answer, {
+        used_sources: data.sources ?? null,
+        was_red_flag: !!data.redFlag,
+      });
       this.messages.update(list => [...list, aiMsg]);
     } finally {
       this.sending.set(false);

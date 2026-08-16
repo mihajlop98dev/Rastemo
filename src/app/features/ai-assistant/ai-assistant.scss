@@ -160,3 +160,13 @@
   line-height: 1.55;
   color: var(--color-danger);
 }
+
+/* Stoji iznad polja za unos, ne u dnu strane: korisnica treba da zna gde pitanje
+   odlazi pre nego što ga napiše, a ne pošto ga je poslala. */
+.ai__privacy {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+
+  a { color: var(--color-primary-dark); text-decoration: underline; }
+}

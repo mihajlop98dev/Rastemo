@@ -5,10 +5,13 @@
  * prihvatanja. Kad se tekst materijalno promeni, podigni verziju — korisnice
  * koje su prihvatile stariju verziju biće ponovo pitane da prihvate novu.
  */
-export const TERMS_VERSION = '2026-08-14';
+export const TERMS_VERSION = '2026-08-16';
 
 /** Email na koji stižu zahtevi po ZZPL/GDPR i sva pravna pitanja. */
-export const LEGAL_CONTACT_EMAIL = 'podrska@rastemo.app';
+export const LEGAL_CONTACT_EMAIL = 'mihajlop98@gmail.com';
+
+/** Ime i prezime rukovaoca podacima — dok ne postoji registrovano pravno lice. */
+export const DATA_CONTROLLER = 'Mihajlo Petrović';
 
 export interface LegalSection {
   heading: string;
@@ -188,8 +191,8 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
     {
       heading: '1. Ko obrađuje tvoje podatke',
       paragraphs: [
-        'Rukovalac podacima je tim koji stoji iza aplikacije Rastemo. Za sva pitanja o zaštiti podataka ' +
-          `dostupni smo na ${LEGAL_CONTACT_EMAIL}.`,
+        `Rukovalac podacima je ${DATA_CONTROLLER}, kao fizičko lice. Za sva pitanja o zaštiti ` +
+          `podataka, kao i za ostvarivanje svojih prava, možeš se obratiti na ${LEGAL_CONTACT_EMAIL}.`,
         'Obradu vršimo u skladu sa Zakonom o zaštiti podataka o ličnosti Republike Srbije i Opštom ' +
           'uredbom o zaštiti podataka (GDPR).',
       ],
@@ -227,7 +230,20 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
       bullets: [
         'Supabase — baza podataka i autentikacija;',
         'Vercel — hosting aplikacije;',
-        'Google — samo ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu.',
+        'Google — samo ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu;',
+        'Mistral AI (Francuska) — obrađuje isključivo pitanja koja sama pošalješ AI pomoćniku.',
+      ],
+    },
+    {
+      heading: '4a. AI pomoćnik i tvoja pitanja',
+      paragraphs: [
+        'Kada postaviš pitanje AI pomoćniku, tekst tvog pitanja se šalje kompaniji Mistral AI, koja ' +
+          'ima sedište u Francuskoj, radi sastavljanja odgovora. Ako u pitanju navedeš nešto o svom ' +
+          'zdravlju, i taj podatak odlazi sa njim.',
+        'Pitanja i odgovori se čuvaju u tvom nalogu da bi razgovor imao istoriju. Brišu se kada ' +
+          'obrišeš nalog.',
+        'Ako ne želiš da tvoja pitanja napuštaju aplikaciju, jednostavno ne koristi AI pomoćnika — ' +
+          'sve ostale funkcije rade bez njega.',
       ],
     },
     {

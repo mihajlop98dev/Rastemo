@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Sparkles, Send } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
@@ -10,7 +11,7 @@ import { AiChatService } from '../../core/services/ai-chat.service';
 @Component({
   selector: 'app-ai-assistant',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiMedicalNotice],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiMedicalNotice],
   templateUrl: './ai-assistant.html',
   styleUrl: './ai-assistant.scss'
 })

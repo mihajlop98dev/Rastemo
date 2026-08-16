@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   { label: 'Pregledi i nalazi', path: '/calendar', icon: 'clipboard-list' },
   { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },
   { label: 'Zajednica', path: '/community', icon: 'users' },
-  { label: 'AI pomoćnik', path: '/ai', icon: 'sparkles', badge: 'Uskoro' },
+  { label: 'AI pomoćnik', path: '/ai', icon: 'sparkles', badge: 'Probno' },
   { label: 'Priprema', path: '/preparation', icon: 'shopping-bag' },
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];

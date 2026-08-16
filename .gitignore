@@ -42,3 +42,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Tajne i privremeni fajlovi Supabase CLI-ja — nikad u verzionisanje
+.env
+.env.*
+supabase/.temp/

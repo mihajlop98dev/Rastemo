@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
-import { mobileNavItems } from '../nav-items';
+import { mobileNavItems, adminNavItem } from '../nav-items';
+import { AdminService } from '../../services/admin.service';
 import { iconMap } from '../icon-map';
 
 @Component({
@@ -13,6 +14,12 @@ import { iconMap } from '../icon-map';
   styleUrl: './mobile-nav.scss'
 })
 export class MobileNav {
-  readonly items = mobileNavItems;
   readonly iconMap = iconMap;
+
+  constructor(private admin: AdminService) {}
+
+  /** Administrator dobija samo svoju stavku — ostatak app-a ga ne zanima. */
+  get items() {
+    return this.admin.isAdmin() ? [adminNavItem] : mobileNavItems;
+  }
 }

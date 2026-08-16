@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, Heart, PhoneCall, X } from 'lucide-angular';
-import { navItems } from '../nav-items';
+import { navItems, adminNavItem } from '../nav-items';
+import { AdminService } from '../../services/admin.service';
 import { iconMap } from '../icon-map';
 
 interface EmergencyNumber {
@@ -17,8 +18,9 @@ interface EmergencyNumber {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
-export class Sidebar {
+export class Sidebar implements OnInit {
   readonly navItems = navItems;
+  readonly adminNavItem = adminNavItem;
   readonly iconMap = iconMap;
 
   readonly showEmergency = signal(false);
@@ -32,4 +34,10 @@ export class Sidebar {
   readonly HeartIcon = Heart;
   readonly PhoneIcon = PhoneCall;
   readonly XIcon = X;
+
+  constructor(readonly admin: AdminService) {}
+
+  async ngOnInit() {
+    await this.admin.checkAdmin();
+  }
 }

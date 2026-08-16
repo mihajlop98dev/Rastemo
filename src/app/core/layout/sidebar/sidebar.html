@@ -11,13 +11,22 @@
 
   <nav class="sidebar__nav">
     <a
-      *ngFor="let item of navItems"
+      *ngFor="let item of admin.isAdmin() ? [] : navItems"
       [routerLink]="item.path"
       routerLinkActive="sidebar__link--active"
       class="sidebar__link">
       <lucide-icon [img]="iconMap[item.icon]" [size]="19"></lucide-icon>
       <span>{{ item.label }}</span>
       <span class="sidebar__badge" *ngIf="item.badge">{{ item.badge }}</span>
+    </a>
+
+    <a
+      *ngIf="admin.isAdmin()"
+      [routerLink]="adminNavItem.path"
+      routerLinkActive="sidebar__link--active"
+      class="sidebar__link">
+      <lucide-icon [img]="iconMap[adminNavItem.icon]" [size]="19"></lucide-icon>
+      <span>{{ adminNavItem.label }}</span>
     </a>
   </nav>
 

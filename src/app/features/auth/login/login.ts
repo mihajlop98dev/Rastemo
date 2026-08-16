@@ -6,6 +6,7 @@ import { LucideAngularModule, Heart } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { AuthService } from '../../../core/services/auth.service';
+import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,11 @@ export class Login {
 
   readonly HeartIcon = Heart;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private admin: AdminService,
+    private router: Router,
+  ) {}
 
   async submit() {
     if (!this.email || !this.password) {
@@ -43,7 +48,7 @@ export class Login {
       return;
     }
 
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl(await this.admin.checkAdmin() ? '/admin' : '/home');
   }
 
   async withGoogle() {

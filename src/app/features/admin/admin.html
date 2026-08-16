@@ -1,0 +1,212 @@
+<div class="admin">
+
+  <header class="admin__header">
+    <div class="admin__header-icon"><lucide-icon [img]="ShieldIcon" [size]="18"></lucide-icon></div>
+    <div>
+      <h1>Administracija</h1>
+      <p class="text-soft">Moderacija sadržaja, nalozi i pregled aplikacije.</p>
+    </div>
+    <button type="button" class="admin__logout" (click)="logOut()">Odjavi se</button>
+  </header>
+
+  <div class="admin__notice">
+    Panel namerno ne prikazuje simptome, raspoloženje, težinu, dnevnik, terapiju ni privatne poruke —
+    to su zdravstveni podaci i politika privatnosti kaže da im se ne pristupa.
+  </div>
+
+  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $any($event)"></ui-tabs>
+
+  <!-- ---------------- PREGLED ---------------- -->
+  <div class="admin__stats" *ngIf="activeTab === 'pregled'">
+    <ui-card padding="lg" *ngIf="admin.stats() as s">
+      <h2>Brojke</h2>
+      <div class="admin__stat-grid">
+        <div class="admin__stat"><strong>{{ s.users }}</strong><span>korisnica</span></div>
+        <div class="admin__stat"><strong>{{ s.newUsers7d }}</strong><span>novih (7 dana)</span></div>
+        <div class="admin__stat"><strong>{{ s.pregnancies }}</strong><span>aktivnih trudnoća</span></div>
+        <div class="admin__stat"><strong>{{ s.topics }}</strong><span>tema</span></div>
+        <div class="admin__stat"><strong>{{ s.posts }}</strong><span>komentara</span></div>
+        <div class="admin__stat"><strong>{{ s.doctors }}</strong><span>lekara</span></div>
+        <div class="admin__stat" [class.admin__stat--warn]="s.unverifiedDoctors > 0">
+          <strong>{{ s.unverifiedDoctors }}</strong><span>nepotvrđenih lekara</span>
+        </div>
+        <div class="admin__stat" [class.admin__stat--warn]="s.pendingReports > 0">
+          <strong>{{ s.pendingReports }}</strong><span>prijava na čekanju</span>
+        </div>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg" class="admin__flagged" *ngIf="usersAtLimit.length">
+      <h2><lucide-icon [img]="AlertIcon" [size]="16"></lucide-icon> Nalozi za brisanje</h2>
+      <p class="text-soft">Ovi nalozi imaju {{ STRIKE_LIMIT }} ili više opomena.</p>
+      <div class="admin__row" *ngFor="let u of usersAtLimit">
+        <div>
+          <strong>{{ u.full_name || 'Bez imena' }}</strong>
+          <span class="text-muted">{{ u.strikes }} opomena · od {{ formatDate(u.created_at) }}</span>
+        </div>
+        <ui-button variant="outline" size="sm" (click)="startDeleteUser(u)">Obriši nalog</ui-button>
+      </div>
+    </ui-card>
+  </div>
+
+  <!-- ---------------- PRIJAVE ---------------- -->
+  <ui-card padding="lg" *ngIf="activeTab === 'prijave'">
+    <h2>Prijave korisnica</h2>
+    <p class="text-soft admin__empty" *ngIf="!admin.reports().length">Nema prijava.</p>
+
+    <div class="admin__row" *ngFor="let r of admin.reports()">
+      <div>
+        <strong>{{ r.target_type }} · {{ r.reason }}</strong>
+        <span class="text-muted">{{ formatDate(r.created_at) }} · status: {{ r.status }}</span>
+      </div>
+      <div class="admin__row-actions" *ngIf="r.status === 'pending'">
+        <ui-button variant="outline" size="sm" (click)="admin.setReportStatus(r.id, 'actioned')">Rešeno</ui-button>
+        <ui-button variant="secondary" size="sm" (click)="admin.setReportStatus(r.id, 'dismissed')">Odbaci</ui-button>
+      </div>
+    </div>
+  </ui-card>
+
+  <!-- ---------------- ZAJEDNICA ---------------- -->
+  <ui-card padding="lg" *ngIf="activeTab === 'zajednica'">
+    <h2>Teme i komentari</h2>
+
+    <div class="admin__search">
+      <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
+      <input type="text" [(ngModel)]="contentSearch" name="contentSearch" placeholder="Pretraži sadržaj ili autora..." />
+    </div>
+
+    <p class="text-soft admin__empty" *ngIf="!filteredContent.length">Nema sadržaja.</p>
+
+    <div class="admin__content-item" *ngFor="let c of filteredContent">
+      <div class="admin__content-head">
+        <span class="admin__kind" [class.admin__kind--post]="c.kind === 'post'">
+          {{ c.kind === 'topic' ? 'Tema' : 'Komentar' }}
+        </span>
+        <span class="text-muted">{{ displayAuthor(c) }} · {{ formatDate(c.created_at) }}</span>
+      </div>
+      <strong *ngIf="c.title">{{ c.title }}</strong>
+      <p class="admin__content-body">{{ excerpt(c.body) }}</p>
+      <span class="text-muted admin__content-context" *ngIf="c.context">u temi: {{ c.context }}</span>
+      <ui-button variant="outline" size="sm" (click)="startRemove(c)">
+        <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+        Ukloni i opomeni
+      </ui-button>
+    </div>
+  </ui-card>
+
+  <!-- ---------------- KORISNICE ---------------- -->
+  <ui-card padding="lg" *ngIf="activeTab === 'korisnice'">
+    <h2>Korisnice</h2>
+
+    <div class="admin__search">
+      <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
+      <input type="text" [(ngModel)]="userSearch" name="userSearch" placeholder="Pretraži po imenu ili gradu..." />
+    </div>
+
+    <div class="admin__row" *ngFor="let u of filteredUsers">
+      <div>
+        <strong>{{ u.full_name || 'Bez imena' }}</strong>
+        <span class="text-muted">
+          {{ u.city || 'bez grada' }} · {{ u.role }} · od {{ formatDate(u.created_at) }}
+          <ng-container *ngIf="!u.terms_accepted_at"> · nije prihvatila uslove</ng-container>
+        </span>
+      </div>
+      <div class="admin__row-actions">
+        <span class="admin__strikes" [class.admin__strikes--warn]="u.strikes >= STRIKE_LIMIT" *ngIf="u.strikes">
+          {{ u.strikes }} / {{ STRIKE_LIMIT }} opomena
+        </span>
+        <ui-button variant="outline" size="sm" (click)="startDeleteUser(u)">Obriši</ui-button>
+      </div>
+    </div>
+  </ui-card>
+
+  <!-- ---------------- LEKARI ---------------- -->
+  <ui-card padding="lg" *ngIf="activeTab === 'lekari'">
+    <h2>Lekari koje su dodale korisnice</h2>
+    <p class="text-soft">Potvrdi unos ako je tačan, ili ukloni ako nije.</p>
+
+    <div class="admin__row" *ngFor="let d of doctorSvc.all()">
+      <div>
+        <strong>
+          {{ d.full_name }}
+          <lucide-icon *ngIf="d.is_verified" [img]="VerifiedIcon" [size]="14"></lucide-icon>
+        </strong>
+        <span class="text-muted">
+          {{ d.specialty }}<ng-container *ngIf="d.city"> · {{ d.city }}</ng-container>
+          <ng-container *ngIf="d.clinics"> · {{ d.clinics.name }}</ng-container>
+        </span>
+      </div>
+      <div class="admin__row-actions">
+        <ui-button variant="outline" size="sm" (click)="toggleVerified(d.id, d.is_verified)">
+          {{ d.is_verified ? 'Poništi potvrdu' : 'Potvrdi' }}
+        </ui-button>
+        <ui-button variant="secondary" size="sm" (click)="removeDoctor(d.id)">Ukloni</ui-button>
+      </div>
+    </div>
+  </ui-card>
+
+  <!-- ---------------- DNEVNIK ---------------- -->
+  <ui-card padding="lg" *ngIf="activeTab === 'dnevnik'">
+    <h2>Dnevnik moderacije</h2>
+    <p class="text-soft">Svaka uklonjena objava, sa razlogom i snimkom sadržaja.</p>
+
+    <p class="text-soft admin__empty" *ngIf="!admin.actions().length">Još nema uklonjenog sadržaja.</p>
+
+    <div class="admin__content-item" *ngFor="let a of admin.actions()">
+      <div class="admin__content-head">
+        <span class="admin__kind">{{ a.target_type === 'topic' ? 'Tema' : 'Komentar' }}</span>
+        <span class="text-muted">{{ formatDate(a.created_at) }}</span>
+      </div>
+      <p class="admin__content-body">{{ excerpt(a.target_excerpt) }}</p>
+      <span class="text-muted admin__content-context">Razlog: {{ a.reason }}</span>
+    </div>
+  </ui-card>
+
+  <!-- ---------------- MODAL: uklanjanje ---------------- -->
+  <div class="admin__modal-backdrop" *ngIf="removing() as item" (click)="cancelRemove()">
+    <div class="admin__modal" (click)="$event.stopPropagation()">
+      <h2>Ukloni i opomeni</h2>
+
+      <div class="admin__modal-preview">
+        <strong>{{ displayAuthor(item, true) }}</strong>
+        <p>{{ excerpt(item.body, 300) }}</p>
+      </div>
+
+      <label class="admin__field">
+        <span>Razlog (autor ga vidi u obaveštenju)</span>
+        <input type="text" [(ngModel)]="removeReason" name="removeReason" placeholder="npr. uvredljiv sadržaj" />
+      </label>
+
+      <p class="admin__modal-note">
+        Autoru stiže obaveštenje u aplikaciji sa razlogom i upozorenjem da nalog može biti trajno obrisan.
+        Ovo je {{ admin.strikesFor(item.author_id) + 1 }}. opomena od {{ STRIKE_LIMIT }}.
+      </p>
+
+      <div class="admin__modal-actions">
+        <ui-button variant="primary" size="md" [disabled]="removingBusy() || !removeReason.trim()" (click)="confirmRemove()">
+          {{ removingBusy() ? 'Uklanjanje...' : 'Ukloni i pošalji opomenu' }}
+        </ui-button>
+        <ui-button variant="secondary" size="md" (click)="cancelRemove()">Otkaži</ui-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------------- MODAL: brisanje naloga ---------------- -->
+  <div class="admin__modal-backdrop" *ngIf="deletingUser() as user" (click)="cancelDeleteUser()">
+    <div class="admin__modal" (click)="$event.stopPropagation()">
+      <h2>Trajno obriši nalog</h2>
+
+      <p class="admin__modal-note admin__modal-note--danger">
+        Brišeš nalog <strong>{{ user.full_name || 'Bez imena' }}</strong> ({{ user.strikes }} opomena).
+        Sa njim nestaju i trudnoća, svi unosi i objave. Ovo se ne može poništiti.
+      </p>
+
+      <div class="admin__modal-actions">
+        <ui-button variant="primary" size="md" [disabled]="deletingBusy()" (click)="confirmDeleteUser()">
+          {{ deletingBusy() ? 'Brisanje...' : 'Da, obriši trajno' }}
+        </ui-button>
+        <ui-button variant="secondary" size="md" (click)="cancelDeleteUser()">Otkaži</ui-button>
+      </div>
+    </div>
+  </div>
+</div>

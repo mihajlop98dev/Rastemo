@@ -31,10 +31,17 @@
 
       <p class="topicdetail__body">{{ t.body }}</p>
 
-      <ui-button *ngIf="!isMyTopic()" variant="outline" size="sm" (click)="messageAuthor()">
-        <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
-        Pošalji poruku
-      </ui-button>
+      <div class="topicdetail__topic-actions">
+        <ui-button *ngIf="!isMyTopic()" variant="outline" size="sm" (click)="messageAuthor()">
+          <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
+          Pošalji poruku
+        </ui-button>
+        <button type="button" class="topicdetail__report" *ngIf="!isMyTopic()"
+                [disabled]="reportSvc.isReported(t.id)" (click)="startReport('topic', t.id)">
+          <lucide-icon [img]="FlagIcon" [size]="13"></lucide-icon>
+          {{ reportSvc.isReported(t.id) ? 'Prijavljeno' : 'Prijavi' }}
+        </button>
+      </div>
     </ui-card>
 
     <ui-card padding="lg" class="topicdetail__replies">
@@ -51,6 +58,11 @@
             <span class="text-muted">{{ timeAgo(p.created_at) }}</span>
           </div>
           <p>{{ p.body }}</p>
+          <button type="button" class="topicdetail__report"
+                  [disabled]="reportSvc.isReported(p.id)" (click)="startReport('post', p.id)">
+            <lucide-icon [img]="FlagIcon" [size]="13"></lucide-icon>
+            {{ reportSvc.isReported(p.id) ? 'Prijavljeno' : 'Prijavi' }}
+          </button>
         </div>
       </div>
 
@@ -77,4 +89,23 @@
       <ui-button routerLink="/community" variant="outline" size="md">Nazad na zajednicu</ui-button>
     </ui-card>
   </ng-template>
+
+  <div class="topicdetail__modal-backdrop" *ngIf="reporting()" (click)="cancelReport()">
+    <div class="topicdetail__modal" (click)="$event.stopPropagation()">
+      <h2>Prijavi sadržaj</h2>
+      <p class="text-soft">Reci nam ukratko šta nije u redu. Prijavu pregleda administrator.</p>
+
+      <label class="topicdetail__modal-field">
+        <span>Razlog</span>
+        <input type="text" [(ngModel)]="reportReason" name="reportReason" placeholder="npr. uvredljiv sadržaj" />
+      </label>
+
+      <div class="topicdetail__modal-actions">
+        <ui-button variant="primary" size="md" [disabled]="reportingBusy() || !reportReason.trim()" (click)="submitReport()">
+          {{ reportingBusy() ? 'Slanje...' : 'Pošalji prijavu' }}
+        </ui-button>
+        <ui-button variant="secondary" size="md" (click)="cancelReport()">Otkaži</ui-button>
+      </div>
+    </div>
+  </div>
 </div>

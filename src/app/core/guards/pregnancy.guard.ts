@@ -2,13 +2,19 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { PregnancyService } from '../services/pregnancy.service';
+import { AdminService } from '../services/admin.service';
 
 export const pregnancyGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const pregnancy = inject(PregnancyService);
+  const admin = inject(AdminService);
   const router = inject(Router);
 
   await auth.waitUntilReady();
+
+  // Administrator nema svoju trudnoću i ne treba mu onboarding — bez ovoga bi
+  // ga guard vrteo na /pregnancy-setup i nikad ga ne bi pustio u panel.
+  if (await admin.checkAdmin()) return true;
 
   if (!pregnancy.active() && !pregnancy.loading()) {
     await pregnancy.load();

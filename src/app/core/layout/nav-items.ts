@@ -16,6 +16,9 @@ export const navItems: NavItem[] = [
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];
 
+/** Prikazuje se u meniju samo ako je uloga admin ili moderator. */
+export const adminNavItem: NavItem = { label: 'Administracija', path: '/admin', icon: 'shield' };
+
 export const mobileNavItems: NavItem[] = [
   { label: 'Početna', path: '/home', icon: 'home' },
   { label: 'Praćenje', path: '/tracking', icon: 'activity' },

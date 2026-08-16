@@ -14,12 +14,14 @@ import { TopicDetail } from './features/community/topic-detail/topic-detail';
 import { MessagesInbox } from './features/messages/inbox/inbox';
 import { MessagesThread } from './features/messages/thread/thread';
 import { Profile } from './features/profile/profile';
+import { Admin } from './features/admin/admin';
 import { Register } from './features/auth/register/register';
 import { Login } from './features/auth/login/login';
 import { PregnancySetup } from './features/onboarding/pregnancy-setup/pregnancy-setup';
 import { LegalPage } from './features/legal/legal-page';
 import { authGuard } from './core/guards/auth.guard';
 import { pregnancyGuard } from './core/guards/pregnancy.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: Landing },
@@ -46,6 +48,7 @@ export const routes: Routes = [
       { path: 'messages', component: MessagesInbox },
       { path: 'messages/:id', component: MessagesThread },
       { path: 'profile', component: Profile },
+      { path: 'admin', component: Admin, canActivate: [adminGuard] },
     ],
   },
   { path: '**', redirectTo: '' },

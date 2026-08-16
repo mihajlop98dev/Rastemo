@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, ArrowLeft, Pin, EyeOff, MessageSquare, Bookmark } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Pin, EyeOff, MessageSquare, Bookmark, Flag } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { UiBadge } from '../../../shared/ui/badge/badge';
@@ -10,6 +10,7 @@ import { UiAvatar } from '../../../shared/ui/avatar/avatar';
 import { AuthService } from '../../../core/services/auth.service';
 import { ForumService, ForumTopicRow } from '../../../core/services/forum.service';
 import { MessagesService } from '../../../core/services/messages.service';
+import { ReportService, ReportTarget } from '../../../core/services/report.service';
 
 @Component({
   selector: 'app-topic-detail',
@@ -25,12 +26,42 @@ export class TopicDetail implements OnInit {
   reply = '';
   replyAnonymous = false;
 
+  readonly FlagIcon = Flag;
+
+  /** Sadržaj koji se prijavljuje; prijava traži razlog. */
+  readonly reporting = signal<{ type: ReportTarget; id: string } | null>(null);
+  reportReason = '';
+  readonly reportingBusy = signal(false);
+
+  startReport(type: ReportTarget, id: string) {
+    this.reportReason = '';
+    this.reporting.set({ type, id });
+  }
+
+  cancelReport() {
+    this.reporting.set(null);
+  }
+
+  async submitReport() {
+    const target = this.reporting();
+    if (!target || !this.reportReason.trim()) return;
+
+    this.reportingBusy.set(true);
+    try {
+      await this.reportSvc.report(target.type, target.id, this.reportReason.trim());
+      this.reporting.set(null);
+    } finally {
+      this.reportingBusy.set(false);
+    }
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
     readonly forumSvc: ForumService,
     readonly messagesSvc: MessagesService,
+    readonly reportSvc: ReportService,
   ) {}
 
   async ngOnInit() {

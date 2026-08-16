@@ -287,7 +287,12 @@
     border-radius: var(--radius-md);
     background: var(--color-gold-light);
 
-    .tracking__weight-input { margin-bottom: 0; }
+    /* Ova polja nose pun opis ("Težina pre trudnoće"), pa im 100px iz osnovnog
+       stila reže tekst — ovde su šira. */
+    .tracking__weight-input {
+      margin-bottom: 0;
+      input { width: 190px; }
+    }
   }
 
   &__timer {

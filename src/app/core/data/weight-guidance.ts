@@ -33,7 +33,15 @@ export function bmiCategoryFor(heightCm: number, prePregnancyWeightKg: number): 
   return 'obese';
 }
 
-/** Cumulative recommended weight-gain range (kg) by the given week, per IOM guidelines. */
+/**
+ * Cumulative recommended weight-gain range (kg) by the given week, per IOM guidelines.
+ *
+ * Weeks 14–40 interpolate between the first-trimester gain and the IOM total, so
+ * week 40 lands exactly on the published total. Accumulating `weeklyRate` instead
+ * misses it — the published rate and the published total are rounded separately,
+ * and for a normal BMI the rate summed to 9.9–15.5 kg against a stated 11.5–16.
+ * `weeklyRate` is kept as documentation of the expected per-week pace.
+ */
 export function recommendedGainRangeForWeek(category: BmiCategory, week: number): [number, number] {
   const profile = GAIN_PROFILES[category];
   const w = Math.min(Math.max(week, 0), 40);
@@ -43,10 +51,10 @@ export function recommendedGainRangeForWeek(category: BmiCategory, week: number)
     return [profile.firstTrimester[0] * t, profile.firstTrimester[1] * t];
   }
 
-  const extraWeeks = w - 13;
-  const min = profile.firstTrimester[0] + profile.weeklyRate[0] * extraWeeks;
-  const max = profile.firstTrimester[1] + profile.weeklyRate[1] * extraWeeks;
-  return [Math.min(min, profile.total[1]), Math.min(max, profile.total[1])];
+  const t = (w - 13) / (40 - 13);
+  const min = profile.firstTrimester[0] + (profile.total[0] - profile.firstTrimester[0]) * t;
+  const max = profile.firstTrimester[1] + (profile.total[1] - profile.firstTrimester[1]) * t;
+  return [min, max];
 }
 
 export function recommendedWeightRangeForWeek(

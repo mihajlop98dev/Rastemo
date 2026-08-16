@@ -79,6 +79,7 @@ export class Tracking implements OnInit, OnDestroy {
   moodNote = '';
   weightInput: number | null = null;
   prePregnancyWeightInput: number | null = null;
+  heightInput: number | null = null;
   diaryTitle = '';
   diaryContent = '';
 
@@ -191,9 +192,42 @@ export class Tracking implements OnInit, OnDestroy {
     await this.weightSvc.logToday(p.id, this.weightInput);
   }
 
-  async savePrePregnancyWeight() {
-    if (!this.prePregnancyWeightInput) return;
-    await this.pregnancy.update({ pre_pregnancy_weight_kg: this.prePregnancyWeightInput });
+  /**
+   * Opseg traži i visinu i težinu pre trudnoće. Ranije se tražila samo težina,
+   * pa bi je korisnica unela i opseg se i dalje ne bi pojavio — visina se nigde
+   * nije tražila osim u Profilu. Zato ovde nedostaje ono što stvarno nedostaje.
+   */
+  get profileHeight(): number | null {
+    return this.profileSvc.profile()?.height_cm ?? null;
+  }
+
+  get missingForRange(): boolean {
+    return !this.prePregnancyWeight || !this.profileHeight;
+  }
+
+  get missingForRangeText(): string {
+    if (!this.prePregnancyWeight && !this.profileHeight) {
+      return 'Unesi visinu i težinu pre trudnoće da vidimo preporučeni opseg dobijanja na težini.';
+    }
+    if (!this.prePregnancyWeight) {
+      return 'Unesi težinu pre trudnoće da vidimo preporučeni opseg dobijanja na težini.';
+    }
+    return 'Fali nam još tvoja visina da izračunamo preporučeni opseg.';
+  }
+
+  get canSaveBaseline(): boolean {
+    const weightOk = !!this.prePregnancyWeight || !!this.prePregnancyWeightInput;
+    const heightOk = !!this.profileHeight || !!this.heightInput;
+    return weightOk && heightOk;
+  }
+
+  async saveBaseline() {
+    if (this.prePregnancyWeightInput && !this.prePregnancyWeight) {
+      await this.pregnancy.update({ pre_pregnancy_weight_kg: this.prePregnancyWeightInput });
+    }
+    if (this.heightInput && !this.profileHeight) {
+      await this.profileSvc.update({ height_cm: this.heightInput });
+    }
   }
 
   get prePregnancyWeight(): number | null {

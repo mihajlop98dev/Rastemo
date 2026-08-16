@@ -33,3 +33,33 @@
 
   strong { color: #4F7856; }
 }
+
+.pregsetup__steps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--space-4);
+}
+
+.pregsetup__step {
+  height: 3px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--color-border-soft);
+
+  &--active { background: var(--color-primary); }
+}
+
+.pregsetup__skip {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-4);
+  padding: 8px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover { color: var(--color-text-soft); }
+}

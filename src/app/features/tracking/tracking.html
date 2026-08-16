@@ -179,13 +179,20 @@
         </div>
       </div>
 
-      <div class="tracking__weight-baseline" *ngIf="!prePregnancyWeight">
-        <span class="text-soft">Unesi težinu pre trudnoće da vidimo preporučeni opseg dobijanja na težini.</span>
-        <div class="tracking__weight-input">
-          <input type="number" step="0.1" [(ngModel)]="prePregnancyWeightInput" placeholder="npr. 62" />
+      <div class="tracking__weight-baseline" *ngIf="missingForRange">
+        <span class="text-soft">{{ missingForRangeText }}</span>
+
+        <div class="tracking__weight-input" *ngIf="!prePregnancyWeight">
+          <input type="number" step="0.1" [(ngModel)]="prePregnancyWeightInput" placeholder="Težina pre trudnoće" />
           <span class="text-muted">kg</span>
-          <ui-button variant="outline" size="sm" [disabled]="!prePregnancyWeightInput" (click)="savePrePregnancyWeight()">Sačuvaj</ui-button>
         </div>
+
+        <div class="tracking__weight-input" *ngIf="!profileHeight">
+          <input type="number" [(ngModel)]="heightInput" placeholder="Tvoja visina" />
+          <span class="text-muted">cm</span>
+        </div>
+
+        <ui-button variant="outline" size="sm" [disabled]="!canSaveBaseline" (click)="saveBaseline()">Sačuvaj</ui-button>
       </div>
 
       <div class="tracking__weight-history">

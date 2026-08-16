@@ -31,7 +31,7 @@ export class DoctorService {
     this.loading.set(false);
   }
 
-  async create(dto: { full_name: string; specialty: string; city?: string }) {
+  async create(dto: { full_name: string; specialty: string; city?: string; clinic_id?: string | null }) {
     const { data: authData } = await this.supabase.client.auth.getUser();
     const { data, error } = await this.supabase.client
       .from('doctors')

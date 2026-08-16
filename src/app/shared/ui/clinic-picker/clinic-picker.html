@@ -1,0 +1,80 @@
+<div class="clinic-picker">
+  <span class="clinic-picker__label">{{ label }}</span>
+
+  <button type="button" class="clinic-picker__trigger" (click)="toggleOpen()">
+    <ng-container *ngIf="selected as c; else empty">
+      <span class="clinic-picker__chosen">
+        <strong>{{ c.name }}</strong>
+        <small *ngIf="c.city">{{ c.city }}</small>
+      </span>
+      <span class="clinic-picker__clear" (click)="clear($event)" title="Ukloni izbor">
+        <lucide-icon [img]="XIcon" [size]="14"></lucide-icon>
+      </span>
+    </ng-container>
+    <ng-template #empty>
+      <span class="clinic-picker__empty">Izaberi ustanovu</span>
+      <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
+    </ng-template>
+  </button>
+
+  <div class="clinic-picker__panel" *ngIf="open()">
+
+    <ng-container *ngIf="!adding()">
+      <div class="clinic-picker__search">
+        <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
+        <input type="text" [(ngModel)]="term" [placeholder]="placeholder" name="clinicTerm" />
+      </div>
+
+      <div class="clinic-picker__list">
+        <button
+          type="button"
+          class="clinic-picker__option"
+          *ngFor="let c of results"
+          [class.clinic-picker__option--active]="c.id === value"
+          (click)="choose(c)">
+          <span>
+            <strong>{{ c.name }}</strong>
+            <small *ngIf="c.city">{{ c.city }}<ng-container *ngIf="c.address"> · {{ c.address }}</ng-container></small>
+          </span>
+          <lucide-icon *ngIf="c.id === value" [img]="CheckIcon" [size]="15"></lucide-icon>
+        </button>
+
+        <p class="clinic-picker__none" *ngIf="!results.length">Nema rezultata za „{{ term }}".</p>
+      </div>
+
+      <button type="button" class="clinic-picker__add-trigger" (click)="startAdd()">
+        <lucide-icon [img]="PlusIcon" [size]="14"></lucide-icon>
+        Nema je na listi? Dodaj ustanovu
+      </button>
+    </ng-container>
+
+    <div class="clinic-picker__form" *ngIf="adding()">
+      <label>
+        <span>Naziv ustanove</span>
+        <input type="text" [(ngModel)]="newName" name="newClinicName" placeholder="npr. Ordinacija Vita" />
+      </label>
+      <label>
+        <span>Grad</span>
+        <input type="text" [(ngModel)]="newCity" name="newClinicCity" placeholder="Beograd" />
+      </label>
+      <label>
+        <span>Adresa <small>(nije obavezno)</small></span>
+        <input type="text" [(ngModel)]="newAddress" name="newClinicAddress" placeholder="Nemanjina 5" />
+      </label>
+      <label>
+        <span>Telefon <small>(nije obavezno)</small></span>
+        <input type="text" [(ngModel)]="newPhone" name="newClinicPhone" placeholder="011/123-456" />
+      </label>
+
+      <p class="clinic-picker__error" *ngIf="error()">{{ error() }}</p>
+
+      <div class="clinic-picker__form-actions">
+        <button type="button" class="clinic-picker__btn clinic-picker__btn--primary"
+                [disabled]="saving() || !newName.trim()" (click)="submitAdd()">
+          {{ saving() ? 'Čuvanje...' : 'Sačuvaj i izaberi' }}
+        </button>
+        <button type="button" class="clinic-picker__btn" (click)="cancelAdd()">Otkaži</button>
+      </div>
+    </div>
+  </div>
+</div>

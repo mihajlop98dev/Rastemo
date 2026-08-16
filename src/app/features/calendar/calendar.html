@@ -167,6 +167,11 @@
         </label>
       </div>
 
+      <ui-clinic-picker
+        label="Ustanova (nije obavezno)"
+        [value]="newClinicId"
+        (valueChange)="newClinicId = $event" />
+
       <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newTitle || !newDate" (click)="submitCreate()">
         {{ creating() ? 'Čuvanje...' : 'Sačuvaj događaj' }}
       </ui-button>

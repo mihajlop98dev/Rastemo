@@ -184,6 +184,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+    /* Padajuća lista za izbor ustanove ume da bude viša od modala, pa modal
+       mora da može da skroluje umesto da je preseče. */
+    max-height: 88vh;
+    overflow-y: auto;
   }
 
   &__modal-head {

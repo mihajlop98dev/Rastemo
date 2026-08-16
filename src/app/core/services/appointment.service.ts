@@ -47,6 +47,7 @@ export class AppointmentService {
     appointment_type?: AppointmentRow['appointment_type'];
     scheduled_at: string;
     notes?: string;
+    clinic_id?: string | null;
   }) {
     const { data, error } = await this.supabase.client
       .from('appointments')

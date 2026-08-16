@@ -7,13 +7,14 @@ import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiRating } from '../../shared/ui/rating/rating';
 import { UiMedicalNotice } from '../../shared/ui/medical-notice/medical-notice';
+import { UiClinicPicker } from '../../shared/ui/clinic-picker/clinic-picker';
 import { DoctorService } from '../../core/services/doctor.service';
 import { FavoriteDoctorService } from '../../core/services/favorite-doctor.service';
 
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating, UiMedicalNotice],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating, UiMedicalNotice, UiClinicPicker],
   templateUrl: './doctors.html',
   styleUrl: './doctors.scss'
 })
@@ -26,6 +27,7 @@ export class Doctors implements OnInit {
   newName = '';
   newSpecialty = 'Ginekolog';
   newCity = '';
+  newClinicId: string | null = null;
 
   constructor(readonly doctorSvc: DoctorService, readonly favoriteSvc: FavoriteDoctorService) {}
 
@@ -59,6 +61,7 @@ export class Doctors implements OnInit {
     this.newName = '';
     this.newSpecialty = 'Ginekolog';
     this.newCity = '';
+    this.newClinicId = null;
     this.showAdd.set(true);
   }
 
@@ -70,7 +73,12 @@ export class Doctors implements OnInit {
     if (!this.newName || !this.newSpecialty) return;
     this.saving.set(true);
     try {
-      await this.doctorSvc.create({ full_name: this.newName, specialty: this.newSpecialty, city: this.newCity || undefined });
+      await this.doctorSvc.create({
+        full_name: this.newName,
+        specialty: this.newSpecialty,
+        city: this.newCity || undefined,
+        clinic_id: this.newClinicId,
+      });
       this.showAdd.set(false);
     } finally {
       this.saving.set(false);

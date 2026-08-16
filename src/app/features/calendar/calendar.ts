@@ -6,6 +6,7 @@ import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X } fro
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
+import { UiClinicPicker } from '../../shared/ui/clinic-picker/clinic-picker';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { AppointmentService, AppointmentRow } from '../../core/services/appointment.service';
 
@@ -32,7 +33,7 @@ function toLocalIso(d: Date): string {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs, UiClinicPicker],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss'
 })
@@ -58,6 +59,7 @@ export class CalendarPage implements OnInit {
   newType: AppointmentRow['appointment_type'] = 'pregled';
   newDate = '';
   newTime = '10:00';
+  newClinicId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -206,6 +208,7 @@ export class CalendarPage implements OnInit {
     this.newType = 'pregled';
     this.newDate = this.selectedIso() ?? toLocalIso(new Date());
     this.newTime = '10:00';
+    this.newClinicId = null;
     this.showCreate.set(true);
   }
 
@@ -238,6 +241,7 @@ export class CalendarPage implements OnInit {
         title: this.newTitle,
         appointment_type: this.newType,
         scheduled_at: scheduledAt,
+        clinic_id: this.newClinicId,
       });
       this.selectedIso.set(this.newDate);
       this.buildMonth();

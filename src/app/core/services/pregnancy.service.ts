@@ -16,6 +16,8 @@ export interface Pregnancy {
   baby_name: string | null;
   baby_gender: BabyGender | null;
   pre_pregnancy_weight_kg: number | null;
+  /** Ustanova u kojoj korisnica planira porođaj. */
+  birth_facility_id: string | null;
 }
 
 const TOTAL_GESTATION_DAYS = 280;
@@ -76,6 +78,7 @@ export class PregnancyService {
     baby_name?: string | null;
     baby_gender?: BabyGender | null;
     pre_pregnancy_weight_kg?: number | null;
+    birth_facility_id?: string | null;
   }) {
     const current = this.active();
     if (!current) throw new Error('No active pregnancy');

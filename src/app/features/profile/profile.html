@@ -159,6 +159,12 @@
         </div>
         <div class="profile__field">
           <div>
+            <span class="text-muted">Porodilište</span>
+            <strong>{{ clinics.byId(pregnancy.active()?.birth_facility_id ?? null)?.name || '—' }}</strong>
+          </div>
+        </div>
+        <div class="profile__field">
+          <div>
             <span class="text-muted">Težina pre trudnoće</span>
             <strong>{{ pregnancy.active()?.pre_pregnancy_weight_kg ? (pregnancy.active()?.pre_pregnancy_weight_kg + ' kg') : '—' }}</strong>
           </div>
@@ -193,6 +199,11 @@
             <option value="zensko">Žensko</option>
           </select>
         </label>
+        <ui-clinic-picker
+          label="Porodilište (gde planiraš porođaj)"
+          [value]="editBirthFacilityId"
+          (valueChange)="editBirthFacilityId = $event" />
+
         <label>
           <span>Težina pre trudnoće (kg)</span>
           <input type="number" step="0.1" [(ngModel)]="editPrePregnancyWeight" name="editPrePregnancyWeight" placeholder="npr. 62" />

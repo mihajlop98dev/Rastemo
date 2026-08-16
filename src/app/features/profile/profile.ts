@@ -6,6 +6,8 @@ import { LucideAngularModule, User, Baby, Bell, Shield, FileDown, Pencil, MapPin
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
+import { UiClinicPicker } from '../../shared/ui/clinic-picker/clinic-picker';
+import { ClinicService } from '../../core/services/clinic.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { PregnancyService, BabyGender } from '../../core/services/pregnancy.service';
@@ -17,7 +19,7 @@ type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'izvestaj
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiAvatar],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiAvatar, UiClinicPicker],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })
@@ -49,6 +51,7 @@ export class Profile implements OnInit {
   editBabyName = '';
   editBabyGender: BabyGender = 'nepoznato';
   editPrePregnancyWeight: number | null = null;
+  editBirthFacilityId: string | null = null;
 
   readonly exporting = signal(false);
   readonly loggingOut = signal(false);
@@ -60,11 +63,12 @@ export class Profile implements OnInit {
     readonly profileSvc: ProfileService,
     readonly pregnancy: PregnancyService,
     readonly notifications: NotificationService,
+    readonly clinics: ClinicService,
   ) {}
 
   async ngOnInit() {
     if (!this.profileSvc.profile()) await this.profileSvc.load();
-    await this.notifications.load();
+    await Promise.all([this.notifications.load(), this.clinics.load()]);
   }
 
   selectSection(id: Section) {
@@ -113,6 +117,7 @@ export class Profile implements OnInit {
     this.editBabyName = p?.baby_name ?? '';
     this.editBabyGender = p?.baby_gender ?? 'nepoznato';
     this.editPrePregnancyWeight = p?.pre_pregnancy_weight_kg ?? null;
+    this.editBirthFacilityId = p?.birth_facility_id ?? null;
     this.editingPregnancy.set(true);
   }
 
@@ -131,6 +136,7 @@ export class Profile implements OnInit {
         baby_name: this.editBabyName.trim() || null,
         baby_gender: this.editBabyGender,
         pre_pregnancy_weight_kg: this.editPrePregnancyWeight,
+        birth_facility_id: this.editBirthFacilityId,
       });
       this.editingPregnancy.set(false);
     } finally {

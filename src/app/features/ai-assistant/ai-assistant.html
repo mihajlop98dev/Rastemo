@@ -54,8 +54,37 @@
 
     <p class="ai__error" *ngIf="chat.error()">{{ chat.error() }}</p>
 
-    <div class="ai__suggestions" *ngIf="chat.messages().length <= 1">
-      <button type="button" *ngFor="let s of suggestions" (click)="ask(s)">{{ s }}</button>
+    <div class="ai__intro" *ngIf="chat.messages().length <= 1">
+      <div class="ai__intro-block">
+        <h3>Šta ume</h3>
+        <ul>
+          <li><strong>Odgovara na pitanja o trudnoći</strong> iz zvaničnih izvora — nacionalni vodič
+            Ministarstva zdravlja, preporuke o ishrani, rasporedu pregleda i vakcinaciji. Ispod svakog
+            odgovora piše iz kog izvora dolazi.</li>
+          <li><strong>Traži informacije o lekarima i ustanovama na internetu</strong> i vraća ti linkove
+            gde možeš da pročitaš iskustva drugih — forumi, sajtovi sa ocenama, stranice samih ustanova.</li>
+        </ul>
+      </div>
+
+      <div class="ai__intro-block">
+        <h3>Šta ne radi</h3>
+        <ul>
+          <li>Ne postavlja dijagnoze i ne procenjuje da li je neki simptom opasan</li>
+          <li>Ne preporučuje lekove, ne navodi doze i ne tumači nalaze</li>
+          <li>Ne ocenjuje lekare i ne kaže ti kod koga da ideš</li>
+          <li>Ne poznaje tvoju trudnoću — ne vidi tvoje unose ni istoriju</li>
+        </ul>
+      </div>
+
+      <p class="ai__intro-hitno">
+        Kod krvarenja, jakog bola, curenja plodove vode ili izostanka pokreta bebe
+        <strong>ne pitaj aplikaciju — pozovi 194.</strong>
+      </p>
+
+      <div class="ai__suggestions">
+        <span class="ai__suggestions-label">Probaj:</span>
+        <button type="button" *ngFor="let s of suggestions" (click)="ask(s)">{{ s }}</button>
+      </div>
     </div>
 
     <form class="ai__form" (ngSubmit)="submit()">

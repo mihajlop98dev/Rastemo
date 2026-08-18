@@ -196,3 +196,50 @@
 
   &:hover { border-color: var(--color-primary); }
 }
+
+/* Prikazuje se dok razgovor nije počeo. Pomoćnik radi dve različite stvari i
+   ima jasne granice — ako to korisnica ne zna unapred, pitaće ga ono što ne
+   sme da odgovori i otići razočarana. */
+.ai__intro {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  h3 {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  li {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--color-text-soft);
+  }
+
+  &-hitno {
+    padding: 10px var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+}
+
+.ai__suggestions-label {
+  flex-basis: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+}

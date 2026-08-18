@@ -25,9 +25,9 @@ export class AiAssistant implements OnInit {
    */
   readonly suggestions = [
     'Šta ne smem da jedem u trudnoći?',
-    'Kada se osete prvi pokreti bebe?',
-    'Koliko je normalno da dobijem na težini?',
-    'Šta se dešava na prvom ultrazvuku?',
+    'Koliko ultrazvuka imam u trudnoći?',
+    'Kada se prima vakcina protiv velikog kašlja?',
+    'Iskustva sa GAK Narodni front',
   ];
 
   readonly SparklesIcon = Sparkles;

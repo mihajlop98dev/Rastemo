@@ -374,3 +374,33 @@
     color: var(--color-primary-dark);
   }
 }
+
+/* Na telefonu slika bebe i brojevi ne staju jedno pored drugog: slika uzme
+   236 od 303 piksela, pa brojevima ostane 43 i "16.4 cm" se prelomi na dva
+   reda, a natpis "dužina (teme–trtica)" na tri. Zato idu jedno ispod drugog. */
+@media (max-width: 640px) {
+  .home {
+    &__baby-card-body {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    &__baby-stats {
+      flex-direction: row;
+      justify-content: center;
+      gap: var(--space-6);
+      width: 100%;
+    }
+
+    &__baby-stat {
+      align-items: center;
+      text-align: center;
+    }
+
+    &__baby-card-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+  }
+}

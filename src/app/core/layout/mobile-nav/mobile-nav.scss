@@ -29,3 +29,16 @@
     &--active { color: var(--color-primary-dark); }
   }
 }
+
+/* Sa šest stavki umesto pet nema mesta za razmak koji je traka imala ranije. */
+@media (max-width: 400px) {
+  .mobile-nav {
+    padding-left: 0;
+    padding-right: 0;
+
+    &__link {
+      font-size: 9.5px;
+      gap: 2px;
+    }
+  }
+}

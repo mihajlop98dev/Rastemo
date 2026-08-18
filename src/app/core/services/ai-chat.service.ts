@@ -21,8 +21,8 @@ export interface AiMessageRow {
 
 const WELCOME_TEXT =
   'Ćao! 👋 Pitaj me nešto o trudnoći, ili o nekom lekaru ili porodilištu — ' +
-  'potražiću ti gde o tome piše.\n\n' +
-  'Ispod svakog odgovora vidiš odakle informacija dolazi, pa možeš i sama da proveriš.';
+  'potražiću po internetu i reći ti gde o tome piše.\n\n' +
+  'Uz svaki odgovor stoje linkovi ka izvorima, pa možeš i sama da pročitaš.';
 
 @Injectable({ providedIn: 'root' })
 export class AiChatService {
@@ -112,8 +112,16 @@ export class AiChatService {
         return;
       }
 
+      // Poslednjih nekoliko poruka ide uz pitanje da bi asistent razumeo
+      // dopisivanje — bez toga "Mislio sam na ginekologa" nema na šta da se
+      // odnosi. Uvodna poruka se izostavlja, ona nije deo razgovora.
+      const history = this.messages()
+        .filter(m => m.content !== WELCOME_TEXT)
+        .slice(-6)
+        .map(m => ({ role: m.role, content: m.content }));
+
       const { data, error } = await this.supabase.client.functions.invoke('ai-asistent', {
-        body: { question: text },
+        body: { question: text, history },
       });
 
       if (error || !data?.answer) {

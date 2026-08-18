@@ -6,14 +6,15 @@
     </div>
     <div>
       <h1>AI pomoćnik</h1>
-      <p class="text-soft">Prepričava zvanične izvore o trudnoći. Ne zamenjuje razgovor sa lekarom.</p>
+      <p class="text-soft">Traži po internetu i kaže ti gde šta piše. Ne zamenjuje razgovor sa lekarom.</p>
     </div>
   </header>
 
   <div class="ai__probation">
-    <strong>Ovo nije medicinski savet.</strong> Pomoćnik samo prepričava javno objavljene
-    izvore koje vidiš ispod svakog odgovora — ne poznaje tvoju trudnoću i ne procenjuje
-    tvoj slučaj. O svemu što pročitaš ovde posavetuj se sa svojim ginekologom.
+    <strong>Ovo nije medicinski savet.</strong> Pomoćnik pretražuje internet i prenosi šta
+    na kom sajtu piše — ne proverava da li je to tačno, ne poznaje tvoju trudnoću i ne
+    procenjuje tvoj slučaj. Izvori su navedeni ispod svakog odgovora da možeš sama da
+    otvoriš i pročitaš. O svemu se posavetuj sa svojim ginekologom.
   </div>
 
   <p class="ai__privacy">
@@ -56,13 +57,13 @@
 
     <div class="ai__intro" *ngIf="chat.messages().length <= 1">
       <div class="ai__intro-block">
-        <h3>Šta ume</h3>
+        <h3>Kako radi</h3>
         <ul>
-          <li><strong>Odgovara na pitanja o trudnoći</strong> iz zvaničnih izvora — nacionalni vodič
-            Ministarstva zdravlja, preporuke o ishrani, rasporedu pregleda i vakcinaciji. Ispod svakog
-            odgovora piše iz kog izvora dolazi.</li>
-          <li><strong>Traži informacije o lekarima i ustanovama na internetu</strong> i vraća ti linkove
-            gde možeš da pročitaš iskustva drugih — forumi, sajtovi sa ocenama, stranice samih ustanova.</li>
+          <li><strong>Pretraži internet</strong> na tvoje pitanje — o trudnoći, o nekom lekaru,
+            ordinaciji ili porodilištu — i sažme šta je našao.</li>
+          <li><strong>Uz svaku tvrdnju kaže odakle je</strong> („na sajtu X piše da…"), a ispod
+            odgovora stoje linkovi ka svim izvorima da možeš sama da otvoriš i pročitaš.</li>
+          <li>Ako ne nađe pouzdan izvor, reći će ti to umesto da nagađa.</li>
         </ul>
       </div>
 
@@ -73,6 +74,8 @@
           <li>Ne preporučuje lekove, ne navodi doze i ne tumači nalaze</li>
           <li>Ne ocenjuje lekare i ne kaže ti kod koga da ideš</li>
           <li>Ne poznaje tvoju trudnoću — ne vidi tvoje unose ni istoriju</li>
+          <li><strong>Ne proverava da li je izvor tačan</strong> — različiti sajtovi znaju da pišu
+            različito, pa pogledaj odakle informacija dolazi</li>
         </ul>
       </div>
 

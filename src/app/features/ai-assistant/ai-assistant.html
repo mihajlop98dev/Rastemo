@@ -35,10 +35,15 @@
         <p>{{ m.content }}</p>
 
         <div class="ai__sources" *ngIf="m.used_sources?.length">
-          <span>Izvor:</span>
-          <span *ngFor="let s of m.used_sources; let last = last">
-            {{ s.source }}<ng-container *ngIf="s.section"> — {{ s.section }}</ng-container><ng-container *ngIf="!last">, </ng-container>
-          </span>
+          <span class="ai__sources-label">Izvori:</span>
+          <ng-container *ngFor="let s of m.used_sources">
+            <a *ngIf="s.url" [href]="s.url" target="_blank" rel="noopener noreferrer nofollow" class="ai__source-link">
+              {{ s.source }}
+            </a>
+            <span *ngIf="!s.url" class="ai__source-plain">
+              {{ s.source }}<ng-container *ngIf="s.section"> — {{ s.section }}</ng-container>
+            </span>
+          </ng-container>
         </div>
       </div>
 

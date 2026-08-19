@@ -252,6 +252,35 @@
       </label>
     </ui-card>
 
+    <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'lozinka'">
+      <h2>Lozinka</h2>
+      <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">
+        Postavi novu lozinku za prijavu. Posle promene ostaješ prijavljena na ovom uređaju.
+      </p>
+
+      <form class="profile__password" (ngSubmit)="promeniLozinku()">
+        <label>
+          <span>Nova lozinka</span>
+          <input type="password" name="novaLozinka" [(ngModel)]="novaLozinka" placeholder="Bar 6 karaktera" />
+        </label>
+        <label>
+          <span>Ponovi lozinku</span>
+          <input type="password" name="potvrdaLozinke" [(ngModel)]="potvrdaLozinke" placeholder="Ista lozinka još jednom" />
+        </label>
+
+        <p class="profile__password-error" *ngIf="lozinkaGreska()">{{ lozinkaGreska() }}</p>
+        <p class="profile__password-ok" *ngIf="lozinkaSacuvana()">Lozinka je promenjena.</p>
+
+        <ui-button type="submit" variant="primary" size="md" [disabled]="menjamLozinku()">
+          {{ menjamLozinku() ? 'Čuvanje...' : 'Sačuvaj lozinku' }}
+        </ui-button>
+      </form>
+
+      <p class="text-muted" style="margin-top: var(--space-5); font-size: 12px">
+        Ako se prijavljuješ Google nalogom, lozinka ti ne treba — prijava ide preko Google-a.
+      </p>
+    </ui-card>
+
     <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'izvestaj'">
       <h2>Izveštaj podataka</h2>
       <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">

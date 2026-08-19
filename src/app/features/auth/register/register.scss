@@ -122,3 +122,54 @@
     a { color: var(--color-primary-dark); font-weight: 600; }
   }
 }
+
+/* --- ekrani za potvrdu mejla i lozinku --- */
+
+.authpage__icon-big {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+/* Poruke na ovim ekranima su jedini sadržaj kartice, pa centriranje drži
+   pažnju na njima umesto da tekst visi uz levu ivicu. */
+.authpage__card:has(.authpage__icon-big) {
+  text-align: center;
+}
+
+.authpage__hint {
+  margin-top: var(--space-3);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.authpage__ok {
+  margin-top: var(--space-3);
+  padding: 9px var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 12.5px;
+}
+
+/* Natpis polja i link ka oporavku lozinke dele isti red iznad unosa. */
+.authpage__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.authpage__label-link {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}

@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import type { Session, User } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
+import { TERMS_VERSION } from '../data/legal';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -35,12 +36,48 @@ export class AuthService {
     await this.initPromise;
   }
 
+  /**
+   * Sa uključenom potvrdom mejla signUp ne vraća sesiju, pa aplikacija posle
+   * registracije ne može ništa da upiše u bazu. Zato prihvatanje uslova putuje
+   * kroz metapodatke — okidač handle_new_user ih prepisuje u profil.
+   */
   async signUp(email: string, password: string, fullName: string) {
     return this.supabase.client.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: {
+        data: {
+          full_name: fullName,
+          terms_version: TERMS_VERSION,
+          terms_accepted_at: new Date().toISOString(),
+        },
+        emailRedirectTo: `${window.location.origin}/potvrda`,
+      },
     });
+  }
+
+  /** Ponovno slanje mejla za potvrdu, ako prvi ne stigne. */
+  async resendConfirmation(email: string) {
+    return this.supabase.client.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/potvrda` },
+    });
+  }
+
+  /** Šalje link za postavljanje nove lozinke. */
+  async sendPasswordReset(email: string) {
+    return this.supabase.client.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/nova-lozinka`,
+    });
+  }
+
+  /**
+   * Menja lozinku prijavljenoj korisnici. Isti poziv radi i posle klika na link
+   * iz mejla, jer Supabase tada uspostavi privremenu sesiju za oporavak.
+   */
+  async updatePassword(password: string) {
+    return this.supabase.client.auth.updateUser({ password });
   }
 
   async signIn(email: string, password: string) {

@@ -1,0 +1,27 @@
+<div class="authpage">
+  <div class="authpage__brand">
+    <span class="authpage__brand-icon"><lucide-icon [img]="HeartIcon" [size]="20"></lucide-icon></span>
+    <strong>Dnevnik trudnoće</strong>
+  </div>
+
+  <ui-card padding="lg" class="authpage__card">
+    <ng-container *ngIf="checking() || prijavljena()">
+      <div class="authpage__icon-big">
+        <lucide-icon [img]="CheckIcon" [size]="28"></lucide-icon>
+      </div>
+      <h1>Nalog je potvrđen</h1>
+      <p class="text-soft">Vodimo te dalje...</p>
+    </ng-container>
+
+    <ng-container *ngIf="!checking() && !prijavljena()">
+      <h1>Link više ne važi</h1>
+      <p class="text-soft">
+        Ovaj link je već iskorišćen ili je istekao. Ako si nalog već potvrdila,
+        samo se prijavi.
+      </p>
+      <ui-button routerLink="/login" variant="primary" size="lg" [fullWidth]="true">
+        Prijavi se
+      </ui-button>
+    </ng-container>
+  </ui-card>
+</div>

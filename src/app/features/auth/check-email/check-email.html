@@ -1,0 +1,36 @@
+<div class="authpage">
+  <div class="authpage__brand">
+    <span class="authpage__brand-icon"><lucide-icon [img]="HeartIcon" [size]="20"></lucide-icon></span>
+    <strong>Dnevnik trudnoće</strong>
+  </div>
+
+  <ui-card padding="lg" class="authpage__card">
+    <div class="authpage__icon-big">
+      <lucide-icon [img]="MailIcon" [size]="28"></lucide-icon>
+    </div>
+
+    <h1>Proveri svoj mejl</h1>
+    <p class="text-soft">
+      Poslali smo ti link za potvrdu<ng-container *ngIf="email()"> na <strong>{{ email() }}</strong></ng-container>.
+      Otvori ga i nalog je spreman.
+    </p>
+
+    <p class="authpage__hint">
+      Ako ga nema u prijemnom sandučetu, pogledaj i neželjenu poštu — tamo zna da završi.
+    </p>
+
+    <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
+    <p class="authpage__ok" *ngIf="sent()">Poslali smo novi mejl.</p>
+
+    <ui-button
+      *ngIf="email() && !sent()"
+      variant="secondary" size="lg" [fullWidth]="true"
+      [disabled]="sending()" (click)="resend()">
+      {{ sending() ? 'Slanje...' : 'Pošalji ponovo' }}
+    </ui-button>
+
+    <p class="authpage__switch">
+      Potvrdila si? <a routerLink="/login">Prijavi se</a>
+    </p>
+  </ui-card>
+</div>

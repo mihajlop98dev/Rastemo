@@ -14,7 +14,7 @@ import { PregnancyService, BabyGender } from '../../core/services/pregnancy.serv
 import { NotificationService } from '../../core/services/notification.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 
-type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'izvestaj';
+type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'lozinka' | 'izvestaj';
 
 @Component({
   selector: 'app-profile',
@@ -29,10 +29,50 @@ export class Profile implements OnInit {
     { id: 'trudnoca', label: 'Trudnoća', icon: Baby },
     { id: 'notifikacije', label: 'Notifikacije', icon: Bell },
     { id: 'privatnost', label: 'Privatnost', icon: Shield },
+    { id: 'lozinka', label: 'Lozinka', icon: Lock },
     { id: 'izvestaj', label: 'Izveštaj podataka', icon: FileDown },
   ];
 
   activeSection: Section = 'profil';
+
+  // --- promena lozinke ---
+  novaLozinka = '';
+  potvrdaLozinke = '';
+  readonly menjamLozinku = signal(false);
+  readonly lozinkaGreska = signal('');
+  readonly lozinkaSacuvana = signal(false);
+
+  async promeniLozinku() {
+    this.lozinkaSacuvana.set(false);
+
+    if (this.novaLozinka.length < 6) {
+      this.lozinkaGreska.set('Lozinka mora imati bar 6 karaktera.');
+      return;
+    }
+    if (this.novaLozinka !== this.potvrdaLozinke) {
+      this.lozinkaGreska.set('Lozinke se ne poklapaju.');
+      return;
+    }
+
+    this.menjamLozinku.set(true);
+    this.lozinkaGreska.set('');
+    const { error } = await this.auth.updatePassword(this.novaLozinka);
+    this.menjamLozinku.set(false);
+
+    if (error) {
+      this.lozinkaGreska.set(
+        error.message.toLowerCase().includes('should be different')
+          ? 'Nova lozinka mora da se razlikuje od stare.'
+          : error.message
+      );
+      return;
+    }
+
+    this.novaLozinka = '';
+    this.potvrdaLozinke = '';
+    this.lozinkaSacuvana.set(true);
+  }
+
 
   readonly editing = signal(false);
   readonly saving = signal(false);
@@ -213,7 +253,7 @@ export class Profile implements OnInit {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `rastemo-podaci-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `dnevnik-trudnoce-podaci-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {

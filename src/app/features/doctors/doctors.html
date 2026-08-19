@@ -12,14 +12,15 @@
   </header>
 
   <ui-medical-notice
-    text="Ocene i komentari su lična iskustva korisnica. Rastemo ne preporučuje lekare i ne odgovara za izbor zdravstvenog radnika ili ustanove." />
+    text="Ocene i komentari su lična iskustva korisnica. Dnevnik trudnoće ne preporučuje lekare i ne odgovara za izbor zdravstvenog radnika ili ustanove." />
 
   <ui-card padding="md" class="doctors__filters">
     <div class="doctors__search">
       <lucide-icon [img]="SearchIcon" [size]="16"></lucide-icon>
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Pretraži lekare, gradove, specijalizacije..." />
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch()"
+             placeholder="Pretraži po imenu, gradu ili specijalizaciji..." />
     </div>
-    <button class="doctors__fav-filter" [class.doctors__fav-filter--active]="onlyFavorites" (click)="onlyFavorites = !onlyFavorites">
+    <button class="doctors__fav-filter" [class.doctors__fav-filter--active]="onlyFavorites()" (click)="toggleFavoritesFilter()">
       <lucide-icon [img]="HeartIcon" [size]="14"></lucide-icon>
       Samo omiljeni
     </button>
@@ -28,16 +29,27 @@
   <div class="doctors__grid">
 
     <ui-card padding="lg" class="doctors__list">
-      <h2>Svi lekari</h2>
+      <div class="doctors__list-head">
+        <h2>{{ onlyFavorites() ? 'Omiljeni lekari' : 'Svi lekari' }}</h2>
+        <span class="text-muted" *ngIf="!onlyFavorites() && doctorSvc.ukupno()">
+          {{ doctorSvc.ukupno() }} {{ doctorSvc.ukupno() === 1 ? 'rezultat' : 'rezultata' }}
+        </span>
+      </div>
 
-      <div class="doctors__row" *ngFor="let d of filtered">
+      <div class="doctors__row" *ngFor="let d of prikazani()">
         <ui-avatar [name]="d.full_name" size="lg" />
         <div class="doctors__row-info">
-          <strong>{{ d.full_name }}</strong>
-          <span class="text-soft">{{ d.specialty }}</span>
+          <strong>
+            {{ d.full_name }}
+            <lucide-icon *ngIf="d.is_verified" [img]="VerifiedIcon" [size]="14"
+                         class="doctors__verified" title="Licenca potvrđena u registru Lekarske komore Srbije"></lucide-icon>
+          </strong>
+          <span class="text-soft">{{ opis(d) }}</span>
+          <span class="text-muted doctors__clinic" *ngIf="d.clinics">{{ d.clinics.name }}</span>
         </div>
         <div class="doctors__row-meta">
           <span class="text-muted" *ngIf="d.city">{{ d.city }}</span>
+          <span class="doctors__no-city" *ngIf="!d.city">grad nije upisan</span>
           <ui-rating [value]="d.avg_rating" [count]="d.review_count" />
         </div>
         <button class="doctors__fav" [class.doctors__fav--active]="favoriteSvc.isFavorite(d.id)" (click)="toggleFavorite($event, d.id)">
@@ -45,21 +57,35 @@
         </button>
       </div>
 
-      <p class="text-soft doctors__empty" *ngIf="!filtered.length">
-        {{ doctorSvc.all().length ? 'Nema rezultata za tu pretragu.' : 'Još uvek nema dodatih lekara. Budi prva!' }}
+      <p class="text-soft doctors__empty" *ngIf="!prikazani().length && !doctorSvc.loading()">
+        {{ onlyFavorites() ? 'Još nisi sačuvala nijednog lekara.' : 'Nema rezultata za tu pretragu.' }}
+      </p>
+
+      <div class="doctors__more" *ngIf="!onlyFavorites() && doctorSvc.imaJos()">
+        <ui-button variant="ghost" size="md" [disabled]="doctorSvc.loading()" (click)="doctorSvc.loadMore()">
+          {{ doctorSvc.loading() ? 'Učitavanje...' : 'Prikaži još' }}
+        </ui-button>
+      </div>
+
+      <p class="doctors__source">
+        Lekari sa oznakom <lucide-icon [img]="VerifiedIcon" [size]="12"></lucide-icon> preuzeti su iz javnog registra
+        izdatih licenci Lekarske komore Srbije (stanje 18.08.2026). Registar ne sadrži grad ni ustanovu — te podatke
+        dopunjuju korisnice. Ako si lekar i ne želiš da budeš na spisku, piši nam i uklonićemo te.
       </p>
     </ui-card>
 
     <ui-card padding="lg" class="doctors__top">
       <h2>Najviše ocenjeni</h2>
-      <div class="doctors__top-row" *ngFor="let d of topRated">
+      <div class="doctors__top-row" *ngFor="let d of doctorSvc.topRated()">
         <ui-avatar [name]="d.full_name" size="sm" />
         <div class="doctors__top-info">
           <strong>{{ d.full_name }}</strong>
         </div>
         <ui-rating [value]="d.avg_rating" />
       </div>
-      <p class="text-soft doctors__empty" *ngIf="!topRated.length">Nema podataka.</p>
+      <p class="text-soft doctors__empty" *ngIf="!doctorSvc.topRated().length">
+        Još nema ocena. Prva ocena je najkorisnija.
+      </p>
     </ui-card>
 
   </div>
@@ -75,12 +101,30 @@
 
       <label class="doctors__field">
         <span>Ime i prezime</span>
-        <input type="text" [(ngModel)]="newName" placeholder="dr Jelena Petrović" />
+        <input type="text" [(ngModel)]="newName" (ngModelChange)="onNameInput()"
+               [disabled]="!!izabraniIzRegistra()" placeholder="Jelena Petrović" />
       </label>
 
-      <label class="doctors__field">
+      <!-- Bez ovoga bi isti lekar iz registra ulazio po drugi put, bez licence. -->
+      <div class="doctors__hits" *ngIf="predlozi().length && !izabraniIzRegistra()">
+        <span class="doctors__hits-label">Već je na spisku:</span>
+        <button type="button" class="doctors__hit" *ngFor="let p of predlozi()" (click)="izaberi(p)">
+          <strong>{{ p.full_name }}</strong>
+          <span class="text-muted">{{ opis(p) }}{{ p.city ? ' · ' + p.city : '' }}</span>
+        </button>
+      </div>
+
+      <div class="doctors__picked" *ngIf="izabraniIzRegistra() as izabrani">
+        <div>
+          <strong>{{ izabrani.full_name }}</strong>
+          <span class="text-muted">Licenca br. {{ izabrani.license_number }} · potvrđen u registru Komore</span>
+        </div>
+        <button type="button" (click)="ponistiIzbor()">Promeni</button>
+      </div>
+
+      <label class="doctors__field" *ngIf="!izabraniIzRegistra()">
         <span>Specijalizacija</span>
-        <input type="text" [(ngModel)]="newSpecialty" placeholder="Ginekolog · akušer" />
+        <input type="text" [(ngModel)]="newSpecialty" placeholder="Ginekologija i akušerstvo" />
       </label>
 
       <label class="doctors__field">
@@ -94,7 +138,7 @@
         (valueChange)="newClinicId = $event" />
 
       <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="saving() || !newName || !newSpecialty" (click)="submitAdd()">
-        {{ saving() ? 'Čuvanje...' : 'Sačuvaj lekara' }}
+        {{ saving() ? 'Čuvanje...' : (izabraniIzRegistra() ? 'Dopuni podatke' : 'Sačuvaj lekara') }}
       </ui-button>
     </div>
   </div>

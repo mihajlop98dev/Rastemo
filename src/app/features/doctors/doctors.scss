@@ -233,3 +233,111 @@
     }
   }
 }
+
+/* --- registar Lekarske komore --- */
+
+.doctors__list-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  span { font-size: 12px; }
+}
+
+/* Oznaka da licenca stoji u registru Komore, a ne da mi nekog preporučujemo. */
+.doctors__verified {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-left: 4px;
+  color: var(--color-primary);
+}
+
+.doctors__clinic {
+  font-size: 12px;
+}
+
+/* Registar nema grad, pa ga većina unosa nema — to mora da se vidi kao
+   nedostatak podatka, a ne kao prazno mesto u kartici. */
+.doctors__no-city {
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--color-text-muted);
+  opacity: .75;
+}
+
+.doctors__more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-4);
+}
+
+.doctors__source {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+
+  lucide-icon { vertical-align: -2px; }
+}
+
+.doctors__hits {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft);
+}
+
+.doctors__hits-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  margin-bottom: 2px;
+}
+
+.doctors__hit {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  cursor: pointer;
+
+  strong { font-size: 13px; }
+  span { font-size: 11.5px; }
+
+  &:hover { border-color: var(--color-primary); }
+}
+
+.doctors__picked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 10px var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary-soft);
+
+  div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  strong { font-size: 13.5px; color: var(--color-primary-dark); }
+  span { font-size: 11.5px; }
+
+  button {
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

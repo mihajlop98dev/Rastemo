@@ -73,7 +73,7 @@ export class Admin implements OnInit {
       this.admin.loadContent(),
       this.admin.loadReports(),
       this.admin.loadActions(),
-      this.doctorSvc.loadAll(),
+      this.doctorSvc.loadUserAdded(),
     ]);
     this.admin.loading.set(false);
   }
@@ -105,7 +105,7 @@ export class Admin implements OnInit {
   }
 
   get unverifiedDoctors() {
-    return this.doctorSvc.all().filter(d => !d.is_verified);
+    return this.doctorSvc.userAdded().filter(d => !d.is_verified);
   }
 
   /**
@@ -163,13 +163,13 @@ export class Admin implements OnInit {
 
   async toggleVerified(doctorId: string, current: boolean) {
     await this.admin.setDoctorVerified(doctorId, !current);
-    await this.doctorSvc.loadAll();
+    await this.doctorSvc.loadUserAdded();
     await this.admin.loadStats();
   }
 
   async removeDoctor(doctorId: string) {
     await this.admin.deleteDoctor(doctorId);
-    await this.doctorSvc.loadAll();
+    await this.doctorSvc.loadUserAdded();
     await this.admin.loadStats();
   }
 

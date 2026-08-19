@@ -123,9 +123,12 @@
   <!-- ---------------- LEKARI ---------------- -->
   <ui-card padding="lg" *ngIf="activeTab === 'lekari'">
     <h2>Lekari koje su dodale korisnice</h2>
-    <p class="text-soft">Potvrdi unos ako je tačan, ili ukloni ako nije.</p>
+    <p class="text-soft">
+      Potvrdi unos ako je tačan, ili ukloni ako nije. Lekari preuzeti iz registra
+      Lekarske komore se ovde ne prikazuju — njih niko nije ručno unosio.
+    </p>
 
-    <div class="admin__row" *ngFor="let d of doctorSvc.all()">
+    <div class="admin__row" *ngFor="let d of doctorSvc.userAdded()">
       <div>
         <strong>
           {{ d.full_name }}

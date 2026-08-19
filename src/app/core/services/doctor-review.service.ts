@@ -49,27 +49,26 @@ export class DoctorReviewService {
     return this.ocene().find(o => o.moja);
   }
 
+  /**
+   * Upis ide kroz funkciju u bazi, ne direktnim upsertom.
+   *
+   * Kolona user_id je zatvorena za čitanje da anonimnost ne bi bila probojna,
+   * a upsert sa "on conflict (doctor_id, user_id)" mora da je pročita. Funkcija
+   * uzima korisnika iz auth.uid(), pa se id nikada ne šalje sa klijenta.
+   */
   async sacuvaj(doctorId: string, rating: number, comment: string, anonimno: boolean) {
-    const userId = this.auth.user()?.id;
-    if (!userId) throw new Error('Potrebna je prijava');
-
-    // Jedna ocena po lekaru i korisnici — ponovno slanje menja postojeću.
-    const { error } = await this.supabase.client
-      .from('doctor_reviews')
-      .upsert({
-        doctor_id: doctorId,
-        user_id: userId,
-        rating,
-        comment: comment.trim() || null,
-        is_anonymous: anonimno,
-      }, { onConflict: 'doctor_id,user_id' });
-
+    const { error } = await this.supabase.client.rpc('sacuvaj_ocenu', {
+      p_doctor_id: doctorId,
+      p_rating: rating,
+      p_comment: comment.trim() || null,
+      p_anonimno: anonimno,
+    });
     if (error) throw error;
     await this.load(doctorId);
   }
 
   async obrisi(doctorId: string, reviewId: string) {
-    const { error } = await this.supabase.client.from('doctor_reviews').delete().eq('id', reviewId);
+    const { error } = await this.supabase.client.rpc('obrisi_moju_ocenu', { p_review_id: reviewId });
     if (error) throw error;
     await this.load(doctorId);
   }
@@ -92,10 +91,7 @@ export class DoctorReviewService {
   }
 
   async obrisiKomentar(reviewId: string, komentarId: string) {
-    const { error } = await this.supabase.client
-      .from('doctor_review_comments')
-      .delete()
-      .eq('id', komentarId);
+    const { error } = await this.supabase.client.rpc('obrisi_moj_komentar', { p_komentar_id: komentarId });
     if (error) throw error;
     await this.ucitajKomentare(reviewId);
   }

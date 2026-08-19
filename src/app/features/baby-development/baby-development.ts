@@ -47,7 +47,10 @@ export class BabyDevelopment {
   }
 
   get isCurrentWeek(): boolean {
-    return this.selectedWeek() === this.pregnancy.weekNumber();
+    // Poredi se sa nedeljom svedenom na opseg trake (4–42). Bez toga bi
+    // trudnici u 3. nedelji stajalo dugme „vrati me na moju 3. nedelju", koje
+    // ne bi imalo gde da je vrati — traka tu nedelju uopšte nema.
+    return this.selectedWeek() === this.uOpsegu(this.pregnancy.weekNumber());
   }
 
   get currentWeekDay(): number {

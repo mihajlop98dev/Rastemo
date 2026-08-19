@@ -61,3 +61,19 @@
     &__zaglavlje h1 { font-size: 25px; }
   }
 }
+
+.nema__spisak {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  a {
+    font-size: 14.5px;
+    color: var(--color-primary-dark);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}

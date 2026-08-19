@@ -88,5 +88,24 @@ export class Pitanja implements OnInit {
       'Odgovori na najčešća pitanja o aplikaciji, privatnosti podataka, spisku lekara i tome šta aplikacija jeste a šta nije.',
       '/cesta-pitanja',
     );
+
+    // FAQPage je jedina oznaka koja Google-u dozvoljava da pitanja i odgovore
+    // prikaže proširena, direktno u rezultatu pretrage.
+    this.seo.strukturirano([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        inLanguage: 'sr-Latn-RS',
+        mainEntity: this.grupe.flatMap(g => g.pitanja).map(p => ({
+          '@type': 'Question',
+          name: p.pitanje,
+          acceptedAnswer: { '@type': 'Answer', text: p.odgovor },
+        })),
+      },
+      this.seo.mrvice([
+        { naziv: 'Početna', putanja: '/' },
+        { naziv: 'Česta pitanja', putanja: '/cesta-pitanja' },
+      ]),
+    ]);
   }
 }

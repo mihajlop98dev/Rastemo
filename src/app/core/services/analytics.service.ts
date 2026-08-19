@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -27,10 +28,14 @@ export class AnalyticsService {
   readonly pristanak = signal<Pristanak | null>(null);
   private ucitano = false;
 
+  /** Stranice se peku u HTML pri build-u, gde localStorage i window ne postoje. */
+  private uPregledacu = isPlatformBrowser(inject(PLATFORM_ID));
+
   constructor(private router: Router) {}
 
   /** Poziva se jednom, pri pokretanju aplikacije. */
   init() {
+    if (!this.uPregledacu) return;
     const sacuvano = this.procitaj();
     this.pristanak.set(sacuvano);
     if (sacuvano === 'prihvaceno') this.ukljuci();
@@ -64,7 +69,7 @@ export class AnalyticsService {
   }
 
   private ukljuci() {
-    if (this.ucitano || typeof document === 'undefined') return;
+    if (this.ucitano || !this.uPregledacu) return;
     this.ucitano = true;
 
     window.dataLayer = window.dataLayer || [];

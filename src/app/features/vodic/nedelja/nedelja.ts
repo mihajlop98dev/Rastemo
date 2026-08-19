@@ -31,8 +31,37 @@ export class VodicNedelja implements OnInit {
       const n = Number(p.get('nedelja'));
       const v = vodicZaNedelju(n) ?? null;
       this.podaci.set(v);
-      if (v) this.seo.postavi(v.naslov, `${v.uvod} ${v.beba}`.slice(0, 155), `/trudnoca/${v.nedelja}`);
+      if (v) this.oznaci(v);
     });
+  }
+
+  /**
+   * MedicalWebPage, a ne obična stranica: pretraživači zdravstveni sadržaj
+   * ocenjuju strože, pa je bolje da im se odmah kaže o čemu je reč i da je
+   * tekst informativan, uz jasno navedenog autora.
+   */
+  private oznaci(v: NedeljaVodic) {
+    const putanja = `/trudnoca/${v.nedelja}`;
+    this.seo.postavi(v.naslov, `${v.uvod} ${v.beba}`, putanja);
+    this.seo.strukturirano([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'MedicalWebPage',
+        name: v.naslov,
+        description: v.uvod,
+        inLanguage: 'sr-Latn-RS',
+        url: `https://dnevniktrudnoce.com${putanja}`,
+        about: { '@type': 'MedicalCondition', name: 'Trudnoća' },
+        audience: { '@type': 'Patient' },
+        isPartOf: { '@type': 'WebSite', name: 'Dnevnik trudnoće', url: 'https://dnevniktrudnoce.com' },
+        publisher: { '@type': 'Organization', name: 'Dnevnik trudnoće', url: 'https://dnevniktrudnoce.com' },
+      },
+      this.seo.mrvice([
+        { naziv: 'Početna', putanja: '/' },
+        { naziv: 'Nedelju po nedelju', putanja: '/trudnoca' },
+        { naziv: v.naslov, putanja },
+      ]),
+    ]);
   }
 
   get duzina(): number { return babyLengthForWeek(this.podaci()!.nedelja); }

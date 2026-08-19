@@ -38,6 +38,23 @@ export class Kalkulator implements OnInit {
       'Izračunaj termin porođaja i nedelju trudnoće na osnovu poslednje menstruacije ili datuma začeća. Besplatno, na srpskom.',
       '/kalkulator-termina',
     );
+
+    this.seo.strukturirano([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Kalkulator termina porođaja',
+        applicationCategory: 'HealthApplication',
+        operatingSystem: 'Web',
+        inLanguage: 'sr-Latn-RS',
+        url: 'https://dnevniktrudnoce.com/kalkulator-termina',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RSD' },
+      },
+      this.seo.mrvice([
+        { naziv: 'Početna', putanja: '/' },
+        { naziv: 'Kalkulator termina', putanja: '/kalkulator-termina' },
+      ]),
+    ]);
   }
 
   izracunaj() {

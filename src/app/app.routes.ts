@@ -82,5 +82,7 @@ export const routes: Routes = [
       { path: 'admin', component: Admin, canActivate: [adminGuard] },
     ],
   },
-  { path: '**', redirectTo: '' },
+  // Prava stranica sa porukom, a ne tiho preusmeravanje na početnu:
+  // preusmereni 404 pretraživači vide kao grešku u sadržaju.
+  { path: '**', loadComponent: () => import('./features/javno/nema-strane/nema-strane').then(m => m.NemaStrane) },
 ];

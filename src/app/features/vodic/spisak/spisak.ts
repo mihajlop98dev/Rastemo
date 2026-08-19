@@ -30,6 +30,25 @@ export class VodicSpisak implements OnInit {
       'Šta se dešava sa bebom i sa tobom u svakoj nedelji trudnoće, od 4. do 42. Na srpskom, jednostavno i pregledno.',
       '/trudnoca',
     );
+
+    this.seo.strukturirano([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Trudnoća nedelju po nedelju',
+        numberOfItems: VODIC.length,
+        itemListElement: VODIC.map((v, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: v.naslov,
+          url: `https://dnevniktrudnoce.com/trudnoca/${v.nedelja}`,
+        })),
+      },
+      this.seo.mrvice([
+        { naziv: 'Početna', putanja: '/' },
+        { naziv: 'Nedelju po nedelju', putanja: '/trudnoca' },
+      ]),
+    ]);
   }
 
   poredjenje(n: number): string { return babyComparisonForWeek(n); }

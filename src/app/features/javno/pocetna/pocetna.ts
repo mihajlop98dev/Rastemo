@@ -6,6 +6,7 @@ import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { MomVisual } from '../../../shared/illustrations/mom-visual/mom-visual';
 import { SeoService } from '../../vodic/seo.service';
+import { LEGAL_CONTACT_EMAIL } from '../../../core/data/legal';
 
 @Component({
   selector: 'app-javna-pocetna',
@@ -42,6 +43,36 @@ export class JavnaPocetna implements OnInit {
       'Besplatna aplikacija za praćenje trudnoće na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, simptomi, težina i pregledi.',
       '/',
     );
+
+    this.seo.strukturirano([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Dnevnik trudnoće',
+        alternateName: 'dnevniktrudnoce.com',
+        url: 'https://dnevniktrudnoce.com',
+        inLanguage: 'sr-Latn-RS',
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Dnevnik trudnoće',
+        url: 'https://dnevniktrudnoce.com',
+        logo: 'https://dnevniktrudnoce.com/icon-512.png',
+        email: LEGAL_CONTACT_EMAIL,
+        areaServed: { '@type': 'Country', name: 'Srbija' },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Dnevnik trudnoće',
+        applicationCategory: 'HealthApplication',
+        operatingSystem: 'Web',
+        inLanguage: 'sr-Latn-RS',
+        // Bez cene Google ne prikazuje da je besplatno, a to je glavni argument.
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RSD' },
+      },
+    ]);
   }
 
   readonly LockIcon = Lock;

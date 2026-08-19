@@ -132,50 +132,27 @@ export class AdminService {
     );
   }
 
+  /**
+   * Sadržaj se čita kroz funkciju, a ne direktno iz tabela: pravo čitanja
+   * kolone sa autorom je oduzeto svima da anonimnost ne bi bila probojna.
+   * Funkcija sama proverava da je pozivalac administrator.
+   */
   async loadContent() {
-    const c = this.supabase.client;
-    const [topics, posts] = await Promise.all([
-      c.from('forum_topics')
-        .select('id, title, body, author_id, is_anonymous, created_at, profiles!forum_topics_author_id_fkey(full_name)')
-        .order('created_at', { ascending: false })
-        .limit(200),
-      c.from('forum_posts')
-        .select('id, body, author_id, is_anonymous, created_at, profiles!forum_posts_author_id_fkey(full_name), forum_topics(title)')
-        .order('created_at', { ascending: false })
-        .limit(200),
-    ]);
+    const { data, error } = await this.supabase.client.rpc('admin_sadrzaj');
+    if (error) { this.content.set([]); return; }
 
-    const rows: AdminContentRow[] = [];
+    const rows = ((data as any[]) ?? []).map(r => ({
+      id: r.id,
+      kind: r.kind as 'topic' | 'post',
+      title: r.title,
+      body: r.body,
+      author_id: r.author_id,
+      author_name: r.author_name,
+      is_anonymous: r.is_anonymous,
+      created_at: r.created_at,
+      context: r.context,
+    })) as AdminContentRow[];
 
-    for (const t of (topics.data as any[]) ?? []) {
-      rows.push({
-        id: t.id,
-        kind: 'topic',
-        title: t.title,
-        body: t.body,
-        author_id: t.author_id,
-        author_name: t.profiles?.full_name ?? 'Nepoznato',
-        is_anonymous: t.is_anonymous,
-        created_at: t.created_at,
-        context: null,
-      });
-    }
-
-    for (const p of (posts.data as any[]) ?? []) {
-      rows.push({
-        id: p.id,
-        kind: 'post',
-        title: null,
-        body: p.body,
-        author_id: p.author_id,
-        author_name: p.profiles?.full_name ?? 'Nepoznato',
-        is_anonymous: p.is_anonymous,
-        created_at: p.created_at,
-        context: p.forum_topics?.title ?? null,
-      });
-    }
-
-    rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
     this.content.set(rows);
   }
 

@@ -32,7 +32,7 @@
       <p class="topicdetail__body">{{ t.body }}</p>
 
       <div class="topicdetail__topic-actions">
-        <ui-button *ngIf="!isMyTopic()" variant="outline" size="sm" (click)="messageAuthor()">
+        <ui-button *ngIf="mozeSePisatiAutoru" variant="outline" size="sm" (click)="messageAuthor()">
           <lucide-icon [img]="MessageIcon" [size]="15"></lucide-icon>
           Pošalji poruku
         </ui-button>

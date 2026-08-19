@@ -243,7 +243,9 @@ export class Profile implements OnInit {
         pregnancyId ? this.supabase.client.from('weight_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
         pregnancyId ? this.supabase.client.from('diary_entries').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
         pregnancyId ? this.supabase.client.from('appointments').select('*').eq('pregnancy_id', pregnancyId) : Promise.resolve({ data: [] }),
-        this.supabase.client.from('forum_topics').select('*').eq('author_id', userId),
+        // Kroz pogled: filtriranje po author_id traži pravo čitanja te kolone,
+        // koje je oduzeto da anonimne teme ne bi mogle da se povežu sa autorom.
+        this.supabase.client.from('forum_teme_v').select('*').eq('moja', true),
       ]);
 
       const report = {

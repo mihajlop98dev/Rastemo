@@ -77,9 +77,9 @@ export class TopicDetail implements OnInit {
     this.loading.set(false);
   }
 
-  authorLabel(entry: { is_anonymous: boolean; profiles: { full_name: string } | null }): string {
+  authorLabel(entry: { is_anonymous: boolean; autor: string | null }): string {
     if (entry.is_anonymous) return 'Anonimna trudnica';
-    return entry.profiles?.full_name ?? 'Korisnica';
+    return entry.autor ?? 'Korisnica';
   }
 
   isSaved(): boolean {
@@ -93,12 +93,20 @@ export class TopicDetail implements OnInit {
   }
 
   isMyTopic(): boolean {
-    return this.topic()?.author_id === this.auth.user()?.id;
+    // Dolazi iz pogleda: kod anonimnih tema author_id se uopšte ne izdaje,
+    // pa se pripadnost ne može utvrditi poređenjem id-jeva.
+    return this.topic()?.moja === true;
+  }
+
+  /** Anonimnoj autorki se ne može pisati — njen id ne postoji na klijentu. */
+  get mozeSePisatiAutoru(): boolean {
+    const t = this.topic();
+    return !!t && !t.is_anonymous && !!t.author_id && !this.isMyTopic();
   }
 
   async messageAuthor() {
     const t = this.topic();
-    if (!t || this.isMyTopic()) return;
+    if (!t || !t.author_id || this.isMyTopic()) return;
     const conversationId = await this.messagesSvc.findOrCreateConversation(t.author_id);
     this.router.navigate(['/messages', conversationId]);
   }

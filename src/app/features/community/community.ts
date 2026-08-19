@@ -46,8 +46,7 @@ export class Community implements OnInit {
       return all.filter(t => saved.has(t.id));
     }
     if (this.activeTab === 'moje') {
-      const me = this.auth.user()?.id;
-      return all.filter(t => t.author_id === me);
+      return all.filter(t => t.moja);
     }
     return all;
   }
@@ -62,9 +61,9 @@ export class Community implements OnInit {
     this.forumSvc.toggleSaved(topicId);
   }
 
-  authorLabel(topic: any): string {
+  authorLabel(topic: { is_anonymous: boolean; autor: string | null }): string {
     if (topic.is_anonymous) return 'Anonimna trudnica';
-    return topic.profiles?.full_name ?? 'Korisnica';
+    return topic.autor ?? 'Korisnica';
   }
 
   timeAgo(iso: string): string {

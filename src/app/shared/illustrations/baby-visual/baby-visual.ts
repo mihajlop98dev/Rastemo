@@ -2,7 +2,11 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
- * Licensed illustration set (Vecteezy) covering six stages of development.
+ * Illustration set covering six stages of development.
+ *
+ * "Infant icons set. Baby in the womb." by Creative Design, Vecteezy Free
+ * License (id 22724145) — attribution is a licence condition and is rendered
+ * in the public site footer.
  * Each entry claims every week from `fromWeek` up to the next entry's.
  */
 const STAGES: { fromWeek: number; src: string }[] = [

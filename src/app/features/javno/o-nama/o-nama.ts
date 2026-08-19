@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { SeoService } from '../../vodic/seo.service';
-import { LEGAL_CONTACT_EMAIL, DATA_CONTROLLER } from '../../../core/data/legal';
+import { LEGAL_CONTACT_EMAIL, BRAND_NAME, LEGAL_ENTITY } from '../../../core/data/legal';
 
 @Component({
   selector: 'app-o-nama',
@@ -16,7 +16,8 @@ import { LEGAL_CONTACT_EMAIL, DATA_CONTROLLER } from '../../../core/data/legal';
 export class ONama implements OnInit {
   private seo = inject(SeoService);
   readonly kontakt = LEGAL_CONTACT_EMAIL;
-  readonly rukovalac = DATA_CONTROLLER;
+  readonly brend = BRAND_NAME;
+  readonly rukovalac = LEGAL_ENTITY;
 
   ngOnInit() {
     this.seo.postavi(

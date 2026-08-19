@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, Heart, Menu, X } from 'lucide-angular';
-import { LEGAL_CONTACT_EMAIL, DATA_CONTROLLER } from '../../../core/data/legal';
+import { LEGAL_CONTACT_EMAIL, BRAND_NAME } from '../../../core/data/legal';
 
 @Component({
   selector: 'app-javni-layout',
@@ -24,7 +24,7 @@ export class JavniLayout {
 
   readonly godina = new Date().getFullYear();
   readonly kontakt = LEGAL_CONTACT_EMAIL;
-  readonly rukovalac = DATA_CONTROLLER;
+  readonly brend = BRAND_NAME;
 
   readonly HeartIcon = Heart;
   readonly MenuIcon = Menu;

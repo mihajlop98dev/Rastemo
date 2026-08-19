@@ -10,8 +10,27 @@ export const TERMS_VERSION = '2026-08-19';
 /** Email na koji stižu zahtevi po ZZPL/GDPR i sva pravna pitanja. */
 export const LEGAL_CONTACT_EMAIL = 'mihajlop98@gmail.com';
 
-/** Ime i prezime rukovaoca podacima — dok ne postoji registrovano pravno lice. */
+/**
+ * Naziv pod kojim sajt istupa. Nije registrovan subjekt — samo ime brenda.
+ * Koristi se svuda gde je dovoljno reći ko stoji iza sajta.
+ */
+export const BRAND_NAME = 'VVK Digital';
+
+/**
+ * Rukovalac podacima o ličnosti.
+ *
+ * Ovde mora stajati stvarni identitet, ne brend: korisnica ima pravo da zna
+ * kome se obraća kad traži uvid ili brisanje svojih podataka, a iza naziva
+ * „VVK Digital" ne stoji registrovan subjekt kome bi se zahtev mogao uputiti.
+ * Zato ime brenda ide uz ime lica, a ne umesto njega.
+ *
+ * Kad se registruje firma, ovde ide njeno puno poslovno ime i matični broj,
+ * i podigne se TERMS_VERSION da korisnice ponovo prihvate uslove.
+ */
 export const DATA_CONTROLLER = 'Mihajlo Petrović';
+
+/** Oblik za pravne tekstove: brend uz lice koje stvarno odgovara. */
+export const LEGAL_ENTITY = `${BRAND_NAME} (${DATA_CONTROLLER})`;
 
 export interface LegalSection {
   heading: string;
@@ -30,7 +49,8 @@ export const TERMS_DOCUMENT: LegalDocument = {
   title: 'Uslovi korišćenja',
   updated: '19. avgust 2026.',
   intro:
-    'Ovi uslovi uređuju korišćenje aplikacije „Dnevnik trudnoće”. Molimo te da ih pažljivo pročitaš — ' +
+    `Ovi uslovi uređuju korišćenje aplikacije „Dnevnik trudnoće”, koju pod nazivom ${BRAND_NAME} ` +
+    `pruža ${DATA_CONTROLLER} kao fizičko lice. Molimo te da ih pažljivo pročitaš — ` +
     'korišćenjem aplikacije potvrđuješ da si ih pročitala, razumela i da ih prihvataš u celosti.',
   sections: [
     {
@@ -191,7 +211,9 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
     {
       heading: '1. Ko obrađuje tvoje podatke',
       paragraphs: [
-        `Rukovalac podacima je ${DATA_CONTROLLER}, kao fizičko lice. Za sva pitanja o zaštiti ` +
+        `Sajt i aplikacija posluju pod nazivom ${BRAND_NAME}. Iza tog naziva ne stoji ` +
+          `registrovano privredno društvo — rukovalac podacima je ${DATA_CONTROLLER}, kao ` +
+          `fizičko lice, i on lično odgovara za obradu tvojih podataka. Za sva pitanja o zaštiti ` +
           `podataka, kao i za ostvarivanje svojih prava, možeš se obratiti na ${LEGAL_CONTACT_EMAIL}.`,
         'Obradu vršimo u skladu sa Zakonom o zaštiti podataka o ličnosti Republike Srbije i Opštom ' +
           'uredbom o zaštiti podataka (GDPR).',

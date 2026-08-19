@@ -1,6 +1,6 @@
 import {
-  Home, Activity, ClipboardList, Stethoscope, Users, Sparkles, ShoppingBag,
-  Heart, User, Search, Bell, MessageCircle, Baby, Info, Phone, Bot,
+  Home, Activity, ClipboardList, Stethoscope, Users, ShoppingBag,
+  Heart, User, Search, Bell, MessageCircle, Baby, Info, Phone,
   Calendar, ChevronRight, ChevronLeft, Plus, Check, Smile, Scale, PenLine,
   FileText, Star, MapPin, Filter, Send, X, Camera, Droplet, Moon, Shield,
 } from 'lucide-angular';
@@ -11,7 +11,6 @@ export const iconMap: Record<string, any> = {
   'clipboard-list': ClipboardList,
   stethoscope: Stethoscope,
   users: Users,
-  sparkles: Sparkles,
   'shopping-bag': ShoppingBag,
   heart: Heart,
   user: User,
@@ -21,7 +20,6 @@ export const iconMap: Record<string, any> = {
   baby: Baby,
   info: Info,
   phone: Phone,
-  bot: Bot,
   calendar: Calendar,
   'chevron-right': ChevronRight,
   'chevron-left': ChevronLeft,

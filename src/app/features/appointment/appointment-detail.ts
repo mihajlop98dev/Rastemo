@@ -81,9 +81,9 @@ export class AppointmentDetail implements OnInit {
     const ics = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Rastemo//Pregled//SR',
+      'PRODID:-//Dnevnik trudnoce//Pregled//SR',
       'BEGIN:VEVENT',
-      `UID:${apt.id}@rastemo`,
+      `UID:${apt.id}@dnevniktrudnoce`,
       `DTSTAMP:${toIcsDate(new Date())}`,
       `DTSTART:${toIcsDate(start)}`,
       `DTEND:${toIcsDate(end)}`,

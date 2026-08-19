@@ -36,8 +36,11 @@
 
     strong {
       font-family: var(--font-heading);
-      font-size: 19px;
+      /* Ime aplikacije je dvorečno i na 19px se prelama u dva reda uz podnaslov;
+         na 18px staje u jedan, a razlika se ne primećuje. */
+      font-size: 18px;
       font-weight: 700;
+      white-space: nowrap;
       color: var(--color-text);
     }
 

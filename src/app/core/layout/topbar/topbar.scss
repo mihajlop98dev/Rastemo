@@ -21,10 +21,17 @@
       font-family: var(--font-heading);
       font-size: 17px;
       font-weight: 700;
+      white-space: nowrap;
       color: var(--color-text);
     }
 
     @media (max-width: 1024px) { display: flex; }
+
+    /* Na telefonu dvorečno ime gura avatar van ekrana. Ikona ostaje — ona je
+       prepoznatljiva i vodi na Početnu isto kao i tekst. */
+    @media (max-width: 560px) {
+      strong { display: none; }
+    }
   }
 
   &__brand-icon {

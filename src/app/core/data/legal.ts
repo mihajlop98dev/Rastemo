@@ -5,7 +5,7 @@
  * prihvatanja. Kad se tekst materijalno promeni, podigni verziju — korisnice
  * koje su prihvatile stariju verziju biće ponovo pitane da prihvate novu.
  */
-export const TERMS_VERSION = '2026-08-16';
+export const TERMS_VERSION = '2026-08-19';
 
 /** Email na koji stižu zahtevi po ZZPL/GDPR i sva pravna pitanja. */
 export const LEGAL_CONTACT_EMAIL = 'mihajlop98@gmail.com';
@@ -28,23 +28,23 @@ export interface LegalDocument {
 
 export const TERMS_DOCUMENT: LegalDocument = {
   title: 'Uslovi korišćenja',
-  updated: '14. avgust 2026.',
+  updated: '19. avgust 2026.',
   intro:
-    'Ovi uslovi uređuju korišćenje aplikacije Rastemo. Molimo te da ih pažljivo pročitaš — ' +
+    'Ovi uslovi uređuju korišćenje aplikacije „Dnevnik trudnoće”. Molimo te da ih pažljivo pročitaš — ' +
     'korišćenjem aplikacije potvrđuješ da si ih pročitala, razumela i da ih prihvataš u celosti.',
   sections: [
     {
-      heading: '1. Šta je Rastemo',
+      heading: '1. Šta je Dnevnik trudnoće',
       paragraphs: [
-        'Rastemo je digitalni dnevnik trudnoće: mesto na kome možeš da pratiš nedelje trudnoće, ' +
+        'Dnevnik trudnoće je aplikacija na kojoj možeš da pratiš nedelje trudnoće, ' +
           'beležiš simptome, raspoloženje, težinu i kontrakcije, vodiš evidenciju terapije, ' +
           'organizuješ preglede i razmenjuješ iskustva sa drugim trudnicama.',
-        'Rastemo je isključivo informativnog i organizacionog karaktera. Aplikacija nije zdravstvena ' +
+        'Dnevnik trudnoće je isključivo informativnog i organizacionog karaktera. Aplikacija nije zdravstvena ' +
           'ustanova, nije medicinsko sredstvo i ne pruža zdravstvenu uslugu u smislu propisa Republike Srbije.',
       ],
     },
     {
-      heading: '2. Rastemo ne daje medicinske savete',
+      heading: '2. Dnevnik trudnoće ne daje medicinske savete',
       paragraphs: [
         'Sav sadržaj u aplikaciji — tekstovi o razvoju bebe, preporučeni rasponi težine, saveti o ishrani, ' +
           'važni datumi, podsetnici i bilo koji drugi materijal — ima opšti, edukativni karakter. ' +
@@ -60,7 +60,7 @@ export const TERMS_DOCUMENT: LegalDocument = {
     {
       heading: '3. Hitni slučajevi',
       paragraphs: [
-        'Rastemo nije namenjen prijavljivanju hitnih stanja i ne prati tvoje unose u realnom vremenu. ' +
+        'Dnevnik trudnoće nije namenjen prijavljivanju hitnih stanja i ne prati tvoje unose u realnom vremenu. ' +
           'Ako imaš krvarenje, jak ili uporan bol, curenje plodove vode, izostanak pokreta bebe, visok ' +
           'pritisak, temperaturu, poremećaj vida ili bilo koji drugi zabrinjavajući simptom — odmah pozovi ' +
           'Hitnu pomoć na 194 ili se javi najbližoj zdravstvenoj ustanovi.',
@@ -90,7 +90,7 @@ export const TERMS_DOCUMENT: LegalDocument = {
       heading: '6. Zajednica i sadržaj korisnica',
       paragraphs: [
         'Teme, komentari i poruke koje objavljuju druge korisnice predstavljaju njihova lična iskustva i ' +
-          'mišljenja. Rastemo taj sadržaj ne kreira, ne proverava unapred i ne stoji iza njega. ' +
+          'mišljenja. Dnevnik trudnoće taj sadržaj ne kreira, ne proverava unapred i ne stoji iza njega. ' +
           'Iskustvo druge trudnice nije preporuka za tebe.',
         'Zabranjeno je objavljivati sadržaj koji je uvredljiv, diskriminatoran, neistinit, protivpravan, ' +
           'koji predstavlja reklamu, koji nudi konkretne medicinske instrukcije drugim korisnicama ili ' +
@@ -101,7 +101,7 @@ export const TERMS_DOCUMENT: LegalDocument = {
     {
       heading: '7. Podaci o lekarima i ustanovama',
       paragraphs: [
-        'Podaci o lekarima i zdravstvenim ustanovama služe za lakše snalaženje. Rastemo ne posreduje u ' +
+        'Podaci o lekarima i zdravstvenim ustanovama služe za lakše snalaženje. Dnevnik trudnoće ne posreduje u ' +
           'zakazivanju, ne proverava stručne kvalifikacije i ne preporučuje nijednog konkretnog lekara.',
         'Ocene i komentari su subjektivni utisci korisnica. Ne garantujemo njihovu tačnost i ne odgovaramo ' +
           'za posledice izbora zdravstvenog radnika ili ustanove.',
@@ -182,9 +182,9 @@ export const TERMS_DOCUMENT: LegalDocument = {
 
 export const PRIVACY_DOCUMENT: LegalDocument = {
   title: 'Politika privatnosti',
-  updated: '14. avgust 2026.',
+  updated: '19. avgust 2026.',
   intro:
-    'U Rastemo aplikaciji obrađujemo podatke o tvom zdravlju i zdravlju tvoje bebe. To su naročito ' +
+    'U aplikaciji Dnevnik trudnoće obrađujemo podatke o tvom zdravlju i zdravlju tvoje bebe. To su naročito ' +
     'osetljivi podaci i prema njima se odnosimo sa posebnom pažnjom. Ovde ti otvoreno objašnjavamo ' +
     'šta prikupljamo, zašto, kome to poveravamo i koja prava imaš.',
   sections: [
@@ -230,20 +230,24 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
       bullets: [
         'Supabase — baza podataka i autentikacija;',
         'Vercel — hosting aplikacije;',
-        'Google — samo ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu;',
-        'Mistral AI (Francuska) — obrađuje isključivo pitanja koja sama pošalješ AI pomoćniku.',
+        'Google — samo ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu.',
       ],
     },
     {
-      heading: '4a. AI pomoćnik i tvoja pitanja',
+      heading: '4a. Podaci o lekarima',
       paragraphs: [
-        'Kada postaviš pitanje AI pomoćniku, tekst tvog pitanja se šalje kompaniji Mistral AI, koja ' +
-          'ima sedište u Francuskoj, radi sastavljanja odgovora. Ako u pitanju navedeš nešto o svom ' +
-          'zdravlju, i taj podatak odlazi sa njim.',
-        'Pitanja i odgovori se čuvaju u tvom nalogu da bi razgovor imao istoriju. Brišu se kada ' +
-          'obrišeš nalog.',
-        'Ako ne želiš da tvoja pitanja napuštaju aplikaciju, jednostavno ne koristi AI pomoćnika — ' +
-          'sve ostale funkcije rade bez njega.',
+        'U aplikaciji postoji spisak ginekologa-akušera preuzet iz javno objavljenog registra izdatih ' +
+          'licenci Lekarske komore Srbije. Taj registar Komora objavljuje po zakonu, upravo zato da bi ' +
+          'svako mogao da proveri ko sme da se bavi lekarskom praksom.',
+        'Iz registra preuzimamo samo ime i prezime, titulu, broj licence, specijalizaciju i rok važenja ' +
+          'licence. Ne preuzimamo adresu, telefon, matični broj niti bilo koji privatni podatak. Grad i ' +
+          'ustanovu dopunjuju korisnice aplikacije.',
+        'Pravni osnov je legitimni interes — da trudnica može da proveri da lekar kod koga ide zaista ' +
+          'ima važeću licencu. Podatke ne koristimo za oglašavanje i ne prodajemo ih.',
+        'Ako ste lekar i ne želite da budete na spisku, ili je neki podatak o vama netačan, pišite nam ' +
+          `na ${LEGAL_CONTACT_EMAIL}. Uklonićemo ili ispraviti unos bez objašnjenja i bez odlaganja.`,
+        'Ocene i komentari korisnica su njihova lična iskustva, a ne stav aplikacije. Uvredljiv ili ' +
+          'neistinit sadržaj uklanjamo na prijavu.',
       ],
     },
     {

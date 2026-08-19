@@ -173,6 +173,16 @@
     color: var(--color-text-muted);
   }
 
+  &__podnozje-kredit {
+    max-width: 1080px;
+    margin: 6px auto 0;
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-text-muted);
+
+    a { color: inherit; text-decoration: underline; }
+  }
+
   /* ---------- telefon ---------- */
   @media (max-width: 900px) {
     &__hamburger { display: inline-flex; }

@@ -67,6 +67,22 @@ export class MedicationService {
     return data as MedicationRow;
   }
 
+  /**
+   * Menja postojeći unos umesto brisanja i ponovnog dodavanja — tako se čuva
+   * istorija uzimanja, koja visi o istom id-u.
+   */
+  async update(id: string, patch: { name?: string; type?: 'terapija' | 'suplement'; dose_per_day?: number }) {
+    const { data, error } = await this.supabase.client
+      .from('medications')
+      .update(patch)
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    this.medications.update(list => list.map(m => (m.id === id ? (data as MedicationRow) : m)));
+    return data as MedicationRow;
+  }
+
   async remove(id: string) {
     await this.supabase.client.from('medications').update({ active: false }).eq('id', id);
     this.medications.update(list => list.filter(m => m.id !== id));

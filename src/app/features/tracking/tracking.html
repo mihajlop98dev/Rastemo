@@ -20,6 +20,11 @@
         <h2>Danas, {{ todayLabel }}</h2>
       </div>
 
+      <p class="tracking__uputstvo">
+        Dodirni koliko ti je nešto smetalo danas — čuva se odmah, ne treba ništa da potvrđuješ.
+        Ponovni dodir na isti smajli briše unos.
+      </p>
+
       <div class="tracking__symptom" *ngFor="let s of symptomCatalog">
         <div class="tracking__symptom-name">
           <span class="tracking__symptom-emoji">{{ s.emoji }}</span>
@@ -44,6 +49,8 @@
             [class.tracking__level--l3]="lvl === 3">
             {{ lvl === 1 ? '🙂' : lvl === 2 ? '😐' : '😣' }}
           </button>
+
+          <span class="tracking__sacuvano" *ngIf="sacuvanSimptom() === s.name">✓ Sačuvano</span>
         </div>
       </div>
 
@@ -216,6 +223,37 @@
         </ng-template>
       </ui-card>
 
+      <ui-card padding="lg" *ngIf="bmi as bmiVrednost">
+        <h2>Tvoj BMI</h2>
+        <div class="tracking__bmi">
+          <strong>{{ bmiVrednost | number:'1.1-1' }}</strong>
+          <span class="tracking__bmi-kat">{{ bmiCategoryLabel }}</span>
+        </div>
+
+        <!-- Skala pokazuje gde korisnica stoji, umesto da broj visi sam. -->
+        <div class="tracking__bmi-skala">
+          <span class="tracking__bmi-deo tracking__bmi-deo--pod" [class.tracking__bmi-deo--tu]="bmiVrednost < 18.5">ispod 18.5</span>
+          <span class="tracking__bmi-deo tracking__bmi-deo--ok" [class.tracking__bmi-deo--tu]="bmiVrednost >= 18.5 && bmiVrednost < 25">18.5–25</span>
+          <span class="tracking__bmi-deo tracking__bmi-deo--pre" [class.tracking__bmi-deo--tu]="bmiVrednost >= 25 && bmiVrednost < 30">25–30</span>
+          <span class="tracking__bmi-deo tracking__bmi-deo--goj" [class.tracking__bmi-deo--tu]="bmiVrednost >= 30">preko 30</span>
+        </div>
+
+        <p class="tracking__bmi-note">
+          Računa se iz visine i težine <strong>pre trudnoće</strong>, i po njemu se određuje
+          koliko je preporučeno da dobiješ. Ne menja se kako trudnoća odmiče.
+        </p>
+      </ui-card>
+
+      <!-- Bez visine ili početne težine BMI se ne može izračunati; umesto prazne
+           kartice korisnica dobija put do popune. -->
+      <ui-card padding="lg" *ngIf="bmiNedostaje as nedostaje">
+        <h2>Tvoj BMI</h2>
+        <p class="text-soft" style="margin: var(--space-2) 0 var(--space-4)">
+          Da bismo ga izračunali, treba nam još {{ nedostaje }}.
+        </p>
+        <ui-button routerLink="/profile" variant="secondary" size="sm">Dopuni u profilu</ui-button>
+      </ui-card>
+
       <ui-card padding="lg" *ngIf="bmiCategoryLabel && weightRangeNow as range">
         <h2>Preporučeni opseg</h2>
         <p class="text-soft" style="margin-bottom: var(--space-3)">{{ bmiCategoryLabel }} — za {{ pregnancy.weekNumber() }}. nedelju</p>
@@ -278,26 +316,49 @@
         <h2>Terapija i suplementi</h2>
       </div>
 
-      <div class="tracking__med-row" *ngFor="let m of medicationSvc.medications()">
-        <div class="tracking__med-info">
-          <span class="tracking__med-icon"><lucide-icon [img]="PillIcon" [size]="15"></lucide-icon></span>
-          <div>
-            <strong>{{ m.name }}</strong>
-            <span class="text-muted">{{ m.type === 'terapija' ? 'Terapija' : 'Suplement' }} · {{ medicationSvc.takenCountToday(m.id) }}/{{ m.dose_per_day }} danas</span>
+      <ng-container *ngFor="let m of medicationSvc.medications()">
+
+        <div class="tracking__med-row" *ngIf="medUIzmeni() !== m.id">
+          <div class="tracking__med-info">
+            <span class="tracking__med-icon"><lucide-icon [img]="PillIcon" [size]="15"></lucide-icon></span>
+            <div>
+              <strong>{{ m.name }}</strong>
+              <span class="text-muted">{{ m.type === 'terapija' ? 'Terapija' : 'Suplement' }} · {{ medicationSvc.takenCountToday(m.id) }}/{{ m.dose_per_day }} danas</span>
+            </div>
+          </div>
+          <div class="tracking__med-actions">
+            <button type="button" (click)="undoDose(m.id)" [disabled]="!medicationSvc.takenCountToday(m.id)" title="Poništi uzimanje">
+              <lucide-icon [img]="MinusIcon" [size]="14"></lucide-icon>
+            </button>
+            <button type="button" class="tracking__med-add" (click)="logDose(m.id)" [disabled]="medicationSvc.takenCountToday(m.id) >= m.dose_per_day" title="Zabeleži uzimanje">
+              <lucide-icon [img]="PlusIcon" [size]="14"></lucide-icon>
+            </button>
+            <button type="button" (click)="pocniIzmenu(m)" title="Izmeni">
+              <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
+            </button>
+            <button type="button" (click)="removeMedication(m.id)" title="Ukloni">
+              <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+            </button>
           </div>
         </div>
-        <div class="tracking__med-actions">
-          <button type="button" (click)="undoDose(m.id)" [disabled]="!medicationSvc.takenCountToday(m.id)">
-            <lucide-icon [img]="MinusIcon" [size]="14"></lucide-icon>
-          </button>
-          <button type="button" class="tracking__med-add" (click)="logDose(m.id)" [disabled]="medicationSvc.takenCountToday(m.id) >= m.dose_per_day">
-            <lucide-icon [img]="PlusIcon" [size]="14"></lucide-icon>
-          </button>
-          <button type="button" (click)="removeMedication(m.id)">
-            <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
-          </button>
-        </div>
-      </div>
+
+        <!-- Izmena se otvara na mestu unosa, da se ne izgubi koji se menja. -->
+        <form class="tracking__med-izmena" *ngIf="medUIzmeni() === m.id" (ngSubmit)="sacuvajIzmenu(m.id)">
+          <input type="text" [(ngModel)]="izmenaNaziv" name="izmenaNaziv" placeholder="Naziv" />
+          <div class="tracking__med-izmena-red">
+            <select [(ngModel)]="izmenaTip" name="izmenaTip">
+              <option value="terapija">Terapija</option>
+              <option value="suplement">Suplement</option>
+            </select>
+            <input type="number" min="1" [(ngModel)]="izmenaDoza" name="izmenaDoza" placeholder="Puta dnevno" />
+          </div>
+          <div class="tracking__med-izmena-akcije">
+            <ui-button variant="ghost" size="sm" type="button" (click)="otkaziIzmenu()">Otkaži</ui-button>
+            <ui-button variant="primary" size="sm" type="submit" [disabled]="!izmenaNaziv.trim()">Sačuvaj</ui-button>
+          </div>
+        </form>
+
+      </ng-container>
       <p class="text-soft" *ngIf="!medicationSvc.medications().length">Još uvek nema dodate terapije ili suplemenata.</p>
 
       <form class="tracking__diary-form" style="margin-top: var(--space-5)" (ngSubmit)="addMedication()">

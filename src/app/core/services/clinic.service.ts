@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { LOKAL } from '../data/lokalizacija';
 import { SupabaseService } from './supabase.service';
 
 export interface ClinicRow {
@@ -60,7 +61,7 @@ export class ClinicService {
     if (error) throw error;
 
     const row = data as ClinicRow;
-    this.all.update(list => [...list, row].sort((a, b) => a.name.localeCompare(b.name, 'sr')));
+    this.all.update(list => [...list, row].sort((a, b) => a.name.localeCompare(b.name, LOKAL)));
     return row;
   }
 }

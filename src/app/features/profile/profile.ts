@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -203,7 +204,7 @@ export class Profile implements OnInit {
 
   formatDate(iso: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('sr-RS', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Date(iso).toLocaleDateString(LOKAL, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   timeAgo(iso: string): string {

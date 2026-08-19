@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { LOKAL } from '../../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -60,7 +61,7 @@ export class PregnancySetup {
   get formattedDueDate(): string {
     const d = this.computedDueDate;
     if (!d) return '';
-    return d.toLocaleDateString('sr-RS', { day: 'numeric', month: 'long', year: 'numeric' });
+    return d.toLocaleDateString(LOKAL, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   setMode(m: Mode) {

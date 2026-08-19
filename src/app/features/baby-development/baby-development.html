@@ -14,17 +14,24 @@
     <button
       *ngFor="let w of weeks"
       class="babydev__week-pill"
-      [class.babydev__week-pill--active]="w === selectedWeek"
+      [class.babydev__week-pill--active]="w === selectedWeek()"
+      [class.babydev__week-pill--mine]="w === pregnancy.weekNumber()"
+      [attr.title]="w === pregnancy.weekNumber() ? 'Nedelja u kojoj si sada' : null"
       (click)="selectWeek(w)">
       {{ w }}
     </button>
   </div>
 
+  <!-- Vidi se tek kad korisnica odluta sa svoje nedelje; inače bi bio šum. -->
+  <button class="babydev__nazad" *ngIf="!isCurrentWeek" (click)="nazadNaMoju()">
+    ← Vrati me na moju {{ pregnancy.weekNumber() }}. nedelju
+  </button>
+
   <div class="babydev__grid">
 
     <ui-card class="babydev__visual-card" padding="lg">
-      <span class="babydev__week-label">{{ selectedWeek }}. nedelja<ng-container *ngIf="isCurrentWeek"> + {{ currentWeekDay }} dana</ng-container></span>
-      <app-baby-visual [week]="selectedWeek" size="lg" />
+      <span class="babydev__week-label">{{ selectedWeek() }}. nedelja<ng-container *ngIf="isCurrentWeek"> + {{ currentWeekDay }} dana</ng-container></span>
+      <app-baby-visual [week]="selectedWeek()" size="lg" />
       <div class="babydev__stats">
         <div>
           <strong>{{ length }} cm</strong>

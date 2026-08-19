@@ -6,6 +6,7 @@ import { CalendarPage } from './features/calendar/calendar';
 import { Tracking } from './features/tracking/tracking';
 import { BabyDevelopment } from './features/baby-development/baby-development';
 import { Doctors } from './features/doctors/doctors';
+import { DoctorDetail } from './features/doctors/doctor-detail/doctor-detail';
 import { Community } from './features/community/community';
 import { Preparation } from './features/preparation/preparation';
 import { AppointmentDetail } from './features/appointment/appointment-detail';
@@ -49,6 +50,7 @@ export const routes: Routes = [
       { path: 'tracking', component: Tracking },
       { path: 'baby-development', component: BabyDevelopment },
       { path: 'doctors', component: Doctors },
+      { path: 'doctors/:id', component: DoctorDetail },
       { path: 'community', component: Community },
       { path: 'community/topic/:id', component: TopicDetail },
       { path: 'preparation', component: Preparation },

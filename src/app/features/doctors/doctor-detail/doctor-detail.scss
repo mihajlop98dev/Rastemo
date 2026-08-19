@@ -1,0 +1,236 @@
+.lekar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 780px;
+
+  h2 { font-size: 16px; }
+
+  &__nazad {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+    text-decoration: none;
+
+    &:hover { color: var(--color-primary-dark); }
+  }
+
+  &__zaglavlje {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  &__ime {
+    min-width: 0;
+    flex: 1;
+
+    h1 { font-size: 20px; margin-bottom: 3px; }
+    p { font-size: 13px; margin: 0; }
+  }
+
+  &__potvrdjen {
+    display: inline-block;
+    vertical-align: -3px;
+    margin-left: 4px;
+    color: var(--color-primary);
+  }
+
+  &__ocena-zbir {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  &__srce {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &--aktivno { color: var(--color-primary); border-color: var(--color-primary); }
+  }
+
+  &__red {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  /* --- zvezdice --- */
+  &__zvezde {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: var(--space-4);
+
+    button {
+      border: none;
+      background: none;
+      font-size: 30px;
+      line-height: 1;
+      padding: 0 2px;
+      color: var(--color-border);
+      cursor: pointer;
+      transition: color .12s;
+
+      &:hover { color: var(--color-gold); }
+    }
+  }
+
+  &__zvezda--puna { color: var(--color-gold) !important; }
+
+  &__zvezde-opis {
+    margin-left: var(--space-3);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+  }
+
+  &__zvezde-prikaz {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    font-size: 15px;
+    color: var(--color-border);
+  }
+
+  textarea {
+    width: 100%;
+    padding: 12px var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-soft);
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--color-text);
+    resize: vertical;
+    outline: none;
+
+    &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+  }
+
+  &__anonimno {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: var(--space-3);
+    font-size: 12.5px;
+    color: var(--color-text-soft);
+    cursor: pointer;
+
+    &--sitno { margin: 0; font-size: 11.5px; white-space: nowrap; }
+  }
+
+  &__greska {
+    margin-top: var(--space-3);
+    font-size: 12.5px;
+    color: var(--color-danger);
+  }
+
+  &__akcije {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    cursor: pointer;
+
+    &--opasno { color: var(--color-danger); }
+  }
+
+  &__moja p { font-size: 13.5px; line-height: 1.6; margin: var(--space-3) 0; }
+
+  &__oznaka {
+    margin-left: var(--space-3);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-soft);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  /* --- tuđe ocene --- */
+  &__ocena {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-border-soft);
+
+    p { font-size: 13.5px; line-height: 1.6; margin: var(--space-2) 0 var(--space-3); }
+  }
+
+  &__ocena-vrh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__autor {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+  }
+
+  &__komentari {
+    margin-top: var(--space-3);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-border-soft);
+  }
+
+  &__komentar {
+    padding: var(--space-2) 0;
+
+    p { font-size: 13px; margin: 3px 0 2px; }
+  }
+
+  &__komentar-forma {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    flex-wrap: wrap;
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 180px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-soft);
+      font-size: 13px;
+      color: var(--color-text);
+      outline: none;
+
+      &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+    }
+  }
+
+  @media (max-width: 640px) {
+    &__zaglavlje { flex-wrap: wrap; }
+    &__ocena-zbir { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+  }
+}

@@ -92,6 +92,20 @@ export class SymptomService {
     this.lastWeek.set((data as SymptomEntryRow[]) ?? []);
   }
 
+  /** Poništava današnji unos — klik na već izabran nivo znači "ipak ne". */
+  async clearLevel(name: string) {
+    const existing = this.today().find(e => e.name === name);
+    if (!existing) return;
+
+    const { error } = await this.supabase.client
+      .from('symptom_entries')
+      .delete()
+      .eq('id', existing.id);
+    if (error) throw error;
+
+    this.today.update(list => list.filter(e => e.id !== existing.id));
+  }
+
   async setLevel(pregnancyId: string, name: string, level: 1 | 2 | 3) {
     const existing = this.today().find(e => e.name === name);
 

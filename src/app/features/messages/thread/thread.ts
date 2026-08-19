@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { LOKAL } from '../../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -56,7 +57,7 @@ export class MessagesThread implements OnInit {
   }
 
   formatTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString(LOKAL, { hour: '2-digit', minute: '2-digit' });
   }
 
   readonly BackIcon = ArrowLeft;

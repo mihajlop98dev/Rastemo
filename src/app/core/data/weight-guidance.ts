@@ -24,9 +24,18 @@ export const BMI_CATEGORY_LABELS: Record<BmiCategory, string> = {
   obese: 'Gojaznost',
 };
 
-export function bmiCategoryFor(heightCm: number, prePregnancyWeightKg: number): BmiCategory {
+/**
+ * BMI pre trudnoće. Računa se iz težine PRE trudnoće, ne iz trenutne — kroz
+ * trudnoću težina raste po planu, pa BMI računat od trenutne težine ne znači
+ * ništa i samo bi uplašio korisnicu.
+ */
+export function bmiFor(heightCm: number, prePregnancyWeightKg: number): number {
   const heightM = heightCm / 100;
-  const bmi = prePregnancyWeightKg / (heightM * heightM);
+  return prePregnancyWeightKg / (heightM * heightM);
+}
+
+export function bmiCategoryFor(heightCm: number, prePregnancyWeightKg: number): BmiCategory {
+  const bmi = bmiFor(heightCm, prePregnancyWeightKg);
   if (bmi < 18.5) return 'underweight';
   if (bmi < 25) return 'normal';
   if (bmi < 30) return 'overweight';

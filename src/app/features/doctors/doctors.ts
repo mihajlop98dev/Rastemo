@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LucideAngularModule, Search, MapPin, SlidersHorizontal, Heart, ChevronDown, Plus, X, BadgeCheck } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
@@ -14,7 +15,7 @@ import { FavoriteDoctorService } from '../../core/services/favorite-doctor.servi
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating, UiMedicalNotice, UiClinicPicker],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiAvatar, UiRating, UiMedicalNotice, UiClinicPicker, RouterLink],
   templateUrl: './doctors.html',
   styleUrl: './doctors.scss'
 })

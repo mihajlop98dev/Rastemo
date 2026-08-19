@@ -341,3 +341,14 @@
     cursor: pointer;
   }
 }
+
+/* Red je sada link ka lekaru; srce unutar njega ne sme da odvede na stranicu
+   (klik se zaustavlja u toggleFavorite). */
+a.doctors__row {
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-md);
+  transition: background .12s;
+
+  &:hover { background: var(--color-bg-soft); }
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule, Bell, FileText, CircleHelp, NotebookPen, MapPin, Clock } from 'lucide-angular';
@@ -44,7 +45,7 @@ export class AppointmentDetail implements OnInit {
   get dueDateLabel(): string {
     const p = this.pregnancy.active();
     if (!p) return '';
-    return new Date(p.due_date).toLocaleDateString('sr-RS', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Date(p.due_date).toLocaleDateString(LOKAL, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   async ngOnInit() {
@@ -56,15 +57,15 @@ export class AppointmentDetail implements OnInit {
   }
 
   formatDay(iso: string): string {
-    return new Date(iso).toLocaleDateString('sr-RS', { day: '2-digit' });
+    return new Date(iso).toLocaleDateString(LOKAL, { day: '2-digit' });
   }
 
   formatMonth(iso: string): string {
-    return new Date(iso).toLocaleDateString('sr-RS', { month: 'short' }).toUpperCase().replace('.', '');
+    return new Date(iso).toLocaleDateString(LOKAL, { month: 'short' }).toUpperCase().replace('.', '');
   }
 
   formatTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString(LOKAL, { hour: '2-digit', minute: '2-digit' });
   }
 
   addToCalendar() {

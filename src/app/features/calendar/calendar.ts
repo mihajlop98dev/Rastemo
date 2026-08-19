@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -76,7 +77,7 @@ export class CalendarPage implements OnInit {
   }
 
   get monthLabel(): string {
-    return this.viewDate.toLocaleDateString('sr-RS', { month: 'long', year: 'numeric' });
+    return this.viewDate.toLocaleDateString(LOKAL, { month: 'long', year: 'numeric' });
   }
 
   get periodLabel(): string {
@@ -84,8 +85,8 @@ export class CalendarPage implements OnInit {
     const days = this.currentWeekDays;
     const start = days[0].date;
     const end = days[6].date;
-    const startLabel = start.toLocaleDateString('sr-RS', { day: 'numeric', month: start.getMonth() === end.getMonth() ? undefined : 'short' });
-    const endLabel = end.toLocaleDateString('sr-RS', { day: 'numeric', month: 'short', year: 'numeric' });
+    const startLabel = start.toLocaleDateString(LOKAL, { day: 'numeric', month: start.getMonth() === end.getMonth() ? undefined : 'short' });
+    const endLabel = end.toLocaleDateString(LOKAL, { day: 'numeric', month: 'short', year: 'numeric' });
     return `${startLabel} – ${endLabel}`;
   }
 
@@ -187,7 +188,7 @@ export class CalendarPage implements OnInit {
   get plannerGroups(): { dateLabel: string; items: AppointmentRow[] }[] {
     const groups: { dateLabel: string; items: AppointmentRow[] }[] = [];
     for (const apt of this.appointments.all()) {
-      const label = new Date(apt.scheduled_at).toLocaleDateString('sr-RS', { weekday: 'long', day: 'numeric', month: 'long' });
+      const label = new Date(apt.scheduled_at).toLocaleDateString(LOKAL, { weekday: 'long', day: 'numeric', month: 'long' });
       const last = groups[groups.length - 1];
       if (last && last.dateLabel === label) {
         last.items.push(apt);
@@ -216,7 +217,7 @@ export class CalendarPage implements OnInit {
     const iso = this.selectedIso();
     if (!iso) return '';
     const [y, m, d] = iso.split('-').map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString('sr-RS', { weekday: 'long', day: 'numeric', month: 'long' });
+    return new Date(y, m - 1, d).toLocaleDateString(LOKAL, { weekday: 'long', day: 'numeric', month: 'long' });
   }
 
   get selectedDayAppointments(): AppointmentRow[] {
@@ -252,15 +253,15 @@ export class CalendarPage implements OnInit {
   }
 
   formatDay(iso: string): string {
-    return new Date(iso).toLocaleDateString('sr-RS', { day: '2-digit' });
+    return new Date(iso).toLocaleDateString(LOKAL, { day: '2-digit' });
   }
 
   formatMonth(iso: string): string {
-    return new Date(iso).toLocaleDateString('sr-RS', { month: 'short' }).toUpperCase().replace('.', '');
+    return new Date(iso).toLocaleDateString(LOKAL, { month: 'short' }).toUpperCase().replace('.', '');
   }
 
   formatTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString(LOKAL, { hour: '2-digit', minute: '2-digit' });
   }
 
   readonly ChevronLeftIcon = ChevronLeft;

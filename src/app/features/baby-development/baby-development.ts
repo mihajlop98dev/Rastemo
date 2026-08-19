@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Check, Brain, Bone, Ear, Move, CalendarCheck } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
@@ -20,18 +20,34 @@ const DEV_ICONS: Record<string, any> = { brain: Brain, bone: Bone, ear: Ear, mov
 })
 export class BabyDevelopment {
   readonly weeks = Array.from({ length: 39 }, (_, i) => i + 4); // 4..42
-  selectedWeek: number;
 
-  constructor(private pregnancy: PregnancyService) {
-    this.selectedWeek = Math.min(Math.max(pregnancy.weekNumber(), 8), 40);
+  readonly selectedWeek = signal(this.weeks[0]);
+
+  /** Postaje tačno kad korisnica sama izabere nedelju — od tada je ne pomeramo. */
+  private rucnoIzabrana = false;
+
+  constructor(readonly pregnancy: PregnancyService) {
+    // Podaci o trudnoći se učitavaju asinhrono, pa u trenutku pravljenja
+    // komponente weekNumber() još ume da bude 0. Zato se nedelja postavlja
+    // kroz effect, čim stigne prava vrednost.
+    effect(() => {
+      const w = this.pregnancy.weekNumber();
+      if (this.rucnoIzabrana || !w) return;
+      this.selectedWeek.set(this.uOpsegu(w));
+    });
+  }
+
+  /** Lista ide od 4. do 42. nedelje; van toga se hvatamo za najbliži kraj. */
+  private uOpsegu(w: number): number {
+    return Math.min(Math.max(w, this.weeks[0]), this.weeks[this.weeks.length - 1]);
   }
 
   get devPoints() {
-    return devPointsForWeek(this.selectedWeek).map(p => ({ icon: DEV_ICONS[p.icon], text: p.text }));
+    return devPointsForWeek(this.selectedWeek()).map(p => ({ icon: DEV_ICONS[p.icon], text: p.text }));
   }
 
   get isCurrentWeek(): boolean {
-    return this.selectedWeek === this.pregnancy.weekNumber();
+    return this.selectedWeek() === this.pregnancy.weekNumber();
   }
 
   get currentWeekDay(): number {
@@ -39,23 +55,32 @@ export class BabyDevelopment {
   }
 
   get sizeLabel(): string {
-    return babyComparisonForWeek(this.selectedWeek);
+    return babyComparisonForWeek(this.selectedWeek());
   }
 
   get length(): number {
-    return babyLengthForWeek(this.selectedWeek);
+    return babyLengthForWeek(this.selectedWeek());
   }
 
   get weight(): string {
-    const g = babyWeightForWeek(this.selectedWeek);
+    const g = babyWeightForWeek(this.selectedWeek());
     return g < 1 ? 'manje od 1' : String(g);
   }
 
   get lengthLabel(): string {
-    return babyLengthLabelForWeek(this.selectedWeek);
+    return babyLengthLabelForWeek(this.selectedWeek());
   }
 
-  selectWeek(w: number) { this.selectedWeek = w; }
+  selectWeek(w: number) {
+    this.rucnoIzabrana = true;
+    this.selectedWeek.set(w);
+  }
+
+  /** Vraća prikaz na nedelju u kojoj je trudnica. */
+  nazadNaMoju() {
+    this.rucnoIzabrana = false;
+    this.selectedWeek.set(this.uOpsegu(this.pregnancy.weekNumber()));
+  }
 
   readonly milestones = PREGNANCY_MILESTONES;
   readonly nutritionGuide = NUTRITION_GUIDE;

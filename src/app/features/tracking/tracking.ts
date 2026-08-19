@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, Plus, AlertTriangle, Search, Trash2, Timer, Pill, Minus } from 'lucide-angular';
+import { LucideAngularModule, Plus, AlertTriangle, Search, Trash2, Timer, Pill, Minus, Pencil } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiButton } from '../../shared/ui/button/button';
@@ -17,7 +19,7 @@ import { WeightService } from '../../core/services/weight.service';
 import { DiaryService } from '../../core/services/diary.service';
 import { ContractionService } from '../../core/services/contraction.service';
 import { MedicationService } from '../../core/services/medication.service';
-import { bmiCategoryFor, recommendedWeightRangeForWeek, BMI_CATEGORY_LABELS } from '../../core/data/weight-guidance';
+import { bmiFor, bmiCategoryFor, recommendedWeightRangeForWeek, BMI_CATEGORY_LABELS } from '../../core/data/weight-guidance';
 
 interface SymptomDef {
   name: string;
@@ -31,7 +33,7 @@ const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '🙁', 3: '😐', 4:
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiAvatar, UiButton, UiTabs, UiMedicalNotice],
+  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiAvatar, UiButton, UiTabs, UiMedicalNotice, RouterLink],
   templateUrl: './tracking.html',
   styleUrl: './tracking.scss'
 })
@@ -54,8 +56,9 @@ export class Tracking implements OnInit, OnDestroy {
     { name: 'Nadutost', emoji: '🌾' },
   ];
 
-  /** Emoji ponuđeni pri dodavanju — kucanje emojija na desktopu je nezgodno. */
-  readonly symptomEmojis = ['🩺', '🤕', '🌙', '💧', '🔥', '😵‍💫', '🦵', '🫃', '🤧', '💤'];
+  /** Emoji ponuđeni pri dodavanju — kucanje emojija na desktopu je nezgodno.
+   *  Namerno samo simptomi i telesni osećaji, bez figura ljudi. */
+  readonly symptomEmojis = ['🩺', '🤕', '🌙', '💧', '🔥', '😵‍💫', '🦵', '🤧', '💤', '🍋', '🌡️', '💗'];
 
   readonly showAddSymptom = signal(false);
   readonly addingSymptom = signal(false);
@@ -74,7 +77,7 @@ export class Tracking implements OnInit, OnDestroy {
   readonly moodLevels = [1, 2, 3, 4, 5] as const;
   readonly MOOD_EMOJI = MOOD_EMOJI;
 
-  readonly todayLabel = new Date().toLocaleDateString('sr-RS', { day: 'numeric', month: 'long' });
+  readonly todayLabel = new Date().toLocaleDateString(LOKAL, { day: 'numeric', month: 'long' });
 
   moodNote = '';
   weightInput: number | null = null;
@@ -89,6 +92,12 @@ export class Tracking implements OnInit, OnDestroy {
   newMedName = '';
   newMedType: 'terapija' | 'suplement' = 'terapija';
   newMedDose = 1;
+
+  // --- izmena postojećeg unosa ---
+  readonly medUIzmeni = signal<string | null>(null);
+  izmenaNaziv = '';
+  izmenaTip: 'terapija' | 'suplement' = 'terapija';
+  izmenaDoza = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -174,10 +183,34 @@ export class Tracking implements OnInit, OnDestroy {
     await this.symptomSvc.removeCustom(customId);
   }
 
+  /** Ime simptoma za koji se trenutno prikazuje potvrda čuvanja. */
+  readonly sacuvanSimptom = signal<string | null>(null);
+  private potvrdaTajmer?: ReturnType<typeof setTimeout>;
+
+  /**
+   * Unos se čuva odmah po kliku, bez posebnog dugmeta — ali bez povratne
+   * informacije korisnica ne zna da li je prošlo. Zato se uz simptom nakratko
+   * pojavi potvrda.
+   */
   async setLevel(name: string, level: 1 | 2 | 3) {
     const p = this.pregnancy.active();
     if (!p) return;
+
+    // Ponovni klik na isti nivo poništava unos.
+    if (this.levelFor(name) === level) {
+      await this.symptomSvc.clearLevel(name);
+      this.potvrdi(null);
+      return;
+    }
+
     await this.symptomSvc.setLevel(p.id, name, level);
+    this.potvrdi(name);
+  }
+
+  private potvrdi(name: string | null) {
+    clearTimeout(this.potvrdaTajmer);
+    this.sacuvanSimptom.set(name);
+    if (name) this.potvrdaTajmer = setTimeout(() => this.sacuvanSimptom.set(null), 2200);
   }
 
   async setMood(mood: 1 | 2 | 3 | 4 | 5) {
@@ -238,6 +271,23 @@ export class Tracking implements OnInit, OnDestroy {
     return this.weightSvc.latest?.weight_kg ?? this.profileSvc.profile()?.weight_kg ?? null;
   }
 
+  /** BMI pre trudnoće, zaokružen na jednu decimalu. */
+  get bmi(): number | null {
+    const height = this.profileSvc.profile()?.height_cm;
+    const preWeight = this.prePregnancyWeight;
+    if (!height || !preWeight) return null;
+    return Math.round(bmiFor(height, preWeight) * 10) / 10;
+  }
+
+  /** Šta korisnici fali da bismo mogli da izračunamo BMI. */
+  get bmiNedostaje(): string | null {
+    const height = this.profileSvc.profile()?.height_cm;
+    const preWeight = this.prePregnancyWeight;
+    if (height && preWeight) return null;
+    if (!height && !preWeight) return 'visina i težina pre trudnoće';
+    return !height ? 'visina' : 'težina pre trudnoće';
+  }
+
   get bmiCategoryLabel(): string | null {
     const height = this.profileSvc.profile()?.height_cm;
     const preWeight = this.prePregnancyWeight;
@@ -294,7 +344,7 @@ export class Tracking implements OnInit, OnDestroy {
   }
 
   formatDateTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString(LOKAL, { hour: '2-digit', minute: '2-digit' });
   }
 
   intervalLabel(index: number): string {
@@ -317,6 +367,32 @@ export class Tracking implements OnInit, OnDestroy {
     await this.medicationSvc.remove(id);
   }
 
+  /**
+   * Izmena umesto brisanja i ponovnog unosa: ako korisnica promeni preparat,
+   * istorija uzimanja ostaje vezana za isti unos.
+   */
+  pocniIzmenu(m: { id: string; name: string; type: 'terapija' | 'suplement'; dose_per_day: number }) {
+    this.medUIzmeni.set(m.id);
+    this.izmenaNaziv = m.name;
+    this.izmenaTip = m.type;
+    this.izmenaDoza = m.dose_per_day;
+  }
+
+  otkaziIzmenu() {
+    this.medUIzmeni.set(null);
+  }
+
+  async sacuvajIzmenu(id: string) {
+    const naziv = this.izmenaNaziv.trim();
+    if (!naziv) return;
+    await this.medicationSvc.update(id, {
+      name: naziv,
+      type: this.izmenaTip,
+      dose_per_day: this.izmenaDoza,
+    });
+    this.medUIzmeni.set(null);
+  }
+
   async logDose(id: string) {
     await this.medicationSvc.logDose(id);
   }
@@ -334,7 +410,7 @@ export class Tracking implements OnInit, OnDestroy {
   }
 
   formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString('sr-RS', { day: 'numeric', month: 'short' });
+    return new Date(iso).toLocaleDateString(LOKAL, { day: 'numeric', month: 'short' });
   }
 
   get trendDays(): string[] {
@@ -342,7 +418,7 @@ export class Tracking implements OnInit, OnDestroy {
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      days.push(d.toLocaleDateString('sr-RS', { weekday: 'short' }).replace('.', ''));
+      days.push(d.toLocaleDateString(LOKAL, { weekday: 'short' }).replace('.', ''));
     }
     return days;
   }
@@ -432,6 +508,7 @@ export class Tracking implements OnInit, OnDestroy {
   readonly AlertIcon = AlertTriangle;
   readonly SearchIcon = Search;
   readonly TrashIcon = Trash2;
+  readonly PencilIcon = Pencil;
   readonly TimerIcon = Timer;
   readonly PillIcon = Pill;
   readonly MinusIcon = Minus;

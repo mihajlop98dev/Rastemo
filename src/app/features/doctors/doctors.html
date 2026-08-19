@@ -36,7 +36,7 @@
         </span>
       </div>
 
-      <div class="doctors__row" *ngFor="let d of prikazani()">
+      <a class="doctors__row" *ngFor="let d of prikazani()" [routerLink]="['/doctors', d.id]">
         <ui-avatar [name]="d.full_name" size="lg" />
         <div class="doctors__row-info">
           <strong>
@@ -55,7 +55,7 @@
         <button class="doctors__fav" [class.doctors__fav--active]="favoriteSvc.isFavorite(d.id)" (click)="toggleFavorite($event, d.id)">
           <lucide-icon [img]="HeartIcon" [size]="17"></lucide-icon>
         </button>
-      </div>
+      </a>
 
       <p class="text-soft doctors__empty" *ngIf="!prikazani().length && !doctorSvc.loading()">
         {{ onlyFavorites() ? 'Još nisi sačuvala nijednog lekara.' : 'Nema rezultata za tu pretragu.' }}

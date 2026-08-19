@@ -1,0 +1,132 @@
+<div class="lekar" *ngIf="lekar() as d; else nemaGa">
+
+  <a routerLink="/doctors" class="lekar__nazad">
+    <lucide-icon [img]="BackIcon" [size]="15"></lucide-icon> Svi lekari
+  </a>
+
+  <ui-card padding="lg" class="lekar__zaglavlje">
+    <ui-avatar [name]="d.full_name" size="lg" />
+    <div class="lekar__ime">
+      <h1>
+        {{ d.full_name }}
+        <lucide-icon *ngIf="d.is_verified" [img]="VerifiedIcon" [size]="16"
+                     class="lekar__potvrdjen" title="Licenca potvrđena u registru Lekarske komore Srbije"></lucide-icon>
+      </h1>
+      <p class="text-soft">{{ opis(d) }}</p>
+      <p class="text-muted" *ngIf="d.city || d.clinics">
+        {{ d.city }}<ng-container *ngIf="d.city && d.clinics"> · </ng-container>{{ d.clinics?.name }}
+      </p>
+    </div>
+    <div class="lekar__ocena-zbir">
+      <ui-rating [value]="d.avg_rating" [count]="d.review_count" />
+      <button class="lekar__srce" [class.lekar__srce--aktivno]="favoriteSvc.isFavorite(d.id)"
+              (click)="favoriteSvc.toggle(d.id)" title="Sačuvaj lekara">
+        <lucide-icon [img]="HeartIcon" [size]="18"></lucide-icon>
+      </button>
+    </div>
+  </ui-card>
+
+  <ui-medical-notice
+    text="Ocene i komentari su lična iskustva korisnica, ne stručna procena. Dnevnik trudnoće ne preporučuje lekare i ne odgovara za izbor zdravstvenog radnika." />
+
+  <!-- ---------- moja ocena ---------- -->
+  <ui-card padding="lg">
+    <div class="lekar__red">
+      <h2>{{ reviewSvc.moja ? 'Tvoja ocena' : 'Oceni ovog lekara' }}</h2>
+      <button class="lekar__link" *ngIf="reviewSvc.moja && !formaOtvorena()" (click)="formaOtvorena.set(true)">Izmeni</button>
+    </div>
+
+    <div class="lekar__moja" *ngIf="reviewSvc.moja as moja; else formaBlok">
+      <ng-container *ngIf="!formaOtvorena()">
+        <div class="lekar__zvezde-prikaz">
+          <span *ngFor="let z of zvezdice" [class.lekar__zvezda--puna]="z <= moja.rating">★</span>
+          <span class="lekar__oznaka" *ngIf="moja.is_anonymous">anonimno</span>
+        </div>
+        <p *ngIf="moja.comment">{{ moja.comment }}</p>
+        <button class="lekar__link lekar__link--opasno" (click)="obrisiMoju(moja.id)">Obriši ocenu</button>
+      </ng-container>
+      <ng-container *ngIf="formaOtvorena()"><ng-container *ngTemplateOutlet="forma"></ng-container></ng-container>
+    </div>
+
+    <ng-template #formaBlok><ng-container *ngTemplateOutlet="forma"></ng-container></ng-template>
+
+    <ng-template #forma>
+      <div class="lekar__zvezde">
+        <button *ngFor="let z of zvezdice" type="button"
+                [class.lekar__zvezda--puna]="z <= ocena"
+                [attr.aria-label]="z + ' od 5'"
+                (click)="ocena = z">★</button>
+        <span class="lekar__zvezde-opis" *ngIf="ocena">{{ ocena }} od 5</span>
+      </div>
+
+      <textarea [(ngModel)]="komentar" name="komentar" rows="4"
+                placeholder="Kako je prošao pregled? Piši o svom iskustvu — ne o dijagnozi drugih."></textarea>
+
+      <label class="lekar__anonimno">
+        <input type="checkbox" [(ngModel)]="anonimno" name="anonimno" />
+        <span>Objavi anonimno — tvoje ime se neće videti</span>
+      </label>
+
+      <p class="lekar__greska" *ngIf="greska()">{{ greska() }}</p>
+
+      <div class="lekar__akcije">
+        <ui-button variant="ghost" size="sm" *ngIf="formaOtvorena()" (click)="formaOtvorena.set(false)">Otkaži</ui-button>
+        <ui-button variant="primary" size="md" [disabled]="cuvam()" (click)="sacuvaj()">
+          {{ cuvam() ? 'Čuvanje...' : (reviewSvc.moja ? 'Sačuvaj izmenu' : 'Objavi ocenu') }}
+        </ui-button>
+      </div>
+    </ng-template>
+  </ui-card>
+
+  <!-- ---------- tuđe ocene ---------- -->
+  <ui-card padding="lg">
+    <h2>Iskustva drugih ({{ reviewSvc.ocene().length }})</h2>
+
+    <p class="text-soft" *ngIf="!reviewSvc.ocene().length && !reviewSvc.loading()">
+      Još nema nijedne ocene. Tvoja bi bila prva i najkorisnija.
+    </p>
+
+    <div class="lekar__ocena" *ngFor="let o of reviewSvc.ocene()">
+      <div class="lekar__ocena-vrh">
+        <div class="lekar__zvezde-prikaz">
+          <span *ngFor="let z of zvezdice" [class.lekar__zvezda--puna]="z <= o.rating">★</span>
+        </div>
+        <span class="lekar__autor">{{ o.autor || 'Anonimno' }} · {{ datum(o.created_at) }}</span>
+      </div>
+
+      <p *ngIf="o.comment">{{ o.comment }}</p>
+
+      <button class="lekar__link" (click)="prikaziKomentare(o)">
+        <lucide-icon [img]="CommentIcon" [size]="13"></lucide-icon>
+        {{ otvorenaOcena() === o.id ? 'Sakrij komentare' : 'Komentari' }}
+      </button>
+
+      <div class="lekar__komentari" *ngIf="otvorenaOcena() === o.id">
+        <div class="lekar__komentar" *ngFor="let k of reviewSvc.komentari()[o.id] || []">
+          <span class="lekar__autor">{{ k.autor || 'Anonimno' }} · {{ datum(k.created_at) }}</span>
+          <p>{{ k.body }}</p>
+          <button class="lekar__link lekar__link--opasno" *ngIf="k.moj" (click)="reviewSvc.obrisiKomentar(o.id, k.id)">Obriši</button>
+        </div>
+
+        <form class="lekar__komentar-forma" (ngSubmit)="posaljiKomentar(o.id)">
+          <input type="text" [(ngModel)]="noviKomentar" name="noviKomentar" placeholder="Dodaj komentar..." />
+          <label class="lekar__anonimno lekar__anonimno--sitno">
+            <input type="checkbox" [(ngModel)]="komentarAnoniman" name="komentarAnoniman" />
+            <span>anonimno</span>
+          </label>
+          <ui-button variant="secondary" size="sm" type="submit" [disabled]="!noviKomentar.trim() || saljemKomentar()">
+            Pošalji
+          </ui-button>
+        </form>
+      </div>
+    </div>
+  </ui-card>
+</div>
+
+<ng-template #nemaGa>
+  <ui-card padding="lg" *ngIf="!ucitavam()">
+    <h2>Lekar nije pronađen</h2>
+    <p class="text-soft" style="margin: var(--space-2) 0 var(--space-4)">Možda je unos u međuvremenu uklonjen.</p>
+    <ui-button routerLink="/doctors" variant="primary" size="md">Nazad na spisak</ui-button>
+  </ui-card>
+</ng-template>

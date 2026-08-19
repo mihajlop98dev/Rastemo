@@ -1,0 +1,71 @@
+.kolacici {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--space-4);
+  z-index: 200;
+  width: min(680px, calc(100vw - 2 * var(--space-4)));
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: 0 8px 28px rgba(55, 46, 42, 0.16);
+
+  strong { font-size: 14px; display: block; margin-bottom: 3px; }
+
+  p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--color-text-soft);
+    margin: 0;
+  }
+
+  a { color: var(--color-primary-dark); text-decoration: underline; }
+
+  &__dugmad {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  button {
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* Odbijanje mora da bude jednako lako kao prihvatanje — zato isto dugme,
+     samo bez ispune. Saglasnost data zato što je drugo dugme sakriveno
+     nije saglasnost. */
+  &__ne {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-soft);
+
+    &:hover { border-color: var(--color-text-soft); }
+  }
+
+  &__da {
+    border: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+
+    &:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+  }
+
+  /* Na telefonu traka ide preko cele širine, iznad donje navigacije. */
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    bottom: calc(var(--space-3) + 68px);
+
+    &__dugmad button { flex: 1; }
+  }
+}

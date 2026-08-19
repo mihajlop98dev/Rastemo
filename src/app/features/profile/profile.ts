@@ -13,6 +13,7 @@ import { ProfileService } from '../../core/services/profile.service';
 import { PregnancyService, BabyGender } from '../../core/services/pregnancy.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
 
 type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'lozinka' | 'izvestaj';
 
@@ -34,6 +35,12 @@ export class Profile implements OnInit {
   ];
 
   activeSection: Section = 'profil';
+
+  // --- merenje poseta ---
+  // Data saglasnost mora da se povuče isto tako lako kao što je data.
+  promeniPristanak(prihvata: boolean) {
+    prihvata ? this.analytics.prihvati() : this.analytics.odbij();
+  }
 
   // --- promena lozinke ---
   novaLozinka = '';
@@ -104,6 +111,7 @@ export class Profile implements OnInit {
     readonly pregnancy: PregnancyService,
     readonly notifications: NotificationService,
     readonly clinics: ClinicService,
+    readonly analytics: AnalyticsService,
   ) {}
 
   async ngOnInit() {

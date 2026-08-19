@@ -1,0 +1,17 @@
+<!-- Prikazuje se dok korisnica ne izabere. Namerno bez dugmeta za zatvaranje:
+     prećutno zatvaranje nije pristanak, pa bi traka morala da se vrati. -->
+<div class="kolacici" *ngIf="analytics.pristanak() === null" role="dialog" aria-label="Kolačići">
+  <div class="kolacici__tekst">
+    <strong>Smemo li da merimo posete?</strong>
+    <p>
+      Koristili bismo Google analitiku da vidimo koji ekrani su korisni, a koji smetaju.
+      Mere se posete, ne tvoji unosi — simptomi, težina i beleške nikada ne napuštaju aplikaciju.
+      <a routerLink="/politika-privatnosti">Politika privatnosti</a>
+    </p>
+  </div>
+
+  <div class="kolacici__dugmad">
+    <button type="button" class="kolacici__ne" (click)="analytics.odbij()">Ne, hvala</button>
+    <button type="button" class="kolacici__da" (click)="analytics.prihvati()">Prihvatam</button>
+  </div>
+</div>

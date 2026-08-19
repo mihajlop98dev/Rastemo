@@ -250,6 +250,19 @@
           <span class="text-soft">Nove teme i odgovori na forumu će podrazumevano biti anonimni. Ovo uvek možeš promeniti pri objavljivanju.</span>
         </span>
       </label>
+
+      <label class="profile__toggle" style="margin-top: var(--space-4)">
+        <input type="checkbox" [checked]="analytics.pristanak() === 'prihvaceno'"
+               (change)="promeniPristanak($any($event.target).checked)" />
+        <span>
+          <strong>Merenje poseta</strong>
+          <span class="text-soft">
+            Dozvoli Google analitici da beleži koje ekrane otvaraš, da bismo znali šta da popravimo.
+            Tvoji unosi — simptomi, težina, beleške i poruke — ne šalju se nikada.
+            Ako isključiš, merenje prestaje pri sledećem otvaranju aplikacije.
+          </span>
+        </span>
+      </label>
     </ui-card>
 
     <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'lozinka'">

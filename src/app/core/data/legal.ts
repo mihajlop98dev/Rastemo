@@ -230,11 +230,31 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
       bullets: [
         'Supabase — baza podataka i autentikacija;',
         'Vercel — hosting aplikacije;',
-        'Google — samo ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu.',
+        'Google — ako se prijaviš preko Google naloga, u obimu neophodnom za prijavu; ' +
+          'i Google analitika, ali samo ako si na to pristala (vidi odeljak 4a).',
       ],
     },
     {
-      heading: '4a. Podaci o lekarima',
+      heading: '4a. Kolačići i merenje poseta',
+      paragraphs: [
+        'Aplikacija koristi kolačiće koji su neophodni da bi radila — oni te drže prijavljenom i ' +
+          'pamte tvoja podešavanja. Bez njih aplikacija ne može da funkcioniše i za njih se ' +
+          'saglasnost ne traži.',
+        'Odvojeno od toga, želeli bismo da merimo posete pomoću Google analitike, kako bismo videli ' +
+          'koji ekrani su korisni a koji smetaju. To nije neophodno za rad aplikacije, pa se učitava ' +
+          'tek ako na to izričito pristaneš. Dok ne pristaneš, Google analitika se uopšte ne pokreće.',
+        'Ako pristaneš, Google-u se šalje koja je stranica otvorena, kada, i osnovni podaci o uređaju ' +
+          'i pregledaču. Iz adrese stranice uklanjamo sve što bi moglo da te oda — pojmove iz pretrage ' +
+          'i identifikatore tema. Tvoji unosi se ne šalju nikada: ni simptomi, ni raspoloženje, ni ' +
+          'težina, ni beleške, ni poruke, ni podaci o trudnoći.',
+        'Merenje ne koristimo za oglašavanje. Reklamni kolačići su isključeni i ne pravimo profile za ' +
+          'ciljanje oglasa.',
+        'Svoj izbor možeš promeniti u svakom trenutku: Profil → Privatnost → Merenje poseta. ' +
+          'Povlačenje saglasnosti je jednako lako kao i davanje.',
+      ],
+    },
+    {
+      heading: '4b. Podaci o lekarima',
       paragraphs: [
         'U aplikaciji postoji spisak ginekologa-akušera preuzet iz javno objavljenog registra izdatih ' +
           'licenci Lekarske komore Srbije. Taj registar Komora objavljuje po zakonu, upravo zato da bi ' +

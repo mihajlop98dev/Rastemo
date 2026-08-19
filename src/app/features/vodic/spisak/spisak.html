@@ -1,0 +1,34 @@
+<div class="spisak">
+
+  <header class="spisak__zaglavlje">
+    <h1>Trudnoća nedelju po nedelju</h1>
+    <p>
+      Šta se dešava sa bebom i sa tobom u svakoj nedelji, od četvrte do četrdeset druge.
+      Bez stručnih izraza i bez plašenja.
+    </p>
+  </header>
+
+  <section class="spisak__trimestar" *ngFor="let t of trimestri">
+    <h2>{{ t.naziv }}</h2>
+    <div class="spisak__mreza">
+      <a *ngFor="let v of t.nedelje" [routerLink]="['/trudnoca', v.nedelja]" class="spisak__kartica">
+        <strong>{{ v.nedelja }}. nedelja</strong>
+        <span>veličine {{ poredjenje(v.nedelja) }}</span>
+      </a>
+    </div>
+  </section>
+
+  <ui-card padding="lg" class="spisak__poziv">
+    <h2>Prati svoju trudnoću</h2>
+    <p>
+      Aplikacija ti računa nedelju, beleži simptome i težinu, čuva preglede i povezuje te
+      sa drugim trudnicama. Besplatno, na srpskom.
+    </p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+
+  <p class="spisak__upozorenje">
+    Sadržaj je informativan i ne zamenjuje savet lekara. O svemu što se tiče tvog zdravlja
+    i zdravlja bebe posavetuj se sa svojim ginekologom.
+  </p>
+</div>

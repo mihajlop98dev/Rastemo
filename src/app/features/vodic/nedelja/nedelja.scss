@@ -1,0 +1,159 @@
+.vodic {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  &__vrh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
+  }
+
+  &__brend {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  &__brend-ikona {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-peach));
+    color: #fff;
+  }
+
+  &__svi {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    text-decoration: none;
+  }
+
+  &__zaglavlje {
+    text-align: center;
+    padding: var(--space-4) 0 var(--space-2);
+  }
+
+  &__trimestar {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+  }
+
+  h1 {
+    font-size: 30px;
+    line-height: 1.2;
+    margin-bottom: var(--space-3);
+  }
+
+  &__uvod {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+  }
+
+  &__mere {
+    text-align: center;
+
+    &-brojevi {
+      display: flex;
+      justify-content: space-around;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-border-soft);
+
+      div { display: flex; flex-direction: column; gap: 2px; }
+      strong { font-family: var(--font-heading); font-size: 17px; }
+      span { font-size: 11.5px; color: var(--color-text-muted); }
+    }
+  }
+
+  &__odeljak, &__savet {
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 16px;
+      margin-bottom: var(--space-3);
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--color-text-soft);
+    }
+  }
+
+  &__savet {
+    background: var(--color-sage-light);
+
+    h2 { color: var(--color-text); }
+  }
+
+  &__upozorenje {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  &__poziv {
+    text-align: center;
+    background: linear-gradient(135deg, var(--color-primary-soft), var(--color-peach-light));
+
+    h2 { font-size: 19px; margin-bottom: var(--space-3); }
+    p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--color-text-soft);
+      margin-bottom: var(--space-5);
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  &__listanje {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-top: var(--space-3);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      text-decoration: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 24px; }
+    &__mere-brojevi { flex-direction: column; gap: var(--space-3); }
+  }
+}

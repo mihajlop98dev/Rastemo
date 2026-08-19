@@ -1,0 +1,44 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Kontakt</h1>
+    <p>Nema formulara ni tiketa — piše ti se direktno osobi koja stoji iza sajta.</p>
+  </header>
+
+  <ui-card padding="lg" class="kontakt__glavni">
+    <span class="kontakt__oznaka">Email</span>
+    <a [href]="'mailto:' + kontakt" class="kontakt__adresa">{{ kontakt }}</a>
+    <p>Odgovaramo obično u roku od par dana. Na zahteve koji se tiču podataka o ličnosti — u zakonskom roku od 30 dana.</p>
+  </ui-card>
+
+  <section class="strana__tekst">
+    <h2>Sa čim možeš da nam se javiš</h2>
+    <ul>
+      <li><strong>Greška u aplikaciji</strong> — opiši šta si radila i šta se desilo, i na kom uređaju. Snimak ekrana mnogo pomaže.</li>
+      <li><strong>Predlog</strong> — najveći deo onoga što aplikacija danas ima došao je od korisnica, ne od nas.</li>
+      <li><strong>Netačan podatak</strong> — u tekstovima, spisku porodilišta ili spisku lekara.</li>
+      <li><strong>Prijava sadržaja</strong> — ako si na zajednici naišla na nešto uvredljivo, ima i dugme za prijavu u samoj aplikaciji.</li>
+      <li><strong>Saradnja</strong> — ako si lekar ili ordinacija i želiš da budeš vidljiviji korisnicama.</li>
+    </ul>
+
+    <h2>Ako si lekar</h2>
+    <p>
+      Spisak ginekologa preuzet je iz javno objavljenog registra Lekarske komore Srbije.
+      Ako ne želiš da budeš na njemu, ili je neki podatak o tebi netačan, piši nam —
+      uklonićemo ili ispraviti unos <strong>bez traženja obrazloženja i bez odlaganja</strong>.
+    </p>
+
+    <h2>Zaštita podataka</h2>
+    <p>
+      Rukovalac podacima je {{ rukovalac }}, kao fizičko lice. Na istu adresu šalješ i
+      zahtev za pristup svojim podacima, ispravku ili brisanje naloga. Kako postupamo sa
+      podacima piše u <a routerLink="/politika-privatnosti">politici privatnosti</a>.
+    </p>
+
+    <h2>Hitni slučajevi</h2>
+    <p>
+      Ovo nije zdravstvena služba i ne pratimo poruke u realnom vremenu. Kod krvarenja,
+      jakog bola, curenja plodove vode ili izostanka pokreta bebe <strong>ne piši nama —
+      pozovi 194</strong> ili idi u najbliže porodilište.
+    </p>
+  </section>
+</div>

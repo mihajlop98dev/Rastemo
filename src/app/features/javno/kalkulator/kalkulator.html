@@ -1,0 +1,94 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Kalkulator termina porođaja</h1>
+    <p>
+      Upiši prvi dan poslednje menstruacije ili datum začeća, pa ti odmah kažemo kada
+      se očekuje beba i u kojoj si nedelji.
+    </p>
+  </header>
+
+  <ui-card padding="lg">
+    <div class="kalk__izbor">
+      <button type="button" [class.kalk__izbor--tekuci]="nacin === 'menstruacija'" (click)="nacin = 'menstruacija'">
+        Znam poslednju menstruaciju
+      </button>
+      <button type="button" [class.kalk__izbor--tekuci]="nacin === 'zaceće'" (click)="nacin = 'zaceće'">
+        Znam datum začeća
+      </button>
+    </div>
+
+    <form class="kalk__forma" (ngSubmit)="izracunaj()">
+      <label>
+        <span>{{ nacin === 'menstruacija' ? 'Prvi dan poslednje menstruacije' : 'Datum začeća' }}</span>
+        <input type="date" [(ngModel)]="datum" name="datum" />
+      </label>
+
+      <label *ngIf="nacin === 'menstruacija'">
+        <span>Prosečna dužina ciklusa (dana)</span>
+        <input type="number" min="20" max="45" [(ngModel)]="duzinaCiklusa" name="duzinaCiklusa" />
+      </label>
+
+      <p class="kalk__greska" *ngIf="greska()">{{ greska() }}</p>
+
+      <ui-button type="submit" variant="primary" size="lg">Izračunaj</ui-button>
+    </form>
+  </ui-card>
+
+  <ui-card padding="lg" class="kalk__rezultat" *ngIf="rezultat() as r">
+    <span class="kalk__oznaka">Očekivani termin</span>
+    <strong class="kalk__termin">{{ formatirajDatum(r.termin) }}</strong>
+
+    <div class="kalk__brojevi">
+      <div>
+        <strong>{{ r.nedelja }}. nedelja</strong>
+        <span>+ {{ r.dan }} dana</span>
+      </div>
+      <div>
+        <strong>{{ r.trimestar }}. trimestar</strong>
+        <span>u kom si sada</span>
+      </div>
+      <div>
+        <strong>{{ r.preostaloDana }}</strong>
+        <span>dana do termina</span>
+      </div>
+    </div>
+
+    <p class="kalk__napomena">
+      Termin je procena, ne datum. Samo oko 5 odsto beba rodi se baš na termin —
+      porođaj od 37. do 42. nedelje smatra se urednim. Tačan termin određuje lekar
+      na osnovu ultrazvuka.
+    </p>
+
+    <div class="kalk__dalje">
+      <a [routerLink]="['/trudnoca', r.nedelja]" class="kalk__veza">Pogledaj šta se dešava u {{ r.nedelja }}. nedelji →</a>
+      <ui-button routerLink="/register" variant="primary" size="md">Prati trudnoću u aplikaciji</ui-button>
+    </div>
+  </ui-card>
+
+  <section class="strana__tekst">
+    <h2>Kako se računa termin porođaja</h2>
+    <p>
+      Termin se najčešće računa po Naegeleovom pravilu: <strong>280 dana</strong>, odnosno
+      40 nedelja, od prvog dana poslednje menstruacije. To znači da se prve dve nedelje
+      broje pre nego što je do začeća uopšte došlo — trudnoća se po dogovoru meri od
+      menstruacije, jer je to datum koga se žene sećaju, dok se trenutak začeća retko zna.
+    </p>
+    <p>
+      Ako ti ciklus nije 28 dana, ovulacija ne pada na 14. dan, pa se razlika dodaje na
+      termin. Zato kalkulator pita i za dužinu ciklusa. Ako znaš tačan datum začeća,
+      računa se 266 dana od njega.
+    </p>
+
+    <h2>Koliko je termin tačan</h2>
+    <p>
+      Termin je sredina raspona, ne obećanje. Porođaj između 37. i 42. nedelje smatra se
+      urednim, a na sam datum rodi se svega oko 5 odsto beba. Prvorotke se češće porode
+      posle termina nego pre njega.
+    </p>
+    <p>
+      Najtačniju procenu daje ultrazvuk u prvom trimestru, kada su sve bebe skoro iste
+      veličine. Ako se ta procena razlikuje od računa po menstruaciji za više od nekoliko
+      dana, lekar obično uzima ultrazvučni termin.
+    </p>
+  </section>
+</div>

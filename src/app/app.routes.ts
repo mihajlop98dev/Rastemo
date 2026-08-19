@@ -31,6 +31,25 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', component: Landing },
   { path: 'register', component: Register },
   { path: 'login', component: Login },
+
+  // Javni deo sajta — namerno bez guarda: ove stranice postoje da bi ih otvorio
+  // neko ko još nema nalog, i da bi ih pretraživači indeksirali.
+  //
+  // Učitavaju se tek kad se otvore: posetiteljka koja sa pretrage dođe na jednu
+  // nedelju vodiča ne treba da skine celu aplikaciju da bi je pročitala.
+  {
+    path: '',
+    loadComponent: () => import('./features/javno/layout/layout').then(m => m.JavniLayout),
+    children: [
+      { path: 'trudnoca', loadComponent: () => import('./features/vodic/spisak/spisak').then(m => m.VodicSpisak) },
+      { path: 'trudnoca/:nedelja', loadComponent: () => import('./features/vodic/nedelja/nedelja').then(m => m.VodicNedelja) },
+      { path: 'kalkulator-termina', loadComponent: () => import('./features/javno/kalkulator/kalkulator').then(m => m.Kalkulator) },
+      { path: 'porodilista', loadComponent: () => import('./features/javno/porodilista/porodilista').then(m => m.Porodilista) },
+      { path: 'cesta-pitanja', loadComponent: () => import('./features/javno/pitanja/pitanja').then(m => m.Pitanja) },
+      { path: 'o-nama', loadComponent: () => import('./features/javno/o-nama/o-nama').then(m => m.ONama) },
+      { path: 'kontakt', loadComponent: () => import('./features/javno/kontakt/kontakt').then(m => m.Kontakt) },
+    ],
+  },
   { path: 'proveri-mejl', component: CheckEmail },
   { path: 'potvrda', component: Confirmed },
   { path: 'zaboravljena-lozinka', component: ForgotPassword },

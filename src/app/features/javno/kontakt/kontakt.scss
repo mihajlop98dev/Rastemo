@@ -1,0 +1,33 @@
+.kontakt {
+  &__glavni { text-align: center; }
+
+  &__oznaka {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  &__adresa {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 21px;
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    margin-bottom: var(--space-4);
+    word-break: break-all;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__glavni p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}

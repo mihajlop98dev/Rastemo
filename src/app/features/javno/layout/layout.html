@@ -1,0 +1,73 @@
+<div class="javno">
+
+  <header class="javno__zaglavlje">
+    <div class="javno__traka">
+      <a routerLink="/" class="javno__brend">
+        <span class="javno__brend-ikona"><lucide-icon [img]="HeartIcon" [size]="17"></lucide-icon></span>
+        Dnevnik trudnoće
+      </a>
+
+      <nav class="javno__meni" [class.javno__meni--otvoren]="meniOtvoren()">
+        <a *ngFor="let s of stavke" [routerLink]="s.putanja" routerLinkActive="javno__meni-stavka--tekuca"
+           class="javno__meni-stavka" (click)="meniOtvoren.set(false)">{{ s.naziv }}</a>
+      </nav>
+
+      <div class="javno__akcije">
+        <a routerLink="/login" class="javno__prijava">Prijavi se</a>
+        <a routerLink="/register" class="javno__dugme">Otvori dnevnik</a>
+        <button class="javno__hamburger" (click)="meniOtvoren.set(!meniOtvoren())" [attr.aria-label]="meniOtvoren() ? 'Zatvori meni' : 'Otvori meni'">
+          <lucide-icon [img]="meniOtvoren() ? XIcon : MenuIcon" [size]="20"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="javno__sadrzaj">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="javno__podnozje">
+    <div class="javno__podnozje-mreza">
+      <div class="javno__podnozje-o">
+        <a routerLink="/" class="javno__brend">
+          <span class="javno__brend-ikona"><lucide-icon [img]="HeartIcon" [size]="15"></lucide-icon></span>
+          Dnevnik trudnoće
+        </a>
+        <p>Besplatna aplikacija za praćenje trudnoće, na srpskom. Zajedno kroz najvažniji period.</p>
+      </div>
+
+      <div class="javno__podnozje-kolona">
+        <h3>Sadržaj</h3>
+        <a routerLink="/trudnoca">Trudnoća nedelju po nedelju</a>
+        <a routerLink="/kalkulator-termina">Kalkulator termina porođaja</a>
+        <a routerLink="/porodilista">Porodilišta u Srbiji</a>
+        <a routerLink="/cesta-pitanja">Česta pitanja</a>
+      </div>
+
+      <div class="javno__podnozje-kolona">
+        <h3>Aplikacija</h3>
+        <a routerLink="/register">Otvori nalog</a>
+        <a routerLink="/login">Prijavi se</a>
+        <a routerLink="/o-nama">O nama</a>
+        <a routerLink="/kontakt">Kontakt</a>
+      </div>
+
+      <div class="javno__podnozje-kolona">
+        <h3>Pravno</h3>
+        <a routerLink="/uslovi-koriscenja">Uslovi korišćenja</a>
+        <a routerLink="/politika-privatnosti">Politika privatnosti</a>
+        <a [href]="'mailto:' + kontakt">{{ kontakt }}</a>
+      </div>
+    </div>
+
+    <!-- Medicinska ograda mora da stoji na svakoj strani, ne samo u vodiču. -->
+    <p class="javno__podnozje-upozorenje">
+      Sadržaj na ovom sajtu je informativan i ne zamenjuje pregled, dijagnozu ili savet lekara.
+      U hitnim slučajevima pozovi <strong>194</strong>.
+    </p>
+
+    <p class="javno__podnozje-dno">
+      © {{ godina }} {{ rukovalac }} · dnevniktrudnoce.com
+    </p>
+  </footer>
+</div>

@@ -1,0 +1,74 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>O nama</h1>
+    <p>Ko stoji iza ovog sajta, odakle dolazi sadržaj i šta radimo sa tvojim podacima.</p>
+  </header>
+
+  <section class="strana__tekst">
+    <h2>Zašto ovo postoji</h2>
+    <p>
+      Aplikacija za praćenje trudnoće ima mnogo, ali skoro sve su na engleskom, računaju u
+      funtama i inčima i upućuju na zdravstveni sistem koji nije naš. Trudnica u Srbiji
+      dobije savet da pozove svog „provider-a" i spisak analiza koji kod nas ne postoji.
+    </p>
+    <p>
+      <strong>Dnevnik trudnoće</strong> je napravljen za žene ovde: na srpskom, u kilogramima
+      i centimetrima, sa porodilištima iz Srbije i lekarima iz registra Lekarske komore.
+      Besplatan je i nema reklama unutar aplikacije.
+    </p>
+
+    <h2>Odakle sadržaj</h2>
+    <p>
+      Tekstovi o razvoju bebe i preporučeni opsezi telesne mase oslanjaju se na javno
+      dostupne stručne izvore, pre svega na smernice Instituta za medicinu (IOM) za prirast
+      težine u trudnoći i na opšteprihvaćene podatke o rastu ploda po nedeljama.
+    </p>
+    <p>
+      Spisak ginekologa preuzet je iz <strong>javno objavljenog registra izdatih licenci
+      Lekarske komore Srbije</strong> — registra koji Komora objavljuje po zakonu, upravo
+      da bi svako mogao da proveri ko sme da se bavi lekarskom praksom. Preuzimamo samo ime,
+      titulu, broj licence, specijalizaciju i rok važenja licence.
+    </p>
+
+    <h2>Šta ovaj sajt nije</h2>
+    <p>
+      Nije zdravstvena ustanova, nije medicinsko sredstvo i ne pruža zdravstvenu uslugu.
+      Sav sadržaj je opšteg i edukativnog karaktera. Ne postavljamo dijagnoze, ne
+      preporučujemo lekove i ne tumačimo nalaze — za sve to postoji tvoj ginekolog, i
+      nijedan tekst ovde ne treba da odloži odlazak kod njega.
+    </p>
+    <p>
+      Ocene lekara koje ostavljaju korisnice su njihova lična iskustva, a ne stručna
+      procena. Ne preporučujemo lekare i ne odgovaramo za izbor zdravstvenog radnika.
+    </p>
+
+    <h2>Tvoji podaci</h2>
+    <p>
+      Ono što upišeš — simptomi, težina, raspoloženje, beleške, poruke — vidiš samo ti.
+      Ni administrator aplikacije nema pristup tim podacima, i to je sprovedeno pravilima
+      u samoj bazi, ne samo izgledom ekrana. Podatke ne prodajemo i ne koristimo za
+      reklamiranje.
+    </p>
+    <p>
+      Merenje poseta uključujemo tek ako na to pristaneš, a svoj izbor možeš promeniti u
+      svakom trenutku. Detaljno je opisano u <a routerLink="/politika-privatnosti">politici privatnosti</a>.
+    </p>
+
+    <h2>Ko stoji iza</h2>
+    <p>
+      Iza sajta stoji <strong>{{ rukovalac }}</strong> kao fizičko lice, a ne firma. To znači
+      da za sve što se ovde dešava odgovara jedna osoba, kojoj možeš pisati direktno na
+      <a [href]="'mailto:' + kontakt">{{ kontakt }}</a>.
+    </p>
+    <p>
+      Ako si lekar i ne želiš da budeš na spisku, ili je neki podatak o tebi netačan —
+      javi se i uklonićemo ili ispraviti unos bez objašnjenja i bez odlaganja.
+    </p>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Prati svoju trudnoću</h2>
+    <p>Besplatno, na srpskom, bez reklama unutar aplikacije.</p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+</div>

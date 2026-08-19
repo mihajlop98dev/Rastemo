@@ -1,0 +1,61 @@
+<div class="pocetna">
+
+  <section class="pocetna__hero">
+    <div class="pocetna__hero-tekst">
+      <h1>Zajedno kroz najvažniji period</h1>
+      <p>
+        Besplatna aplikacija za praćenje trudnoće — na srpskom, sa porodilištima iz Srbije
+        i ginekolozima iz registra Lekarske komore. Bez reklama unutar aplikacije.
+      </p>
+      <div class="pocetna__hero-dugmad">
+        <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+        <a routerLink="/kalkulator-termina" class="pocetna__sporedno">Izračunaj termin porođaja →</a>
+      </div>
+      <p class="pocetna__sitno">Ne treba ti kartica ni instalacija. Nalog se otvara za minut.</p>
+    </div>
+    <div class="pocetna__hero-slika">
+      <app-mom-visual size="xl" />
+    </div>
+  </section>
+
+  <!-- Prvo ono što može odmah da se otvori: posetiteljka koja mora da se
+       registruje pre nego što bilo šta vidi obično ne ostane. -->
+  <section class="pocetna__odeljak">
+    <h2>Pogledaj odmah, bez naloga</h2>
+    <div class="pocetna__mreza">
+      <a *ngFor="let s of odmah" [routerLink]="s.putanja" class="pocetna__kartica">
+        <span class="pocetna__ikona"><lucide-icon [img]="s.ikona" [size]="19"></lucide-icon></span>
+        <strong>{{ s.naslov }}</strong>
+        <span class="pocetna__opis">{{ s.tekst }}</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="pocetna__odeljak">
+    <h2>Kad otvoriš nalog</h2>
+    <div class="pocetna__mreza pocetna__mreza--gusta">
+      <ui-card padding="md" class="pocetna__stavka" *ngFor="let s of uAplikaciji">
+        <span class="pocetna__ikona pocetna__ikona--tiha"><lucide-icon [img]="s.ikona" [size]="17"></lucide-icon></span>
+        <strong>{{ s.naslov }}</strong>
+        <span class="pocetna__opis">{{ s.tekst }}</span>
+      </ui-card>
+    </div>
+  </section>
+
+  <ui-card padding="lg" class="pocetna__privatnost">
+    <span class="pocetna__ikona pocetna__ikona--tiha"><lucide-icon [img]="LockIcon" [size]="17"></lucide-icon></span>
+    <h2>Ono što upišeš vidiš samo ti</h2>
+    <p>
+      Simptome, težinu, raspoloženje, beleške i poruke ne vidi niko drugi — ni administrator
+      aplikacije. To nije stvar poverenja nego pravila u samoj bazi, koja takav pristup ne
+      dozvoljavaju. Podatke ne prodajemo i ne koristimo za reklamiranje.
+    </p>
+    <a routerLink="/politika-privatnosti" class="pocetna__sporedno">Kako čuvamo podatke →</a>
+  </ui-card>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Počni danas</h2>
+    <p>Upiši termin ili datum poslednje menstruacije — sve ostalo se računa samo.</p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+</div>

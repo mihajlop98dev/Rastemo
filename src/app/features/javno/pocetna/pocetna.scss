@@ -1,0 +1,151 @@
+.pocetna {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+
+  /* ---------- hero ---------- */
+  &__hero {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-5) 0;
+  }
+
+  &__hero-tekst {
+    h1 {
+      font-size: 40px;
+      line-height: 1.15;
+      margin-bottom: var(--space-4);
+    }
+
+    p {
+      font-size: 16.5px;
+      line-height: 1.65;
+      color: var(--color-text-soft);
+      margin-bottom: var(--space-5);
+      max-width: 460px;
+    }
+  }
+
+  &__hero-dugmad {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  &__hero-slika {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__sporedno {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__sitno {
+    margin-top: var(--space-4);
+    font-size: 12.5px !important;
+    color: var(--color-text-muted) !important;
+  }
+
+  /* ---------- odeljci ---------- */
+  &__odeljak h2 {
+    font-size: 20px;
+    margin-bottom: var(--space-4);
+  }
+
+  &__mreza {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-4);
+
+    &--gusta { grid-template-columns: repeat(auto-fit, minmax(212px, 1fr)); gap: var(--space-3); }
+  }
+
+  &__kartica {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    text-decoration: none;
+    transition: border-color .12s, transform .12s;
+
+    strong { font-size: 15.5px; color: var(--color-text); }
+
+    &:hover { border-color: var(--color-primary); transform: translateY(-2px); }
+  }
+
+  /* ui-card postavlja stil na svoj host element, a sadržaj je u div-u unutar
+     njega — bez ::ng-deep flex se ne primeni i tekst se zalepi za naslov. */
+  &__stavka ::ng-deep .ui-card {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  &__stavka strong { font-size: 14.5px; }
+
+  &__ikona {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-peach));
+    color: #fff;
+    margin-bottom: 4px;
+
+    &--tiha {
+      background: var(--color-primary-soft);
+      color: var(--color-primary-dark);
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  &__opis {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+  }
+
+  &__privatnost {
+    h2 { font-size: 19px; margin: var(--space-2) 0 var(--space-3); }
+    p {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--color-text-soft);
+      margin-bottom: var(--space-4);
+      max-width: 620px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    &__hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: var(--space-4);
+    }
+    &__hero-tekst {
+      h1 { font-size: 30px; }
+      p { margin-left: auto; margin-right: auto; }
+    }
+    &__hero-dugmad { justify-content: center; }
+    &__hero-slika { order: -1; }
+  }
+}

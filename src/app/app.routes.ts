@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { Shell } from './core/layout/shell/shell';
-import { Landing } from './features/landing/landing';
 import { Home } from './features/home/home';
 import { CalendarPage } from './features/calendar/calendar';
 import { Tracking } from './features/tracking/tracking';
@@ -26,9 +25,9 @@ import { LegalPage } from './features/legal/legal-page';
 import { authGuard } from './core/guards/auth.guard';
 import { pregnancyGuard } from './core/guards/pregnancy.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { pocetnaGuard } from './core/guards/pocetna.guard';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', component: Landing },
   { path: 'register', component: Register },
   { path: 'login', component: Login },
 
@@ -41,6 +40,9 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./features/javno/layout/layout').then(m => m.JavniLayout),
     children: [
+      // Početna je sada javni sajt, ne splash ekran: ko dođe sa pretrage ili
+      // deljenog linka odmah vidi sadržaj, a ne zid sa dugmetom za prijavu.
+      { path: '', pathMatch: 'full', canActivate: [pocetnaGuard], loadComponent: () => import('./features/javno/pocetna/pocetna').then(m => m.JavnaPocetna) },
       { path: 'trudnoca', loadComponent: () => import('./features/vodic/spisak/spisak').then(m => m.VodicSpisak) },
       { path: 'trudnoca/:nedelja', loadComponent: () => import('./features/vodic/nedelja/nedelja').then(m => m.VodicNedelja) },
       { path: 'kalkulator-termina', loadComponent: () => import('./features/javno/kalkulator/kalkulator').then(m => m.Kalkulator) },

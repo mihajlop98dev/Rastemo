@@ -40,7 +40,7 @@ export class JavnaPocetna implements OnInit {
   ngOnInit() {
     this.seo.postavi(
       'Prati trudnoću nedelju po nedelju',
-      'Besplatna aplikacija za praćenje trudnoće na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, simptomi, težina i pregledi.',
+      'Prati trudnoću na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, simptomi, težina, pregledi i zajednica trudnica.',
       '/',
     );
 
@@ -69,8 +69,6 @@ export class JavnaPocetna implements OnInit {
         applicationCategory: 'HealthApplication',
         operatingSystem: 'Web',
         inLanguage: 'sr-Latn-RS',
-        // Bez cene Google ne prikazuje da je besplatno, a to je glavni argument.
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RSD' },
       },
     ]);
   }

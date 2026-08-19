@@ -24,8 +24,8 @@ export class Pitanja implements OnInit {
     {
       naslov: 'O aplikaciji',
       pitanja: [
-        { pitanje: 'Da li je aplikacija besplatna?',
-          odgovor: 'Jeste, u potpunosti. Nema pretplate, nema plaćenih funkcija i nema reklama unutar aplikacije.' },
+        { pitanje: 'Koliko košta?',
+          odgovor: 'Otvaranje naloga i sve što aplikacija danas radi je bez naplate. Ako nešto ubuduće bude naplaćivano, to će biti jasno naznačeno unapred i neće se odnositi na ono što već koristiš.' },
         { pitanje: 'Treba li da skinem nešto sa Google Play-a?',
           odgovor: 'Ne. Aplikacija radi u pregledaču, na telefonu i računaru. Možeš je dodati na početni ekran telefona i ponašaće se kao svaka druga aplikacija.' },
         { pitanje: 'Mogu li da je koristim ako sam tek saznala da sam trudna?',

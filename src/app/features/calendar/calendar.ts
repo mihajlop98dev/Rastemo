@@ -3,12 +3,13 @@ import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X, Pencil, Trash2 } from 'lucide-angular';
+import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X, Pencil, Trash2, CalendarPlus } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
 import { UiClinicPicker } from '../../shared/ui/clinic-picker/clinic-picker';
 import { PregnancyService } from '../../core/services/pregnancy.service';
+import { KalendarIzvozService } from '../../core/services/kalendar-izvoz.service';
 import { AppointmentService, AppointmentRow } from '../../core/services/appointment.service';
 
 interface CalendarDay {
@@ -67,6 +68,7 @@ export class CalendarPage implements OnInit {
     private route: ActivatedRoute,
     private pregnancy: PregnancyService,
     readonly appointments: AppointmentService,
+    private izvoz: KalendarIzvozService,
   ) {}
 
   async ngOnInit() {
@@ -214,6 +216,11 @@ export class CalendarPage implements OnInit {
     this.selectedIso.set(this.selectedIso() === day.iso ? null : day.iso);
   }
 
+  /** Upisuje termin u kalendar telefona (.ics fajl). */
+  uKalendarTelefona(a: AppointmentRow) {
+    this.izvoz.preuzmi(a);
+  }
+
   /** Id termina koji se menja; prazno znači da se pravi nov. */
   readonly uIzmeni = signal<string | null>(null);
   readonly brisem = signal(false);
@@ -339,4 +346,5 @@ export class CalendarPage implements OnInit {
   readonly XIcon = X;
   readonly PencilIcon = Pencil;
   readonly TrashIcon = Trash2;
+  readonly ExportIcon = CalendarPlus;
 }

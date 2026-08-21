@@ -43,7 +43,10 @@
         </div>
 
         <div class="apt__actions">
-          <ui-button variant="primary" size="md" (click)="addToCalendar()">Dodaj u kalendar</ui-button>
+          <ui-button variant="primary" size="md" (click)="addToCalendar()">Dodaj u kalendar telefona</ui-button>
+          <a class="apt__google" [href]="googleVeza(apt)" target="_blank" rel="noopener">
+            ili u Google Kalendar
+          </a>
           <ui-button variant="secondary" size="md"
                      routerLink="/calendar" [queryParams]="{ izmeni: apt.id }">Izmeni termin</ui-button>
           <button type="button" class="apt__obrisi" [disabled]="brisem()" (click)="obrisi(apt.id)">

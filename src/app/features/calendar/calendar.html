@@ -99,6 +99,9 @@
             <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
           </div>
           <div class="calpage__akcije">
+            <button type="button" title="Dodaj u kalendar telefona" (click)="uKalendarTelefona(apt)">
+              <lucide-icon [img]="ExportIcon" [size]="14"></lucide-icon>
+            </button>
             <button type="button" title="Izmeni" (click)="openEdit(apt)">
               <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
             </button>
@@ -127,6 +130,9 @@
             <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
           </div>
           <div class="calpage__akcije">
+            <button type="button" title="Dodaj u kalendar telefona" (click)="uKalendarTelefona(apt)">
+              <lucide-icon [img]="ExportIcon" [size]="14"></lucide-icon>
+            </button>
             <button type="button" title="Izmeni" (click)="openEdit(apt)">
               <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
             </button>

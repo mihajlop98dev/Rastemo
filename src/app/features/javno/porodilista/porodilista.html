@@ -12,7 +12,9 @@
            placeholder="Pretraži po gradu ili nazivu ustanove..." />
   </div>
 
-  <!-- Gradova je preko pedeset, pa spisak bez filtera traži mnogo skrolovanja. -->
+  <!-- Gradova je preko pedeset. Na širem ekranu stoje kao dugmad i vide se svi
+       odjednom; na telefonu bi zauzeli ceo ekran pre prve ustanove, pa tamo ide
+       padajući izbor. -->
   <div class="porod__gradovi">
     <button type="button" [class.porod__grad-dugme--tekuci]="!izabraniGrad()"
             (click)="izabraniGrad.set('')">Svi gradovi</button>
@@ -20,6 +22,14 @@
             [class.porod__grad-dugme--tekuci]="izabraniGrad() === g"
             (click)="izabraniGrad.set(g)">{{ g }}</button>
   </div>
+
+  <label class="porod__grad-izbor">
+    <span>Grad</span>
+    <select [ngModel]="izabraniGrad()" (ngModelChange)="izabraniGrad.set($event)">
+      <option value="">Svi gradovi ({{ ukupno() }})</option>
+      <option *ngFor="let g of gradovi()" [value]="g">{{ g }}</option>
+    </select>
+  </label>
 
   <p class="porod__brojka" *ngIf="izabraniGrad() || pojam()">
     Prikazano {{ prikazano() }} od {{ ukupno() }} ustanova

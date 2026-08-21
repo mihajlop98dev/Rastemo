@@ -471,7 +471,8 @@
   }
 
   /* Datum i vreme jedno pored drugog su preuska; idu jedno ispod drugog. */
-  .calpage__field-row { flex-direction: column; gap: var(--space-4); }
+  /* Red je grid, ne flex — flex-direction ovde ne radi ništa. */
+  .calpage__field-row { grid-template-columns: 1fr; gap: var(--space-4); }
 
   /* Termin u spisku: dugmad prelaze u svoj red da naslov ne bude stisnut. */
   .calpage__upcoming-item {

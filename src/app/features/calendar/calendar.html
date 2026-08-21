@@ -95,6 +95,8 @@
           <div class="calpage__upcoming-info">
             <strong>{{ apt.title }}</strong>
             <span class="text-soft">{{ formatTime(apt.scheduled_at) }}</span>
+            <span class="calpage__ustanova" *ngIf="apt.clinics">{{ apt.clinics.name }}</span>
+            <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
           </div>
           <div class="calpage__akcije">
             <button type="button" title="Izmeni" (click)="openEdit(apt)">
@@ -122,6 +124,12 @@
           <div class="calpage__upcoming-info">
             <strong>{{ apt.title }}</strong>
             <span class="text-soft">{{ formatTime(apt.scheduled_at) }} <ng-container *ngIf="apt.clinics"> · {{ apt.clinics.name }}</ng-container></span>
+            <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
+          </div>
+          <div class="calpage__akcije">
+            <button type="button" title="Izmeni" (click)="openEdit(apt)">
+              <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
+            </button>
           </div>
         </div>
         <p class="text-soft calpage__empty" *ngIf="!appointments.upcoming.length">Nemaš zakazanih događaja.</p>
@@ -179,6 +187,12 @@
         label="Ustanova (nije obavezno)"
         [value]="newClinicId"
         (valueChange)="newClinicId = $event" />
+
+      <label class="calpage__field">
+        <span>Napomena (nije obavezno)</span>
+        <textarea [(ngModel)]="newNotes" rows="3"
+                  placeholder="Npr. uraditi krvnu sliku pre pregleda, poneti nalaze, doći natašte..."></textarea>
+      </label>
 
       <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newTitle || !newDate" (click)="submitCreate()">
         {{ creating() ? 'Čuvanje...' : (uIzmeni() ? 'Sačuvaj izmene' : 'Sačuvaj događaj') }}

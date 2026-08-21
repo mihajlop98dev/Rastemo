@@ -419,3 +419,37 @@
   &:hover { text-decoration: underline; }
   &:disabled { opacity: .5; cursor: default; }
 }
+
+/* Ustanova i napomena uz termin — do sada se videlo samo ime i vreme, pa je
+   ono što je upisano u napomenu bilo nevidljivo. */
+.calpage__ustanova {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.calpage__napomena {
+  margin-top: 4px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold-light);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  white-space: pre-line;
+}
+
+/* Napomena zna da bude duža od jednog reda. */
+.calpage__field textarea {
+  padding: 10px var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-soft);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  resize: vertical;
+  outline: none;
+
+  &:focus { border-color: var(--color-primary); background: var(--color-surface); }
+}

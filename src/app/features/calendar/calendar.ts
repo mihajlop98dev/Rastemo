@@ -61,6 +61,7 @@ export class CalendarPage implements OnInit {
   newDate = '';
   newTime = '10:00';
   newClinicId: string | null = null;
+  newNotes = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -225,6 +226,7 @@ export class CalendarPage implements OnInit {
     this.newDate = toLocalIso(d);
     this.newTime = `${`${d.getHours()}`.padStart(2, '0')}:${`${d.getMinutes()}`.padStart(2, '0')}`;
     this.newClinicId = a.clinic_id ?? null;
+    this.newNotes = a.notes ?? '';
     this.uIzmeni.set(a.id);
     this.showCreate.set(true);
   }
@@ -261,6 +263,7 @@ export class CalendarPage implements OnInit {
     this.newDate = this.selectedIso() ?? toLocalIso(new Date());
     this.newTime = '10:00';
     this.newClinicId = null;
+    this.newNotes = '';
     this.showCreate.set(true);
   }
 
@@ -296,6 +299,7 @@ export class CalendarPage implements OnInit {
           appointment_type: this.newType,
           scheduled_at: scheduledAt,
           clinic_id: this.newClinicId,
+          notes: this.newNotes.trim() || null,
         });
       } else {
         await this.appointments.create({
@@ -304,6 +308,7 @@ export class CalendarPage implements OnInit {
           appointment_type: this.newType,
           scheduled_at: scheduledAt,
           clinic_id: this.newClinicId,
+          notes: this.newNotes.trim() || undefined,
         });
       }
 

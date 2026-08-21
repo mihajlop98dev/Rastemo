@@ -36,6 +36,12 @@
           </div>
         </div>
 
+        <!-- Ono što je korisnica sama upisala; do sada se nigde nije videlo. -->
+        <div class="apt__napomena" *ngIf="apt.notes">
+          <strong>Napomena</strong>
+          <p>{{ apt.notes }}</p>
+        </div>
+
         <div class="apt__actions">
           <ui-button variant="primary" size="md" (click)="addToCalendar()">Dodaj u kalendar</ui-button>
           <ui-button variant="secondary" size="md"

@@ -46,6 +46,11 @@ export class ClinicService {
     return this.all().filter(c => fold(c.name).includes(t) || fold(c.city ?? '').includes(t));
   }
 
+  /**
+   * Ostaje samo za administraciju — RLS dozvoljava unos ustanove isključivo
+   * administratoru. Korisnice ustanovu biraju sa spiska; pogrešna adresa
+   * porodilišta je greška koju one ne bi prepoznale.
+   */
   async create(dto: { name: string; city?: string; address?: string; phone?: string }) {
     const { data, error } = await this.supabase.client
       .from('clinics')

@@ -62,6 +62,31 @@ export class AppointmentService {
     return data as AppointmentRow;
   }
 
+  async update(id: string, patch: {
+    title?: string;
+    appointment_type?: string;
+    scheduled_at?: string;
+    clinic_id?: string | null;
+    notes?: string | null;
+  }) {
+    const { data, error } = await this.supabase.client
+      .from('appointments')
+      .update(patch)
+      .eq('id', id)
+      .select('*, clinics(name), doctors(full_name)')
+      .single();
+    if (error) throw error;
+
+    this.all.update(list => list.map(a => (a.id === id ? (data as AppointmentRow) : a)));
+    return data as AppointmentRow;
+  }
+
+  async remove(id: string) {
+    const { error } = await this.supabase.client.from('appointments').delete().eq('id', id);
+    if (error) throw error;
+    this.all.update(list => list.filter(a => a.id !== id));
+  }
+
   async getById(id: string): Promise<AppointmentRow | null> {
     const cached = this.all().find(a => a.id === id);
     if (cached) return cached;

@@ -38,7 +38,11 @@
 
         <div class="apt__actions">
           <ui-button variant="primary" size="md" (click)="addToCalendar()">Dodaj u kalendar</ui-button>
-          <ui-button variant="secondary" size="md" routerLink="/calendar">Izmeni termin</ui-button>
+          <ui-button variant="secondary" size="md"
+                     routerLink="/calendar" [queryParams]="{ izmeni: apt.id }">Izmeni termin</ui-button>
+          <button type="button" class="apt__obrisi" [disabled]="brisem()" (click)="obrisi(apt.id)">
+            {{ brisem() ? 'Brisanje...' : 'Obriši termin' }}
+          </button>
         </div>
       </ui-card>
 

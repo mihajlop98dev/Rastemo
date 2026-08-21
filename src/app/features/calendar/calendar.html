@@ -96,6 +96,14 @@
             <strong>{{ apt.title }}</strong>
             <span class="text-soft">{{ formatTime(apt.scheduled_at) }}</span>
           </div>
+          <div class="calpage__akcije">
+            <button type="button" title="Izmeni" (click)="openEdit(apt)">
+              <lucide-icon [img]="PencilIcon" [size]="14"></lucide-icon>
+            </button>
+            <button type="button" title="Obriši" [disabled]="brisem()" (click)="obrisiTermin(apt)">
+              <lucide-icon [img]="TrashIcon" [size]="14"></lucide-icon>
+            </button>
+          </div>
         </div>
         <p class="text-soft calpage__empty" *ngIf="!selectedDayAppointments.length">Nema događaja ovog dana.</p>
         <ui-button variant="outline" size="sm" [fullWidth]="true" (click)="openCreate()">
@@ -135,7 +143,7 @@
   <div class="calpage__modal-backdrop" *ngIf="showCreate()" (click)="closeCreate()">
     <div class="calpage__modal" (click)="$event.stopPropagation()">
       <div class="calpage__modal-head">
-        <h2>Novi događaj</h2>
+        <h2>{{ uIzmeni() ? 'Izmeni događaj' : 'Novi događaj' }}</h2>
         <button class="calpage__modal-close" (click)="closeCreate()">
           <lucide-icon [img]="XIcon" [size]="18"></lucide-icon>
         </button>
@@ -173,8 +181,13 @@
         (valueChange)="newClinicId = $event" />
 
       <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newTitle || !newDate" (click)="submitCreate()">
-        {{ creating() ? 'Čuvanje...' : 'Sačuvaj događaj' }}
+        {{ creating() ? 'Čuvanje...' : (uIzmeni() ? 'Sačuvaj izmene' : 'Sačuvaj događaj') }}
       </ui-button>
+
+      <button type="button" class="calpage__obrisi" *ngIf="uIzmeni() as id"
+              [disabled]="brisem()" (click)="obrisiIzModala(id)">
+        {{ brisem() ? 'Brisanje...' : 'Obriši ovaj događaj' }}
+      </button>
     </div>
   </div>
 </div>

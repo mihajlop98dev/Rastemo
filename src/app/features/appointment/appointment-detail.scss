@@ -136,3 +136,17 @@
     color: #6C5A9E;
   }
 }
+
+/* Brisanje termina — namerno kao tekst, ne kao dugme ravnopravno ostalima. */
+.apt__obrisi {
+  border: none;
+  background: none;
+  padding: 8px 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-danger);
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+  &:disabled { opacity: .5; cursor: default; }
+}

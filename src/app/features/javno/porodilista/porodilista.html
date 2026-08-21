@@ -12,6 +12,19 @@
            placeholder="Pretraži po gradu ili nazivu ustanove..." />
   </div>
 
+  <!-- Gradova je preko pedeset, pa spisak bez filtera traži mnogo skrolovanja. -->
+  <div class="porod__gradovi">
+    <button type="button" [class.porod__grad-dugme--tekuci]="!izabraniGrad()"
+            (click)="izabraniGrad.set('')">Svi gradovi</button>
+    <button type="button" *ngFor="let g of gradovi()"
+            [class.porod__grad-dugme--tekuci]="izabraniGrad() === g"
+            (click)="izabraniGrad.set(g)">{{ g }}</button>
+  </div>
+
+  <p class="porod__brojka" *ngIf="izabraniGrad() || pojam()">
+    Prikazano {{ prikazano() }} od {{ ukupno() }} ustanova
+  </p>
+
   <p class="text-soft" *ngIf="!poGradovima().length && !clinics.loading()">
     Nema ustanove koja odgovara pretrazi.
   </p>

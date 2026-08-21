@@ -19,6 +19,8 @@ import { LOKAL } from '../../../core/data/lokalizacija';
 export class Porodilista implements OnInit {
   private seo = inject(SeoService);
   readonly pojam = signal('');
+  /** Prazno znači sve gradove. */
+  readonly izabraniGrad = signal('');
 
   constructor(readonly clinics: ClinicService) {}
 
@@ -37,11 +39,19 @@ export class Porodilista implements OnInit {
       .replace(/[čć]/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z').replace(/đ/g, 'd');
   }
 
+  /** Svi gradovi u kojima postoji bar jedna ustanova, srpskim redosledom. */
+  readonly gradovi = computed(() =>
+    [...new Set(this.clinics.all().map(k => k.city).filter((g): g is string => !!g))]
+      .sort((a, b) => a.localeCompare(b, LOKAL))
+  );
+
   readonly poGradovima = computed(() => {
     const p = this.slozi(this.pojam().trim());
-    const lista = p
-      ? this.clinics.all().filter(k => this.slozi(`${k.name} ${k.city ?? ''}`).includes(p))
-      : this.clinics.all();
+    const grad = this.izabraniGrad();
+
+    let lista = this.clinics.all();
+    if (grad) lista = lista.filter(k => k.city === grad);
+    if (p) lista = lista.filter(k => this.slozi(`${k.name} ${k.city ?? ''}`).includes(p));
 
     const mapa = new Map<string, ClinicRow[]>();
     for (const k of lista) {
@@ -54,6 +64,7 @@ export class Porodilista implements OnInit {
   });
 
   readonly ukupno = computed(() => this.clinics.all().length);
+  readonly prikazano = computed(() => this.poGradovima().reduce((n, g) => n + g.ustanove.length, 0));
 
   readonly MapIcon = MapPin;
   readonly PhoneIcon = Phone;

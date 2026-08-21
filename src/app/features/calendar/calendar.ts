@@ -3,7 +3,7 @@ import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X } from 'lucide-angular';
+import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X, Pencil, Trash2 } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
@@ -74,6 +74,16 @@ export class CalendarPage implements OnInit {
     this.buildMonth();
 
     if (this.route.snapshot.queryParamMap.get('new')) this.openCreate();
+
+    // Dolazak sa ekrana termina: otvara se odmah izmena baš tog događaja.
+    const zaIzmenu = this.route.snapshot.queryParamMap.get('izmeni');
+    if (zaIzmenu) {
+      const a = this.appointments.all().find(x => x.id === zaIzmenu);
+      if (a) {
+        this.selectedIso.set(toLocalIso(new Date(a.scheduled_at)));
+        this.openEdit(a);
+      }
+    }
   }
 
   get monthLabel(): string {
@@ -203,8 +213,49 @@ export class CalendarPage implements OnInit {
     this.selectedIso.set(this.selectedIso() === day.iso ? null : day.iso);
   }
 
+  /** Id termina koji se menja; prazno znači da se pravi nov. */
+  readonly uIzmeni = signal<string | null>(null);
+  readonly brisem = signal(false);
+
+  /** Otvara isti obrazac, ali popunjen postojećim terminom. */
+  openEdit(a: AppointmentRow) {
+    const d = new Date(a.scheduled_at);
+    this.newTitle = a.title;
+    this.newType = a.appointment_type as typeof this.newType;
+    this.newDate = toLocalIso(d);
+    this.newTime = `${`${d.getHours()}`.padStart(2, '0')}:${`${d.getMinutes()}`.padStart(2, '0')}`;
+    this.newClinicId = a.clinic_id ?? null;
+    this.uIzmeni.set(a.id);
+    this.showCreate.set(true);
+  }
+
+  /** Brisanje iz otvorenog obrasca — tamo se zna samo id. */
+  async obrisiIzModala(id: string) {
+    if (this.brisem()) return;
+    this.brisem.set(true);
+    try {
+      await this.appointments.remove(id);
+      this.buildMonth();
+      this.showCreate.set(false);
+    } finally {
+      this.brisem.set(false);
+    }
+  }
+
+  async obrisiTermin(a: AppointmentRow) {
+    if (this.brisem()) return;
+    this.brisem.set(true);
+    try {
+      await this.appointments.remove(a.id);
+      this.buildMonth();
+    } finally {
+      this.brisem.set(false);
+    }
+  }
+
   /** Događaj se podrazumevano zakazuje za izabrani dan, a ne za danas. */
   openCreate() {
+    this.uIzmeni.set(null);
     this.newTitle = '';
     this.newType = 'pregled';
     this.newDate = this.selectedIso() ?? toLocalIso(new Date());
@@ -237,13 +288,25 @@ export class CalendarPage implements OnInit {
     this.creating.set(true);
     try {
       const scheduledAt = new Date(`${this.newDate}T${this.newTime}:00`).toISOString();
-      await this.appointments.create({
-        pregnancy_id: p.id,
-        title: this.newTitle,
-        appointment_type: this.newType,
-        scheduled_at: scheduledAt,
-        clinic_id: this.newClinicId,
-      });
+      const id = this.uIzmeni();
+
+      if (id) {
+        await this.appointments.update(id, {
+          title: this.newTitle,
+          appointment_type: this.newType,
+          scheduled_at: scheduledAt,
+          clinic_id: this.newClinicId,
+        });
+      } else {
+        await this.appointments.create({
+          pregnancy_id: p.id,
+          title: this.newTitle,
+          appointment_type: this.newType,
+          scheduled_at: scheduledAt,
+          clinic_id: this.newClinicId,
+        });
+      }
+
       this.selectedIso.set(this.newDate);
       this.buildMonth();
       this.showCreate.set(false);
@@ -269,4 +332,6 @@ export class CalendarPage implements OnInit {
   readonly PlusIcon = Plus;
   readonly SparklesIcon = Sparkles;
   readonly XIcon = X;
+  readonly PencilIcon = Pencil;
+  readonly TrashIcon = Trash2;
 }

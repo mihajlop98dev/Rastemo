@@ -381,3 +381,41 @@
     gap: var(--space-3);
   }
 }
+
+/* Izmena i brisanje termina — do sada se dodat događaj nije mogao ni dirati. */
+.calpage__akcije {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+
+  button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover { border-color: var(--color-border); color: var(--color-text); }
+    &:disabled { opacity: .4; cursor: default; }
+  }
+}
+
+.calpage__obrisi {
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: 9px;
+  border: none;
+  background: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-danger);
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+  &:disabled { opacity: .5; cursor: default; }
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule, Bell, FileText, CircleHelp, NotebookPen, MapPin, Clock } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
@@ -32,11 +32,26 @@ export class AppointmentDetail implements OnInit {
   readonly MapPinIcon = MapPin;
   readonly ClockIcon = Clock;
 
+  readonly brisem = signal(false);
+
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     readonly pregnancy: PregnancyService,
     private appointments: AppointmentService,
   ) {}
+
+  /** Posle brisanja nema čemu da se vrati — vodimo je na kalendar. */
+  async obrisi(id: string) {
+    if (this.brisem()) return;
+    this.brisem.set(true);
+    try {
+      await this.appointments.remove(id);
+      this.router.navigateByUrl('/calendar');
+    } finally {
+      this.brisem.set(false);
+    }
+  }
 
   get weekProgress() {
     return Math.round((this.pregnancy.weekNumber() / this.pregnancy.totalWeeks) * 100);

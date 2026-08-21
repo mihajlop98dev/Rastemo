@@ -25,7 +25,7 @@ export class KalendarIzvozService {
 
   /** U .ics vrednosti zarez, tačka-zarez i novi red moraju da se izbegnu. */
   private escape(t: string): string {
-    return t.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    return t.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
   }
 
   private opis(a: AppointmentRow): string {

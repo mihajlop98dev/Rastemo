@@ -52,12 +52,21 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    this.L = await import('leaflet');
+    // Leaflet je UMD paket. U razvoju `import()` vrati sam modul, a u
+    // produkcijskom buildu ga umota u `default` — bez ovoga na serveru puca
+    // sa „this.L.map is not a function", dok lokalno sve radi.
+    const modul: any = await import('leaflet');
+    this.L = modul.default ?? modul;
     this.mapa = this.L.map(this.platno.nativeElement, { scrollWheelZoom: false });
 
-    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    // CARTO Positron: svetle pločice bez jakih boja. Šarena podloga
+    // OpenStreetMap-a se tukla sa toplom paletom ostatka sajta i vukla pažnju
+    // sa samih ustanova, koje su ovde jedino važne.
+    this.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · '
+        + '© <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(this.mapa);
 
     this.nacrtaj();
@@ -82,14 +91,16 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
     for (const k of saKoordinatama) {
       const priblizna = k.lokacija_priblizna;
       const m = this.L.circleMarker([k.lat!, k.lng!], {
-        radius: 8,
-        color: priblizna ? '#c99' : '#c2185b',
-        fillColor: priblizna ? '#f3d6de' : '#e91e63',
-        fillOpacity: priblizna ? 0.45 : 0.85,
-        weight: 2,
+        radius: 7,
+        // Boje su iz palete sajta: --color-primary i --color-primary-dark.
+        color: '#FFFFFF',
+        fillColor: priblizna ? '#F0A987' : '#E5677E',
+        fillOpacity: priblizna ? 0.7 : 1,
+        weight: 2.5,
+        className: 'mapa__marker',
       })
         .addTo(this.mapa)
-        .bindPopup(this.opis(k));
+        .bindPopup(this.opis(k), { closeButton: false, offset: [0, -4] });
       this.markeri.set(k.id, m);
     }
 
@@ -127,11 +138,13 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
     if (k.city) delovi.push(red(k.city));
     if (k.phone) {
       const cist = this.bezHtml(k.phone);
-      delovi.push(`<a href="tel:${cist.replace(/[^0-9+]/g, '')}">${cist}</a>`);
+      // Svaki link u svom redu — inline su se slepili u „011/2068-242Putanja".
+      delovi.push(`<div><a class="mapa__telefon" href="tel:${cist.replace(/[^0-9+]/g, '')}">${cist}</a></div>`);
     }
     if (k.lokacija_priblizna) delovi.push('<em>Približna lokacija — centar grada</em>');
     delovi.push(
-      `<a href="${this.navigacija(k)}" target="_blank" rel="noopener">Putanja do ustanove</a>`,
+      `<div><a class="mapa__putanja" href="${this.navigacija(k)}" target="_blank" rel="noopener">`
+      + 'Putanja do ustanove →</a></div>',
     );
     return delovi.join('');
   }

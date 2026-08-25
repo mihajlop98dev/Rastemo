@@ -1,5 +1,7 @@
 <div class="calpage">
 
+  <app-push-poziv *ngIf="prikaziPushPoziv()" (zatvoreno)="prikaziPushPoziv.set(false)" />
+
   <header class="calpage__header">
     <div>
       <h1>Kalendar</h1>

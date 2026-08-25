@@ -1,0 +1,58 @@
+<div class="pushpoziv">
+  <ng-container *ngIf="!gotovo(); else uspeh">
+
+    <ng-container [ngSwitch]="push.stanje()">
+
+      <ng-container *ngSwitchCase="'treba-instalirati'">
+        <h3>Da te podsetimo dan pre pregleda?</h3>
+        <p>
+          Da bi podsetnici radili na iPhone-u, aplikacija mora da stoji na
+          početnom ekranu. To traje pola minuta:
+        </p>
+        <ol class="pushpoziv__koraci">
+          <li>Dodirni <strong>dugme za deljenje</strong> na dnu Safari-ja (kvadratić sa strelicom naviše)</li>
+          <li>Skroluj i izaberi <strong>Dodaj na početni ekran</strong></li>
+          <li>Otvori aplikaciju sa te nove ikone i vrati se ovde</li>
+        </ol>
+        <p class="pushpoziv__nota">
+          Uz to, prijava ti više neće isticati — Safari je inače briše posle
+          sedam dana.
+        </p>
+        <ui-button variant="ghost" size="sm" (click)="zatvori()">Razumem</ui-button>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'nepodrzano'">
+        <h3>Podsetnici ovde nisu dostupni</h3>
+        <p>Ovaj pregledač ne podržava notifikacije. Na telefonu će raditi.</p>
+        <ui-button variant="ghost" size="sm" (click)="zatvori()">U redu</ui-button>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <h3>Da te podsetimo dan pre pregleda?</h3>
+        <p *ngIf="!odbijeno()">
+          Poslaćemo ti jednu notifikaciju dan ranije, sa vremenom i ustanovom.
+          Ništa drugo — a možeš da isključiš kad god hoćeš.
+        </p>
+        <p *ngIf="odbijeno()" class="pushpoziv__odbijeno">
+          Notifikacije su odbijene u pregledaču. Da ih uključiš, dozvoli ih za
+          ovaj sajt u podešavanjima telefona.
+        </p>
+
+        <div class="pushpoziv__dugmad" *ngIf="!odbijeno()">
+          <ui-button variant="ghost" size="sm" (click)="zatvori()">Ne sada</ui-button>
+          <ui-button variant="primary" size="sm" [disabled]="push.radi()" (click)="ukljuci()">
+            {{ push.radi() ? 'Uključujem…' : 'Podseti me' }}
+          </ui-button>
+        </div>
+        <ui-button *ngIf="odbijeno()" variant="ghost" size="sm" (click)="zatvori()">U redu</ui-button>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+
+  <ng-template #uspeh>
+    <h3>Gotovo 🎉</h3>
+    <p>Javićemo ti se dan pre pregleda. Šta sve stiže možeš da podesiš u Profilu.</p>
+    <ui-button variant="primary" size="sm" (click)="zatvori()">Zatvori</ui-button>
+  </ng-template>
+</div>

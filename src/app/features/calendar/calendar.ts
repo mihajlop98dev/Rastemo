@@ -11,6 +11,8 @@ import { UiClinicPicker } from '../../shared/ui/clinic-picker/clinic-picker';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { KalendarIzvozService } from '../../core/services/kalendar-izvoz.service';
 import { AppointmentService, AppointmentRow } from '../../core/services/appointment.service';
+import { PushPoziv } from '../../shared/push-poziv/push-poziv';
+import { PushService } from '../../core/services/push.service';
 
 interface CalendarDay {
   date: Date;
@@ -35,7 +37,7 @@ function toLocalIso(d: Date): string {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs, UiClinicPicker],
+  imports: [PushPoziv, CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs, UiClinicPicker],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss'
 })
@@ -69,6 +71,7 @@ export class CalendarPage implements OnInit {
     private pregnancy: PregnancyService,
     readonly appointments: AppointmentService,
     private izvoz: KalendarIzvozService,
+    private push: PushService,
   ) {}
 
   async ngOnInit() {
@@ -322,9 +325,26 @@ export class CalendarPage implements OnInit {
       this.selectedIso.set(this.newDate);
       this.buildMonth();
       this.showCreate.set(false);
+
+      // Poziv ima smisla tek sad, kad postoji pregled na koji se podseća.
+      // Traži se jednom: ko odbije, na iPhone-u se dozvola posle menja samo
+      // kroz podešavanja telefona, pa ponovno zapitkivanje ništa ne rešava.
+      if (!id) await this.mozdaPonudiPodsetnik();
     } finally {
       this.creating.set(false);
     }
+  }
+
+  readonly prikaziPushPoziv = signal(false);
+  private static readonly KLJUC_PITANO = 'dnevnik-push-pitano';
+
+  private async mozdaPonudiPodsetnik() {
+    if (localStorage.getItem(CalendarPage.KLJUC_PITANO)) return;
+    const stanje = await this.push.procitajStanje();
+    if (stanje === 'ukljuceno' || stanje === 'odbijeno') return;
+
+    localStorage.setItem(CalendarPage.KLJUC_PITANO, '1');
+    this.prikaziPushPoziv.set(true);
   }
 
   formatDay(iso: string): string {

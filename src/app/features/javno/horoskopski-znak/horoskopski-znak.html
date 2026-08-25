@@ -1,0 +1,70 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Horoskopski znak bebe</h1>
+    <p>
+      Upiši termin porođaja i vidi u kom znaku bi beba trebalo da se rodi —
+      i koliko je to uopšte izvesno.
+    </p>
+  </header>
+
+  <ui-card padding="lg" class="horo__forma" *ngIf="rezultat() === null">
+    <label class="horo__polje">
+      <span>Termin porođaja ili datum rođenja</span>
+      <input type="date" [(ngModel)]="datum" />
+    </label>
+
+    <p class="horo__greska" *ngIf="greska()">{{ greska() }}</p>
+
+    <ui-button variant="primary" size="lg" (click)="izracunaj()">Pogledaj znak</ui-button>
+  </ui-card>
+
+  <ui-card padding="lg" class="horo__rezultat" *ngIf="rezultat() as r">
+    <span class="horo__emoji" aria-hidden="true">{{ r.znak.emoji }}</span>
+    <h2>{{ r.znak.naziv }}</h2>
+    <p class="horo__osobine">{{ r.znak.osobine }}</p>
+    <p class="horo__opis">{{ r.znak.opis }}</p>
+
+    <p class="horo__granica" *ngIf="r.naGranici as drugi">
+      Termin ti je na samoj granici sa znakom {{ drugi.naziv }} {{ drugi.emoji }}.
+      Kako se u termin porodi manje od jedne od dvadeset žena, znak je zaista
+      neizvestan.
+    </p>
+
+    <ui-button variant="ghost" (click)="ponovo()">Probaj drugi datum</ui-button>
+  </ui-card>
+
+  <ui-card padding="lg">
+    <div class="strana__tekst">
+      <h2>Zašto znak nije siguran</h2>
+      <p>
+        Termin je procena, ne datum. Tačno u termin porodi se manje od
+        <strong>5%</strong> žena, a većina porođaja padne u dve nedelje oko njega.
+        Ako ti je termin blizu granice dva znaka, obe mogućnosti su realne.
+      </p>
+      <h2>Odakle znacima imena</h2>
+      <p>
+        Svih dvanaest nose imena sazvežđa kroz koja Sunce prividno prolazi tokom
+        godine, a većina imena dolazi iz grčkih mitova. Zbog pomeranja Zemljine ose
+        Sunce danas više nije u istom sazvežđu kao pre dve hiljade godina, kad su
+        datumi ustanovljeni — astrologija je zadržala stare datume.
+      </p>
+    </div>
+  </ui-card>
+
+  <section>
+    <h2 class="horo__naslov-spiska">Svih dvanaest znakova</h2>
+    <div class="horo__mreza">
+      <ui-card padding="md" *ngFor="let z of sviZnaci" class="horo__stavka">
+        <span class="horo__stavka-emoji" aria-hidden="true">{{ z.emoji }}</span>
+        <h3>{{ z.naziv }}</h3>
+        <p>{{ opseg(z) }}</p>
+      </ui-card>
+    </div>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Nisi sigurna kad ti je termin?</h2>
+    <p>Izračunaj ga iz poslednje menstruacije ili datuma začeća.</p>
+    <ui-button routerLink="/kalkulator-termina" variant="primary" size="lg">Kalkulator termina</ui-button>
+  </ui-card>
+</div>

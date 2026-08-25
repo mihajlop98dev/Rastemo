@@ -1,0 +1,46 @@
+.zabava {
+  &__mreza {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  &__stavka {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    ::ng-deep .ui-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    &:hover ::ng-deep .ui-card {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    }
+  }
+
+  &__emoji { font-size: 30px; line-height: 1; }
+
+  &__kartica {
+    h2 { font-size: 18px; margin: 0; }
+    p { font-size: 14.5px; line-height: 1.6; color: var(--color-text-soft); margin: 0; flex: 1; }
+  }
+
+  &__oznaka {
+    font-size: 12px;
+    color: var(--color-primary-dark);
+    background: var(--color-primary-soft);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  @media (max-width: 560px) {
+    &__mreza { grid-template-columns: 1fr; }
+  }
+}

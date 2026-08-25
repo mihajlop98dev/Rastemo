@@ -1,0 +1,26 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Zabava</h1>
+    <p>
+      Dok čekaš, nešto lakše. Imena sa proverenim poreklom, i tri stvari iz
+      tradicije koje se rade iz radoznalosti, a ne zato što nešto znače.
+    </p>
+  </header>
+
+  <div class="zabava__mreza">
+    <a *ngFor="let s of stavke" [routerLink]="s.putanja" class="zabava__stavka">
+      <ui-card padding="lg" class="zabava__kartica">
+        <span class="zabava__emoji" aria-hidden="true">{{ s.emoji }}</span>
+        <h2>{{ s.naslov }}</h2>
+        <p>{{ s.opis }}</p>
+        <span class="zabava__oznaka">{{ s.oznaka }}</span>
+      </ui-card>
+    </a>
+  </div>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Ozbiljni deo je u dnevniku</h2>
+    <p>Nedelja trudnoće, simptomi, težina, pregledi i nalazi — sve na jednom mestu.</p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+</div>

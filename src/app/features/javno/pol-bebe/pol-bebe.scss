@@ -1,0 +1,70 @@
+.pol {
+  &__forma {
+    ::ng-deep .ui-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+  }
+
+  &__polje {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    span { font-size: 14px; font-weight: 600; }
+
+    input, select {
+      width: 100%;
+      padding: 11px 13px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      color: var(--color-text);
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+      }
+    }
+  }
+
+  &__greska {
+    font-size: 14px;
+    color: var(--color-danger, #c0392b);
+    margin: 0;
+  }
+
+  &__rezultat {
+    ::ng-deep .ui-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-3);
+      background: linear-gradient(135deg, var(--color-primary-soft), var(--color-peach-light));
+    }
+
+    h2 { font-size: 30px; margin: 0; }
+  }
+
+  &__emoji { font-size: 42px; line-height: 1; }
+
+  &__uvod {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--color-text-soft);
+    margin: 0;
+  }
+
+  &__napomena {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+    margin: 0;
+    max-width: 420px;
+  }
+}

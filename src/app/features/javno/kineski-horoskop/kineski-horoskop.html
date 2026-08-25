@@ -1,0 +1,80 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Kineski znak bebe</h1>
+    <p>
+      Kineski krug ima dvanaest životinja i ponavlja se svake dvanaeste godine.
+      Upiši termin porođaja i vidi koja pripada tvojoj bebi.
+    </p>
+  </header>
+
+  <ui-card padding="lg" class="horo__forma" *ngIf="rezultat() === null">
+    <label class="horo__polje">
+      <span>Termin porođaja ili datum rođenja</span>
+      <input type="date" [(ngModel)]="datum" />
+    </label>
+
+    <p class="horo__greska" *ngIf="greska()">{{ greska() }}</p>
+
+    <ui-button variant="primary" size="lg" (click)="izracunaj()">Pogledaj znak</ui-button>
+  </ui-card>
+
+  <ui-card padding="lg" class="horo__rezultat" *ngIf="rezultat() as r">
+    <span class="horo__emoji" aria-hidden="true">{{ r.znak.emoji }}</span>
+    <p class="horo__uvod">Godina {{ r.godina }}. je godina znaka</p>
+    <h2>{{ r.znak.naziv }}</h2>
+    <p class="horo__osobine">{{ r.znak.osobine }}</p>
+    <p class="horo__opis">{{ r.znak.opis }}</p>
+
+    <p class="horo__granica" *ngIf="r.granica as g">
+      <ng-container *ngIf="g.preGranice; else posle">
+        Termin ti je tik pred kineskom Novom godinom, koja pada {{ g.datum }}.
+        Ako se beba rodi posle tog datuma, znak je {{ g.drugiZnak.naziv }}
+        {{ g.drugiZnak.emoji }}.
+      </ng-container>
+      <ng-template #posle>
+        Kineska Nova godina je bila {{ g.datum }}. Da se beba rodi pre tog datuma,
+        znak bi bio {{ g.drugiZnak.naziv }} {{ g.drugiZnak.emoji }}.
+      </ng-template>
+    </p>
+
+    <ui-button variant="ghost" (click)="ponovo()">Probaj drugi datum</ui-button>
+  </ui-card>
+
+  <ui-card padding="lg">
+    <div class="strana__tekst">
+      <h2>Zašto kineska godina ne počinje prvog januara</h2>
+      <p>
+        Kineski kalendar prati mesečeve mene, pa Nova godina pada između
+        21. januara i 20. februara — svake godine na drugi datum. Zato dete
+        rođeno u januaru najčešće pripada <strong>prethodnoj</strong> kineskoj
+        godini, iako je po našem kalendaru već nova. Ovaj kalkulator to uzima
+        u obzir; većina kalkulatora na internetu ne uzima.
+      </p>
+      <h2>Šta znak znači</h2>
+      <p>
+        Ništa što se može proveriti. To je tradicija stara više vekova i u Kini
+        se doživljava otprilike kao kod nas horoskopski znak — kao tema za
+        razgovor, ne kao opis deteta. Jedina merljiva posledica je da se u
+        godinama zmaja u Kini rodi osetno više dece, jer se taj znak smatra
+        najsrećnijim.
+      </p>
+    </div>
+  </ui-card>
+
+  <section>
+    <h2 class="horo__naslov-spiska">Svih dvanaest znakova</h2>
+    <div class="horo__mreza">
+      <ui-card padding="md" *ngFor="let z of sviZnaci" class="horo__stavka">
+        <span class="horo__stavka-emoji" aria-hidden="true">{{ z.emoji }}</span>
+        <h3>{{ z.naziv }}</h3>
+        <p>{{ z.osobine }}</p>
+      </ui-card>
+    </div>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Znak je zabava, termin je ozbiljan</h2>
+    <p>Izračunaj tačan termin porođaja i prati nedelju po nedelju.</p>
+    <ui-button routerLink="/kalkulator-termina" variant="primary" size="lg">Kalkulator termina</ui-button>
+  </ui-card>
+</div>

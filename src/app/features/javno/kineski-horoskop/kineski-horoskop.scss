@@ -1,0 +1,90 @@
+.horo {
+  &__forma ::ng-deep .ui-card,
+  &__rezultat ::ng-deep .ui-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__rezultat ::ng-deep .ui-card {
+    align-items: center;
+    text-align: center;
+    gap: var(--space-3);
+    background: linear-gradient(135deg, var(--color-primary-soft), var(--color-peach-light));
+  }
+
+  &__polje {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    span { font-size: 14px; font-weight: 600; }
+
+    input {
+      width: 100%;
+      padding: 11px 13px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      color: var(--color-text);
+
+      &:focus { outline: none; border-color: var(--color-primary); }
+    }
+  }
+
+  &__greska { font-size: 14px; color: var(--color-danger, #c0392b); margin: 0; }
+
+  &__emoji { font-size: 46px; line-height: 1; }
+  &__stavka-emoji { font-size: 26px; line-height: 1; }
+
+  &__uvod {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--color-text-soft);
+    margin: 0;
+  }
+
+  &__rezultat h2 { font-size: 30px; margin: 0; }
+
+  &__osobine { font-size: 15px; color: var(--color-text); margin: 0; font-weight: 600; }
+  &__opis { font-size: 14.5px; line-height: 1.6; color: var(--color-text-soft); margin: 0; max-width: 440px; }
+
+  &__granica {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin: 0;
+    max-width: 440px;
+  }
+
+  &__naslov-spiska { font-size: 19px; margin: 0 0 var(--space-4); }
+
+  &__mreza {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  &__stavka {
+    ::ng-deep .ui-card {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      height: 100%;
+    }
+
+    h3 { font-size: 15px; margin: 0; }
+    p { font-size: 13px; line-height: 1.5; color: var(--color-text-soft); margin: 0; }
+  }
+
+  @media (max-width: 560px) {
+    &__mreza { grid-template-columns: repeat(2, 1fr); }
+    &__rezultat h2 { font-size: 25px; }
+  }
+}

@@ -17,8 +17,8 @@ export class JavniLayout {
   readonly stavke = [
     { putanja: '/trudnoca', naziv: 'Nedelju po nedelju' },
     { putanja: '/kalkulator-termina', naziv: 'Kalkulator termina' },
-    { putanja: '/imena', naziv: 'Značenje imena' },
     { putanja: '/porodilista', naziv: 'Porodilišta' },
+    { putanja: '/zabava', naziv: 'Zabava' },
     { putanja: '/cesta-pitanja', naziv: 'Česta pitanja' },
     { putanja: '/o-nama', naziv: 'O nama' },
   ];

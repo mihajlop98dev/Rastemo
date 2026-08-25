@@ -2,7 +2,7 @@ import { Component, OnInit, signal, computed, inject, ViewChild, ElementRef } fr
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, MapPin, Phone } from 'lucide-angular';
+import { LucideAngularModule, MapPin, Phone, Navigation } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { ClinicService, ClinicRow } from '../../../core/services/clinic.service';
@@ -87,6 +87,29 @@ export class Porodilista implements OnInit {
 
   @ViewChild('mapaElement') platnoMape?: ElementRef<HTMLElement>;
 
+  /**
+   * Link koji na telefonu otvara Google mape, po mogućstvu odmah sa putanjom.
+   *
+   * Uvek koordinate kad postoje. Tekstualni upit je probavan i nije pouzdan:
+   * za Kikindu je Google vratio dom zdravlja umesto bolnice iako je adresa
+   * bila u upitu. Zato tekst ide samo kad koordinata nema, i tada vodi na
+   * pretragu a ne na navigaciju — da žena vidi rezultate i sama izabere,
+   * umesto da je aplikacija pošalje na pogrešnu adresu.
+   */
+  navigacija(u: ClinicRow): string {
+    if (u.lat !== null && u.lng !== null) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${u.lat},${u.lng}`;
+    }
+    const upit = [u.name, u.address, u.city, 'Srbija'].filter(Boolean).join(', ');
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(upit);
+  }
+
+  /** Bez koordinata link vodi na pretragu, pa i tekst mora to da kaže. */
+  nazivLinka(u: ClinicRow): string {
+    return u.lat !== null ? 'Putanja do ustanove' : 'Pronađi na mapama';
+  }
+
   readonly MapIcon = MapPin;
+  readonly NavIcon = Navigation;
   readonly PhoneIcon = Phone;
 }

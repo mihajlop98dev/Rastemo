@@ -117,7 +117,15 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
       delovi.push(`<a href="tel:${cist.replace(/[^0-9+]/g, '')}">${cist}</a>`);
     }
     if (k.lokacija_priblizna) delovi.push('<em>Približna lokacija — centar grada</em>');
+    delovi.push(
+      `<a href="${this.navigacija(k)}" target="_blank" rel="noopener">Putanja do ustanove</a>`,
+    );
     return delovi.join('');
+  }
+
+  /** Na mapi su samo ustanove sa koordinatama, pa link uvek vodi na putanju. */
+  private navigacija(k: ClinicRow): string {
+    return `https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}`;
   }
 
   /** Nazivi i adrese dolaze iz baze; u popup idu kao tekst, ne kao HTML. */

@@ -57,7 +57,13 @@
         <a *ngIf="u.phone" [href]="'tel:' + u.phone" (click)="$event.stopPropagation()">
           <lucide-icon [img]="PhoneIcon" [size]="13"></lucide-icon> {{ u.phone }}
         </a>
-        <span class="porod__na-mapi" *ngIf="u.lat !== null">Prikaži na mapi</span>
+        <div class="porod__akcije">
+          <span class="porod__na-mapi" *ngIf="u.lat !== null">Prikaži na mapi</span>
+          <a class="porod__navigacija" [href]="navigacija(u)" target="_blank" rel="noopener"
+             (click)="$event.stopPropagation()">
+            <lucide-icon [img]="NavIcon" [size]="13"></lucide-icon> {{ nazivLinka(u) }}
+          </a>
+        </div>
       </ui-card>
     </div>
   </section>

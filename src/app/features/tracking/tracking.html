@@ -373,6 +373,41 @@
         <ui-button variant="primary" size="sm" type="submit" [disabled]="!newMedName.trim()">Dodaj</ui-button>
       </form>
     </ui-card>
+
+    <ui-card class="tracking__list" padding="lg">
+      <div class="tracking__list-head">
+        <h2>Istorija uzimanja</h2>
+        <ui-button variant="ghost" size="sm" type="button"
+                   (click)="istorijaOtvorena() ? sakrijIstoriju() : prikaziIstoriju()">
+          {{ istorijaOtvorena() ? 'Sakrij' : 'Prikaži' }}
+        </ui-button>
+      </div>
+
+      <ng-container *ngIf="istorijaOtvorena()">
+        <p class="text-soft" *ngIf="medicationSvc.istorijaSeUcitava()">Učitavam…</p>
+
+        <ng-container *ngIf="!medicationSvc.istorijaSeUcitava()">
+          <p class="text-soft" *ngIf="!medicationSvc.istorija().length">
+            Još nema zabeleženih uzimanja. Svaki put kad označiš da si popila terapiju,
+            zabeleži se ovde sa datumom.
+          </p>
+
+          <div class="tracking__istorija-dan" *ngFor="let d of medicationSvc.istorija()">
+            <strong class="tracking__istorija-datum">{{ danLabela(d.datum) }}</strong>
+            <div class="tracking__istorija-stavka" *ngFor="let st of d.stavke">
+              <span>{{ st.naziv }}</span>
+              <span class="text-muted">
+                {{ st.puta }}× <ng-container *ngIf="st.ocekivano">od {{ st.ocekivano }}</ng-container>
+              </span>
+            </div>
+          </div>
+
+          <p class="text-soft tracking__istorija-nota" *ngIf="medicationSvc.istorija().length">
+            Prikazano je poslednjih 30 dana, uključujući i terapiju koju više ne piješ.
+          </p>
+        </ng-container>
+      </ng-container>
+    </ui-card>
   </div>
 
   <div class="tracking__grid" *ngIf="activeTab === 'beleske'">

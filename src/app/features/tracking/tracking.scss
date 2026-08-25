@@ -630,3 +630,33 @@
     gap: var(--space-2);
   }
 }
+
+.tracking {
+  &__istorija-dan {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-of-type { border-bottom: none; }
+  }
+
+  &__istorija-datum {
+    display: block;
+    font-size: 13.5px;
+    color: var(--color-primary-dark);
+    margin-bottom: 6px;
+    text-transform: capitalize;
+  }
+
+  &__istorija-stavka {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-size: 14px;
+    padding: 3px 0;
+  }
+
+  &__istorija-nota {
+    font-size: 12.5px;
+    margin-top: var(--space-3);
+  }
+}

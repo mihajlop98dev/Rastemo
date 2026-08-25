@@ -11,7 +11,7 @@
 
       <ui-card padding="lg" class="apt__main">
         <div class="apt__week">
-          <span class="text-muted">{{ pregnancy.weekNumber() }}. nedelja + {{ pregnancy.weekDay() }} dana</span>
+          <span class="text-muted">{{ pregnancy.weekNumber() }}. nedelja + {{ pregnancy.weekDay() }} dana · {{ pregnancy.mesec() }}. mesec</span>
           <ui-progress-bar [value]="weekProgress" tone="primary" />
           <div class="apt__week-range">
             <span>Termin porođaja</span>

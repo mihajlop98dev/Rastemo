@@ -112,6 +112,7 @@ export class Home implements OnInit {
 
   get weekNumber() { return this.pregnancy.weekNumber(); }
   get weekDay() { return this.pregnancy.weekDay(); }
+  get mesec() { return this.pregnancy.mesec(); }
   get totalWeeks() { return this.pregnancy.totalWeeks; }
   get dueDateLabel(): string {
     const p = this.pregnancy.active();

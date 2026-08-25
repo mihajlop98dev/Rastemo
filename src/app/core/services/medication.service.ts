@@ -21,11 +21,19 @@ function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+/** Jedan dan istorije: šta je tog dana uzeto i koliko puta. */
+export interface DanIstorije {
+  datum: string;
+  stavke: { naziv: string; tip: 'terapija' | 'suplement'; puta: number; ocekivano: number }[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class MedicationService {
   readonly medications = signal<MedicationRow[]>([]);
   readonly todayLogs = signal<MedicationLogRow[]>([]);
   readonly loading = signal(false);
+  readonly istorija = signal<DanIstorije[]>([]);
+  readonly istorijaSeUcitava = signal(false);
 
   constructor(private supabase: SupabaseService) {}
 
@@ -54,6 +62,68 @@ export class MedicationService {
     }
 
     this.loading.set(false);
+  }
+
+  /**
+   * Istorija uzimanja po danima.
+   *
+   * Uzimaju se i neaktivni lekovi: terapija koja je u međuvremenu prekinuta i
+   * dalje je deo istorije, a lekar pita šta je uzimano, ne šta se uzima danas.
+   */
+  async loadIstorija(pregnancyId: string, danaUnazad = 30) {
+    this.istorijaSeUcitava.set(true);
+
+    const { data: meds } = await this.supabase.client
+      .from('medications')
+      .select('*')
+      .eq('pregnancy_id', pregnancyId);
+
+    const sviLekovi = (meds as MedicationRow[]) ?? [];
+    if (!sviLekovi.length) {
+      this.istorija.set([]);
+      this.istorijaSeUcitava.set(false);
+      return;
+    }
+
+    const od = new Date();
+    od.setDate(od.getDate() - danaUnazad);
+    od.setHours(0, 0, 0, 0);
+
+    const { data: logs } = await this.supabase.client
+      .from('medication_logs')
+      .select('*')
+      .in('medication_id', sviLekovi.map(m => m.id))
+      .gte('taken_at', od.toISOString())
+      .order('taken_at', { ascending: false });
+
+    const poDanu = new Map<string, Map<string, number>>();
+    for (const l of (logs as MedicationLogRow[]) ?? []) {
+      // Datum se čita u lokalnoj zoni: unos u 23h ne sme da padne na sutrašnji dan.
+      const d = new Date(l.taken_at);
+      const kljuc = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!poDanu.has(kljuc)) poDanu.set(kljuc, new Map());
+      const dan = poDanu.get(kljuc)!;
+      dan.set(l.medication_id, (dan.get(l.medication_id) ?? 0) + 1);
+    }
+
+    const poId = new Map(sviLekovi.map(m => [m.id, m]));
+    const dani: DanIstorije[] = [...poDanu.entries()]
+      .sort((a, b) => b[0].localeCompare(a[0]))
+      .map(([datum, stavke]) => ({
+        datum,
+        stavke: [...stavke.entries()].map(([id, puta]) => {
+          const m = poId.get(id);
+          return {
+            naziv: m?.name ?? 'Nepoznato',
+            tip: m?.type ?? 'terapija',
+            puta,
+            ocekivano: m?.dose_per_day ?? 0,
+          };
+        }).sort((a, b) => a.naziv.localeCompare(b.naziv, 'sr-Latn-RS')),
+      }));
+
+    this.istorija.set(dani);
+    this.istorijaSeUcitava.set(false);
   }
 
   async add(pregnancyId: string, name: string, type: 'terapija' | 'suplement', dosePerDay: number) {

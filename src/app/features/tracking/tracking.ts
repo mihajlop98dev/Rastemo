@@ -354,6 +354,30 @@ export class Tracking implements OnInit, OnDestroy {
 
   // --- Terapija / suplementi ---
 
+  readonly istorijaOtvorena = signal(false);
+
+  async prikaziIstoriju() {
+    const p = this.pregnancy.active();
+    if (!p) return;
+    this.istorijaOtvorena.set(true);
+    await this.medicationSvc.loadIstorija(p.id);
+  }
+
+  sakrijIstoriju() {
+    this.istorijaOtvorena.set(false);
+  }
+
+  /** „danas" i „juče" se čitaju brže od datuma. */
+  danLabela(datum: string): string {
+    const d = new Date(datum + 'T00:00:00');
+    const danas = new Date();
+    danas.setHours(0, 0, 0, 0);
+    const razlika = Math.round((danas.getTime() - d.getTime()) / 86_400_000);
+    if (razlika === 0) return 'Danas';
+    if (razlika === 1) return 'Juče';
+    return d.toLocaleDateString(LOKAL, { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+
   async addMedication() {
     const p = this.pregnancy.active();
     if (!p || !this.newMedName.trim()) return;
@@ -395,10 +419,12 @@ export class Tracking implements OnInit, OnDestroy {
 
   async logDose(id: string) {
     await this.medicationSvc.logDose(id);
+    if (this.istorijaOtvorena()) await this.prikaziIstoriju();
   }
 
   async undoDose(id: string) {
     await this.medicationSvc.undoDose(id);
+    if (this.istorijaOtvorena()) await this.prikaziIstoriju();
   }
 
   async saveDiaryEntry() {

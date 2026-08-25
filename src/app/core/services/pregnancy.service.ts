@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
+import { mesecZaNedelju } from '../data/mesec-trudnoce';
 import { AuthService } from './auth.service';
 
 export type BabyGender = 'musko' | 'zensko' | 'nepoznato';
@@ -106,5 +107,7 @@ export class PregnancyService {
 
   readonly weekNumber = computed(() => Math.floor(this.gestationDays() / 7));
   readonly weekDay = computed(() => this.gestationDays() % 7);
+  /** Žene o trudnoći govore u mesecima, a aplikacija je merila samo u nedeljama. */
+  readonly mesec = computed(() => mesecZaNedelju(this.weekNumber()));
   readonly totalWeeks = 40;
 }

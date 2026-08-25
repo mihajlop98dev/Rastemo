@@ -24,6 +24,9 @@ export class DiaryService {
       .from('diary_entries')
       .select('*')
       .eq('pregnancy_id', pregnancyId)
+      // Pitanja za lekara dele istu tabelu, ali imaju svoj ekran i ne spadaju
+      // u beleške — bez ovog filtera pojavila bi se u dnevniku.
+      .neq('entry_type', 'doctor_question')
       .order('created_at', { ascending: false });
 
     this.entries.set((data as DiaryEntryRow[]) ?? []);

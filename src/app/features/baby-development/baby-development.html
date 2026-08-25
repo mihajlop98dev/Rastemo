@@ -31,6 +31,9 @@
 
     <ui-card class="babydev__visual-card" padding="lg">
       <span class="babydev__week-label">{{ selectedWeek() }}. nedelja<ng-container *ngIf="isCurrentWeek"> + {{ currentWeekDay }} dana</ng-container></span>
+      <span class="babydev__month-label" *ngIf="opsegMeseca as o">
+        {{ mesec }}. mesec trudnoće · {{ o.od }}–{{ o.do }}. nedelja
+      </span>
       <app-baby-visual [week]="selectedWeek()" size="lg" />
       <div class="babydev__stats">
         <div>
@@ -58,10 +61,44 @@
       <div class="babydev__divider"></div>
 
       <h2>Pitanja za lekara</h2>
-      <ul class="babydev__questions">
-        <li>Da li su pokreti bebe u ovoj nedelji uobičajeni?</li>
-        <li>Na šta treba posebno da obratim pažnju do sledećeg pregleda?</li>
-      </ul>
+
+      <div class="babydev__pitanje" *ngFor="let p of pitanjaSvc.pitanja()">
+        <ng-container *ngIf="izmenaId() !== p.id; else izmena">
+          <label class="babydev__pitanje-red">
+            <input type="checkbox" [checked]="p.is_done" (change)="pitanjaSvc.prebaciStanje(p.id)" />
+            <span [class.babydev__pitanje--gotovo]="p.is_done">{{ p.content }}</span>
+          </label>
+          <div class="babydev__pitanje-akcije">
+            <button type="button" (click)="pocniIzmenu(p.id, p.content)" title="Izmeni">Izmeni</button>
+            <button type="button" (click)="pitanjaSvc.obrisi(p.id)" title="Obriši">Obriši</button>
+          </div>
+        </ng-container>
+
+        <ng-template #izmena>
+          <form class="babydev__pitanje-izmena" (ngSubmit)="sacuvajIzmenu()">
+            <input type="text" [(ngModel)]="izmenaTekst" name="izmenaTekst" />
+            <div class="babydev__pitanje-akcije">
+              <ui-button variant="ghost" size="sm" type="button" (click)="otkaziIzmenu()">Otkaži</ui-button>
+              <ui-button variant="primary" size="sm" type="submit" [disabled]="!izmenaTekst.trim()">Sačuvaj</ui-button>
+            </div>
+          </form>
+        </ng-template>
+      </div>
+
+      <p class="text-soft" *ngIf="!pitanjaSvc.pitanja().length && !pitanjaSvc.ucitavanje()">
+        Zapiši šta te zanima dok ti je na pameti — na pregledu se lako zaboravi.
+      </p>
+
+      <form class="babydev__pitanje-forma" (ngSubmit)="dodajPitanje()">
+        <input type="text" [(ngModel)]="novoPitanje" name="novoPitanje"
+               placeholder="Napiši svoje pitanje…" />
+        <ui-button variant="primary" size="sm" type="submit" [disabled]="!novoPitanje.trim()">Dodaj</ui-button>
+      </form>
+
+      <div class="babydev__predlozi">
+        <span class="text-muted">Ili uzmi predlog:</span>
+        <button type="button" *ngFor="let t of predlozi" (click)="uzmiPredlog(t)">{{ t }}</button>
+      </div>
     </ui-card>
 
   </div>

@@ -15,8 +15,12 @@
 
   <!-- Bez manifesta telefon dodavanje na početni ekran tretira kao običan
        bookmark. Na iOS-u to znači da Safari posle sedam dana neaktivnosti
-       obriše localStorage, pa se prijava gubi iako je sesija još važeća. -->
-  <link rel="manifest" href="/manifest.webmanifest">
+       obriše localStorage, pa se prijava gubi iako je sesija još važeća.
+
+       Ekstenzija je .json, a ne .webmanifest: Vercel .webmanifest ne prepoznaje
+       kao statički fajl, pa ga pravilo za preusmeravanje pretekne i vrati
+       HTML početne strane umesto manifesta. -->
+  <link rel="manifest" href="/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Dnevnik">

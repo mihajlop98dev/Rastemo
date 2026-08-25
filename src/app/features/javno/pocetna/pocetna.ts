@@ -1,12 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Activity, ClipboardList, Stethoscope, Users, ShoppingBag, Baby, Calculator, MapPin, Lock } from 'lucide-angular';
+import { LucideAngularModule, Activity, ClipboardList, Stethoscope, Users, ShoppingBag, Baby, Calculator, MapPin, BookOpen, Lock } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { MomVisual } from '../../../shared/illustrations/mom-visual/mom-visual';
 import { SeoService } from '../../vodic/seo.service';
 import { LEGAL_CONTACT_EMAIL } from '../../../core/data/legal';
+import { IMENA } from '../../../core/data/imena';
 
 @Component({
   selector: 'app-javna-pocetna',
@@ -26,6 +27,8 @@ export class JavnaPocetna implements OnInit {
       tekst: 'Izračunaj termin porođaja i nedelju u kojoj si sada.' },
     { putanja: '/porodilista', ikona: MapPin, naslov: 'Porodilišta u Srbiji',
       tekst: 'Spisak ustanova po gradovima, sa adresama i telefonima.' },
+    { putanja: '/imena', ikona: BookOpen, naslov: 'Značenje imena',
+      tekst: `Odakle ime dolazi i šta zaista znači — ${IMENA.length} imena sa poreklom.` },
   ];
 
   /** Ono što traži nalog — zato stoji odvojeno, sa katancem. */
@@ -40,7 +43,7 @@ export class JavnaPocetna implements OnInit {
   ngOnInit() {
     this.seo.postavi(
       'Prati trudnoću nedelju po nedelju',
-      'Prati trudnoću na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, simptomi, težina, pregledi i zajednica trudnica.',
+      'Prati trudnoću na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, značenje imena, simptomi, težina i zajednica trudnica.',
       '/',
     );
 

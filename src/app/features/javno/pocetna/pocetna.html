@@ -22,7 +22,7 @@
        registruje pre nego što bilo šta vidi obično ne ostane. -->
   <section class="pocetna__odeljak">
     <h2>Pogledaj odmah, bez naloga</h2>
-    <div class="pocetna__mreza">
+    <div class="pocetna__mreza pocetna__mreza--gusta">
       <a *ngFor="let s of odmah" [routerLink]="s.putanja" class="pocetna__kartica">
         <span class="pocetna__ikona"><lucide-icon [img]="s.ikona" [size]="19"></lucide-icon></span>
         <strong>{{ s.naslov }}</strong>

@@ -1,35 +1,13 @@
 import { Routes } from '@angular/router';
 import { Shell } from './core/layout/shell/shell';
-import { Home } from './features/home/home';
-import { CalendarPage } from './features/calendar/calendar';
-import { Tracking } from './features/tracking/tracking';
-import { BabyDevelopment } from './features/baby-development/baby-development';
-import { Doctors } from './features/doctors/doctors';
-import { DoctorDetail } from './features/doctors/doctor-detail/doctor-detail';
-import { Community } from './features/community/community';
-import { Preparation } from './features/preparation/preparation';
-import { AppointmentDetail } from './features/appointment/appointment-detail';
-import { TopicDetail } from './features/community/topic-detail/topic-detail';
-import { MessagesInbox } from './features/messages/inbox/inbox';
-import { MessagesThread } from './features/messages/thread/thread';
-import { Profile } from './features/profile/profile';
-import { Admin } from './features/admin/admin';
-import { Register } from './features/auth/register/register';
-import { Login } from './features/auth/login/login';
-import { CheckEmail } from './features/auth/check-email/check-email';
-import { Confirmed } from './features/auth/confirmed/confirmed';
-import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
-import { NewPassword } from './features/auth/new-password/new-password';
-import { PregnancySetup } from './features/onboarding/pregnancy-setup/pregnancy-setup';
-import { LegalPage } from './features/legal/legal-page';
 import { authGuard } from './core/guards/auth.guard';
 import { pregnancyGuard } from './core/guards/pregnancy.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { pocetnaGuard } from './core/guards/pocetna.guard';
 
 export const routes: Routes = [
-  { path: 'register', component: Register },
-  { path: 'login', component: Login },
+  { path: 'register', loadComponent: () => import('./features/auth/register/register').then(c => c.Register) },
+  { path: 'login', loadComponent: () => import('./features/auth/login/login').then(c => c.Login) },
 
   // Javni deo sajta — namerno bez guarda: ove stranice postoje da bi ih otvorio
   // neko ko još nema nalog, i da bi ih pretraživači indeksirali.
@@ -58,34 +36,34 @@ export const routes: Routes = [
       { path: 'kontakt', loadComponent: () => import('./features/javno/kontakt/kontakt').then(m => m.Kontakt) },
     ],
   },
-  { path: 'proveri-mejl', component: CheckEmail },
-  { path: 'potvrda', component: Confirmed },
-  { path: 'zaboravljena-lozinka', component: ForgotPassword },
+  { path: 'proveri-mejl', loadComponent: () => import('./features/auth/check-email/check-email').then(c => c.CheckEmail) },
+  { path: 'potvrda', loadComponent: () => import('./features/auth/confirmed/confirmed').then(c => c.Confirmed) },
+  { path: 'zaboravljena-lozinka', loadComponent: () => import('./features/auth/forgot-password/forgot-password').then(c => c.ForgotPassword) },
   // Bez guarda: ovde se stiže iz mejla, a sesija za oporavak se uspostavi tek
   // pošto supabase-js pročita token iz adrese.
-  { path: 'nova-lozinka', component: NewPassword },
-  { path: 'uslovi-koriscenja', component: LegalPage, data: { doc: 'terms' } },
-  { path: 'politika-privatnosti', component: LegalPage, data: { doc: 'privacy' } },
-  { path: 'pregnancy-setup', component: PregnancySetup, canActivate: [authGuard] },
+  { path: 'nova-lozinka', loadComponent: () => import('./features/auth/new-password/new-password').then(c => c.NewPassword) },
+  { path: 'uslovi-koriscenja', loadComponent: () => import('./features/legal/legal-page').then(c => c.LegalPage), data: { doc: 'terms' } },
+  { path: 'politika-privatnosti', loadComponent: () => import('./features/legal/legal-page').then(c => c.LegalPage), data: { doc: 'privacy' } },
+  { path: 'pregnancy-setup', loadComponent: () => import('./features/onboarding/pregnancy-setup/pregnancy-setup').then(c => c.PregnancySetup), canActivate: [authGuard] },
   {
     path: '',
     component: Shell,
     canActivate: [authGuard, pregnancyGuard],
     children: [
-      { path: 'home', component: Home },
-      { path: 'calendar', component: CalendarPage },
-      { path: 'tracking', component: Tracking },
-      { path: 'baby-development', component: BabyDevelopment },
-      { path: 'doctors', component: Doctors },
-      { path: 'doctors/:id', component: DoctorDetail },
-      { path: 'community', component: Community },
-      { path: 'community/topic/:id', component: TopicDetail },
-      { path: 'preparation', component: Preparation },
-      { path: 'appointment/:id', component: AppointmentDetail },
-      { path: 'messages', component: MessagesInbox },
-      { path: 'messages/:id', component: MessagesThread },
-      { path: 'profile', component: Profile },
-      { path: 'admin', component: Admin, canActivate: [adminGuard] },
+      { path: 'home', loadComponent: () => import('./features/home/home').then(c => c.Home) },
+      { path: 'calendar', loadComponent: () => import('./features/calendar/calendar').then(c => c.CalendarPage) },
+      { path: 'tracking', loadComponent: () => import('./features/tracking/tracking').then(c => c.Tracking) },
+      { path: 'baby-development', loadComponent: () => import('./features/baby-development/baby-development').then(c => c.BabyDevelopment) },
+      { path: 'doctors', loadComponent: () => import('./features/doctors/doctors').then(c => c.Doctors) },
+      { path: 'doctors/:id', loadComponent: () => import('./features/doctors/doctor-detail/doctor-detail').then(c => c.DoctorDetail) },
+      { path: 'community', loadComponent: () => import('./features/community/community').then(c => c.Community) },
+      { path: 'community/topic/:id', loadComponent: () => import('./features/community/topic-detail/topic-detail').then(c => c.TopicDetail) },
+      { path: 'preparation', loadComponent: () => import('./features/preparation/preparation').then(c => c.Preparation) },
+      { path: 'appointment/:id', loadComponent: () => import('./features/appointment/appointment-detail').then(c => c.AppointmentDetail) },
+      { path: 'messages', loadComponent: () => import('./features/messages/inbox/inbox').then(c => c.MessagesInbox) },
+      { path: 'messages/:id', loadComponent: () => import('./features/messages/thread/thread').then(c => c.MessagesThread) },
+      { path: 'profile', loadComponent: () => import('./features/profile/profile').then(c => c.Profile) },
+      { path: 'admin', loadComponent: () => import('./features/admin/admin').then(c => c.Admin), canActivate: [adminGuard] },
     ],
   },
   // Prava stranica sa porukom, a ne tiho preusmeravanje na početnu:

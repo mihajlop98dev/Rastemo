@@ -46,6 +46,8 @@ export const routes: Routes = [
       { path: 'trudnoca', loadComponent: () => import('./features/vodic/spisak/spisak').then(m => m.VodicSpisak) },
       { path: 'trudnoca/:nedelja', loadComponent: () => import('./features/vodic/nedelja/nedelja').then(m => m.VodicNedelja) },
       { path: 'kalkulator-termina', loadComponent: () => import('./features/javno/kalkulator/kalkulator').then(m => m.Kalkulator) },
+      { path: 'imena', loadComponent: () => import('./features/javno/imena/imena').then(m => m.Imena) },
+      { path: 'imena/:ime', loadComponent: () => import('./features/javno/imena-detalj/imena-detalj').then(m => m.ImeDetalj) },
       { path: 'porodilista', loadComponent: () => import('./features/javno/porodilista/porodilista').then(m => m.Porodilista) },
       { path: 'cesta-pitanja', loadComponent: () => import('./features/javno/pitanja/pitanja').then(m => m.Pitanja) },
       { path: 'o-nama', loadComponent: () => import('./features/javno/o-nama/o-nama').then(m => m.ONama) },

@@ -1,5 +1,6 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { VODIC } from './core/data/vodic-nedelje';
+import { IMENA, slugZaIme } from './core/data/imena';
 
 /**
  * Šta se peče u statički HTML, a šta ostaje na pregledaču.
@@ -14,6 +15,13 @@ export const serverRoutes: ServerRoute[] = [
     // Svaka nedelja dobija svoj HTML fajl, sa svojim naslovom i tekstom.
     getPrerenderParams: async () => VODIC.map(v => ({ nedelja: String(v.nedelja) })),
   },
+  {
+    path: 'imena/:ime',
+    renderMode: RenderMode.Prerender,
+    // Svako ime dobija svoju stranu — to je i smisao: pretraga se radi po imenu.
+    getPrerenderParams: async () => IMENA.map(i => ({ ime: slugZaIme(i.ime) })),
+  },
+  { path: 'imena', renderMode: RenderMode.Prerender },
   { path: 'trudnoca', renderMode: RenderMode.Prerender },
   { path: 'kalkulator-termina', renderMode: RenderMode.Prerender },
   { path: 'porodilista', renderMode: RenderMode.Prerender },

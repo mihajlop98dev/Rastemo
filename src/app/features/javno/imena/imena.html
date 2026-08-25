@@ -1,0 +1,43 @@
+<div class="strana strana--siroka">
+  <header class="strana__zaglavlje">
+    <h1>Značenje srpskih imena</h1>
+    <p>
+      Odakle ime dolazi i šta zaista znači — {{ ukupno }} imena, sa poreklom
+      koje se može proveriti, a ne prepisati.
+    </p>
+  </header>
+
+  <div class="imena__filteri">
+    <input type="text" [ngModel]="pojam()" (ngModelChange)="pojam.set($event)"
+           placeholder="Pretraži ime ili značenje..." />
+    <div class="imena__pol">
+      <button type="button" [class.imena__pol--tekuci]="!pol()" (click)="pol.set('')">Sva</button>
+      <button type="button" [class.imena__pol--tekuci]="pol() === 'z'" (click)="pol.set('z')">Devojčice</button>
+      <button type="button" [class.imena__pol--tekuci]="pol() === 'm'" (click)="pol.set('m')">Dečaci</button>
+    </div>
+  </div>
+
+  <div class="imena__azbuka">
+    <button type="button" [class.imena__slovo--tekuce]="!slovo()" (click)="slovo.set('')">Sva</button>
+    <button type="button" *ngFor="let s of slova"
+            [class.imena__slovo--tekuce]="slovo() === s" (click)="slovo.set(s)">{{ s }}</button>
+  </div>
+
+  <p class="text-soft imena__brojka">{{ rezultati().length }} {{ rezultati().length === 1 ? 'ime' : 'imena' }}</p>
+
+  <div class="imena__mreza">
+    <a *ngFor="let i of rezultati()" [routerLink]="['/imena', slug(i.ime)]" class="imena__kartica">
+      <strong>{{ i.ime }}</strong>
+      <span class="imena__znacenje">{{ i.znacenje }}</span>
+      <span class="imena__poreklo">{{ i.poreklo }}</span>
+    </a>
+  </div>
+
+  <p class="text-soft" *ngIf="!rezultati().length">Nema imena koje odgovara pretrazi.</p>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Izabrala si ime?</h2>
+    <p>Upiši ga uz svoju trudnoću i prati kako beba raste iz nedelje u nedelju.</p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+</div>

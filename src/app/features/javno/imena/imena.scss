@@ -1,0 +1,106 @@
+.imena {
+  &__filteri {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+
+    input {
+      flex: 1;
+      min-width: 220px;
+      height: 46px;
+      padding: 0 var(--space-5);
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--color-text);
+      outline: none;
+
+      &:focus { border-color: var(--color-primary); }
+    }
+  }
+
+  &__pol {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-soft);
+
+    button {
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-soft);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    &--tekuci { background: var(--color-surface) !important; color: var(--color-primary-dark) !important; }
+  }
+
+  &__azbuka {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    button {
+      min-width: 34px;
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-soft);
+      cursor: pointer;
+    }
+  }
+
+  &__slovo--tekuce {
+    border-color: var(--color-primary) !important;
+    background: var(--color-primary) !important;
+    color: #fff !important;
+  }
+
+  &__brojka { font-size: 12.5px; }
+
+  &__mreza {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-3);
+  }
+
+  &__kartica {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    text-decoration: none;
+    transition: border-color .12s, transform .12s;
+
+    strong { font-size: 15.5px; color: var(--color-text); }
+
+    &:hover { border-color: var(--color-primary); transform: translateY(-2px); }
+  }
+
+  &__znacenje { font-size: 12.5px; line-height: 1.5; color: var(--color-text-soft); }
+
+  &__poreklo {
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 560px) {
+    &__filteri { flex-direction: column; }
+    &__pol { justify-content: space-between; button { flex: 1; } }
+  }
+}

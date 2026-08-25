@@ -7,6 +7,10 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { label: 'Početna', path: '/home', icon: 'home' },
+  // Nastavak iste priče o nedelji kao i početna, pa stoji odmah ispod nje.
+  // Do ovog ekrana se ranije dolazilo samo preko dugmeta na početnoj, a na
+  // njemu su i pitanja za lekara.
+  { label: 'Razvoj bebe', path: '/baby-development', icon: 'baby' },
   { label: 'Praćenje trudnoće', path: '/tracking', icon: 'activity' },
   { label: 'Pregledi i nalazi', path: '/calendar', icon: 'clipboard-list' },
   { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },

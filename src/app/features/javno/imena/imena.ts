@@ -43,15 +43,15 @@ export class Imena implements OnInit {
 
   ngOnInit() {
     this.seo.postavi(
-      'Značenje srpskih imena',
-      `Značenje i poreklo ${IMENA.length} srpskih imena za devojčice i dečake — odakle dolaze i šta zaista znače.`,
+      'Značenje imena',
+      `Značenje i poreklo ${IMENA.length} imena za devojčice i dečake — odakle dolaze i šta zaista znače.`,
       '/imena',
     );
     this.seo.strukturirano([
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: 'Značenje srpskih imena',
+        name: 'Značenje imena',
         inLanguage: 'sr-Latn-RS',
         url: 'https://dnevniktrudnoce.com/imena',
       },

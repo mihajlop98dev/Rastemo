@@ -13,6 +13,15 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
+  <!-- Bez manifesta telefon dodavanje na početni ekran tretira kao običan
+       bookmark. Na iOS-u to znači da Safari posle sedam dana neaktivnosti
+       obriše localStorage, pa se prijava gubi iako je sesija još važeća. -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Dnevnik">
+  <meta name="mobile-web-app-capable" content="yes">
+
   <meta property="og:title" content="Dnevnik trudnoće">
   <meta property="og:description" content="Zajedno kroz najvažniji period — prati trudnoću nedelju po nedelju.">
   <meta property="og:image" content="https://dnevniktrudnoce.com/icon-512.png">

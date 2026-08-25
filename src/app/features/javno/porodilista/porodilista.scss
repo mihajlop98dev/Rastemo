@@ -124,3 +124,36 @@
   /* Kartice ustanova idu jedna ispod druge, sa više prostora za dugačke nazive. */
   .porod__mreza { grid-template-columns: 1fr; }
 }
+
+.porod__mapa-red {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+
+  span { font-size: 13px; }
+}
+
+.porod {
+  &__kartica--na-mapi {
+    cursor: pointer;
+
+    ::ng-deep .ui-card { transition: border-color .15s ease, box-shadow .15s ease; }
+
+    &:hover ::ng-deep .ui-card {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .07);
+    }
+  }
+
+  &__kartica--tekuca ::ng-deep .ui-card {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  &__na-mapi {
+    font-size: 12px;
+    color: var(--color-primary-dark);
+    margin-top: 2px;
+  }
+}

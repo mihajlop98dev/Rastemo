@@ -1,0 +1,35 @@
+@use "leaflet/dist/leaflet.css";
+
+.mapa {
+  position: relative;
+
+  &__platno {
+    height: 420px;
+    width: 100%;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface-alt, #f3ece9);
+    z-index: 0;
+  }
+
+  &__poruka {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--color-text-soft);
+    pointer-events: none;
+  }
+
+  &__nota {
+    font-size: 12.5px;
+    color: var(--color-text-soft);
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 560px) {
+    &__platno { height: 320px; }
+  }
+}

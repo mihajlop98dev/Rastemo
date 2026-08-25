@@ -12,6 +12,10 @@
            placeholder="Pretraži po gradu ili nazivu ustanove..." />
   </div>
 
+  <div #mapaElement>
+    <app-mapa-klinika *ngIf="zaMapu().length" [klinike]="zaMapu()" [fokus]="fokus()" />
+  </div>
+
   <!-- Gradova je preko pedeset. Na širem ekranu stoje kao dugmad i vide se svi
        odjednom; na telefonu bi zauzeli ceo ekran pre prve ustanove, pa tamo ide
        padajući izbor. -->
@@ -42,14 +46,18 @@
   <section class="porod__grad" *ngFor="let g of poGradovima()">
     <h2>{{ g.grad }}</h2>
     <div class="porod__mreza">
-      <ui-card padding="md" class="porod__kartica" *ngFor="let u of g.ustanove">
+      <ui-card padding="md" class="porod__kartica" *ngFor="let u of g.ustanove"
+               [class.porod__kartica--na-mapi]="u.lat !== null"
+               [class.porod__kartica--tekuca]="fokus()?.id === u.id"
+               (click)="prikaziNaMapi(u)">
         <strong>{{ u.name }}</strong>
         <span *ngIf="u.address">
           <lucide-icon [img]="MapIcon" [size]="13"></lucide-icon> {{ u.address }}
         </span>
-        <a *ngIf="u.phone" [href]="'tel:' + u.phone">
+        <a *ngIf="u.phone" [href]="'tel:' + u.phone" (click)="$event.stopPropagation()">
           <lucide-icon [img]="PhoneIcon" [size]="13"></lucide-icon> {{ u.phone }}
         </a>
+        <span class="porod__na-mapi" *ngIf="u.lat !== null">Prikaži na mapi</span>
       </ui-card>
     </div>
   </section>

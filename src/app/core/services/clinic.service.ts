@@ -8,6 +8,10 @@ export interface ClinicRow {
   city: string | null;
   address: string | null;
   phone: string | null;
+  lat: number | null;
+  lng: number | null;
+  /** Tačka je centar grada, ne sama ustanova — mapa to mora da prizna. */
+  lokacija_priblizna: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +30,7 @@ export class ClinicService {
     this.loading.set(true);
     const { data } = await this.supabase.client
       .from('clinics')
-      .select('id, name, city, address, phone')
+      .select('id, name, city, address, phone, lat, lng, lokacija_priblizna')
       .order('name');
 
     this.all.set((data as ClinicRow[]) ?? []);
@@ -60,7 +64,7 @@ export class ClinicService {
         address: dto.address || null,
         phone: dto.phone || null,
       })
-      .select('id, name, city, address, phone')
+      .select('id, name, city, address, phone, lat, lng, lokacija_priblizna')
       .single();
 
     if (error) throw error;

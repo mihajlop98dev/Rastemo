@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,13 +6,14 @@ import { LucideAngularModule, MapPin, Phone } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { ClinicService, ClinicRow } from '../../../core/services/clinic.service';
+import { MapaKlinika } from '../../../shared/mapa/mapa-klinika';
 import { SeoService } from '../../vodic/seo.service';
 import { LOKAL } from '../../../core/data/lokalizacija';
 
 @Component({
   selector: 'app-porodilista',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, MapaKlinika],
   templateUrl: './porodilista.html',
   styleUrls: ['../javno.scss', './porodilista.scss']
 })
@@ -63,8 +64,28 @@ export class Porodilista implements OnInit {
       .sort((a, b) => a.grad.localeCompare(b.grad, LOKAL));
   });
 
+  /** Ustanova na koju je kliknuto u spisku — mapa doleti do nje. */
+  readonly fokus = signal<ClinicRow | null>(null);
+
+  /** Prati filter — mapa pokazuje tačno ono što i spisak ispod nje. */
+  readonly zaMapu = computed(() =>
+    this.poGradovima().flatMap(g => g.ustanove).filter(k => k.lat !== null && k.lng !== null)
+  );
+
   readonly ukupno = computed(() => this.clinics.all().length);
   readonly prikazano = computed(() => this.poGradovima().reduce((n, g) => n + g.ustanove.length, 0));
+
+  /**
+   * Klik na ustanovu je centrira na mapi. Mapa je iznad spiska, pa se posle
+   * klika mora i doskrolovati — inače se na telefonu ništa vidljivo ne desi.
+   */
+  prikaziNaMapi(u: ClinicRow) {
+    if (u.lat === null || u.lng === null) return;
+    this.fokus.set(u);
+    this.platnoMape?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  @ViewChild('mapaElement') platnoMape?: ElementRef<HTMLElement>;
 
   readonly MapIcon = MapPin;
   readonly PhoneIcon = Phone;

@@ -15,6 +15,7 @@ import { PregnancyService, BabyGender } from '../../core/services/pregnancy.serv
 import { NotificationService } from '../../core/services/notification.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { PushService, StanjePusha } from '../../core/services/push.service';
 
 type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'lozinka' | 'izvestaj';
 
@@ -36,6 +37,35 @@ export class Profile implements OnInit {
   ];
 
   activeSection: Section = 'profil';
+
+  // --- push notifikacije ---
+  readonly vrstePusha: { kljuc: string; naziv: string; opis: string }[] = [
+    { kljuc: 'push_pregledi', naziv: 'Podsetnik na pregled',
+      opis: 'Dan pre zakazanog pregleda.' },
+    { kljuc: 'push_nedelja', naziv: 'Nova nedelja trudnoće',
+      opis: 'Jednom nedeljno, kad uđeš u sledeću nedelju.' },
+    { kljuc: 'push_terapija', naziv: 'Terapija i suplementi',
+      opis: 'Podsetnik da popiješ ono što si unela.' },
+    { kljuc: 'push_zajednica', naziv: 'Odgovori na Zajednici',
+      opis: 'Kad ti neko odgovori na temu.' },
+  ];
+
+  async ukljuciPush() {
+    const stanje = await this.push.ukljuci();
+    if (stanje === 'ukljuceno') await this.profileSvc.load();
+  }
+
+  async iskljuciPush() {
+    await this.push.iskljuci();
+  }
+
+  async promeniVrstuPusha(kljuc: string, ukljuceno: boolean) {
+    await this.profileSvc.update({ [kljuc]: ukljuceno } as any);
+  }
+
+  vrstaUkljucena(kljuc: string): boolean {
+    return (this.profileSvc.profile() as any)?.[kljuc] ?? false;
+  }
 
   // --- merenje poseta ---
   // Data saglasnost mora da se povuče isto tako lako kao što je data.
@@ -113,9 +143,11 @@ export class Profile implements OnInit {
     readonly notifications: NotificationService,
     readonly clinics: ClinicService,
     readonly analytics: AnalyticsService,
+    readonly push: PushService,
   ) {}
 
   async ngOnInit() {
+    await this.push.procitajStanje();
     if (!this.profileSvc.profile()) await this.profileSvc.load();
     await Promise.all([this.notifications.load(), this.clinics.load()]);
   }

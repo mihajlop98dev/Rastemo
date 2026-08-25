@@ -235,6 +235,45 @@
       </div>
 
       <p class="text-soft" *ngIf="!notifications.items().length">Nemaš notifikacija.</p>
+
+      <div class="profile__push">
+        <h3>Notifikacije na telefonu</h3>
+
+        <p class="text-soft" *ngIf="push.stanje() === 'nepodrzano'">
+          Ovaj pregledač ne podržava notifikacije.
+        </p>
+
+        <p class="text-soft" *ngIf="push.stanje() === 'treba-instalirati'">
+          Na iPhone-u notifikacije rade tek kad dodaš aplikaciju na početni ekran:
+          otvori meni za deljenje i izaberi <strong>Dodaj na početni ekran</strong>.
+          Zatim se ovde vrati i uključi ih.
+        </p>
+
+        <p class="text-soft" *ngIf="push.stanje() === 'odbijeno'">
+          Notifikacije su odbijene. Da ih vratiš, dozvoli ih za ovaj sajt u
+          podešavanjima telefona — aplikacija ne može ponovo da pita.
+        </p>
+
+        <ui-button *ngIf="push.stanje() === 'nije-trazeno'" variant="primary" size="sm"
+                   [disabled]="push.radi()" (click)="ukljuciPush()">
+          {{ push.radi() ? 'Uključujem…' : 'Uključi notifikacije' }}
+        </ui-button>
+
+        <ng-container *ngIf="push.stanje() === 'ukljuceno'">
+          <label class="profile__toggle" *ngFor="let v of vrstePusha">
+            <input type="checkbox" [checked]="vrstaUkljucena(v.kljuc)"
+                   (change)="promeniVrstuPusha(v.kljuc, $any($event.target).checked)" />
+            <span>
+              <strong>{{ v.naziv }}</strong>
+              <small class="text-soft">{{ v.opis }}</small>
+            </span>
+          </label>
+
+          <ui-button variant="ghost" size="sm" (click)="iskljuciPush()">
+            Isključi na ovom uređaju
+          </ui-button>
+        </ng-container>
+      </div>
     </ui-card>
 
     <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'privatnost'">

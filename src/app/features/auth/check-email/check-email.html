@@ -1,8 +1,8 @@
 <div class="authpage">
-  <div class="authpage__brand">
+  <a routerLink="/" class="authpage__brand">
     <span class="authpage__brand-icon"><lucide-icon [img]="HeartIcon" [size]="20"></lucide-icon></span>
     <strong>Dnevnik trudnoće</strong>
-  </div>
+  </a>
 
   <ui-card padding="lg" class="authpage__card">
     <div class="authpage__icon-big">
@@ -33,4 +33,6 @@
       Potvrdila si? <a routerLink="/login">Prijavi se</a>
     </p>
   </ui-card>
+
+  <a routerLink="/" class="authpage__nazad">← Nazad na sajt</a>
 </div>

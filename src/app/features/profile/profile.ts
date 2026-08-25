@@ -276,7 +276,9 @@ export class Profile implements OnInit {
     this.loggingOut.set(true);
     try {
       await this.auth.signOut();
-      this.router.navigateByUrl('/login');
+      // Posle odjave ide javni sajt, ne prazna forma za prijavu — žena koja se
+      // odjavila najčešće nije htela da se odmah ponovo prijavi.
+      this.router.navigateByUrl('/');
     } finally {
       this.loggingOut.set(false);
     }

@@ -54,6 +54,7 @@ export class TermsGate implements OnInit {
 
   async logOut() {
     await this.auth.signOut();
-    this.router.navigateByUrl('/login');
+    // Odbijanje uslova je odustajanje od aplikacije, pa ide javni sajt.
+    this.router.navigateByUrl('/');
   }
 }

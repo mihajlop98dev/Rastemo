@@ -62,7 +62,8 @@ export class Admin implements OnInit {
   async logOut() {
     await this.auth.signOut();
     this.admin.isAdmin.set(false);
-    this.router.navigateByUrl('/login');
+    // Isto kao iz profila: posle odjave ide javni sajt, ne forma za prijavu.
+    this.router.navigateByUrl('/');
   }
 
   async ngOnInit() {

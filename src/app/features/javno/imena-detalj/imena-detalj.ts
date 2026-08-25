@@ -1,10 +1,11 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { Ime, imeZaSlug, slicnaImena, slugZaIme, OZNAKA_POREKLA, POREKLO_GENITIV, tekstUcestalosti } from '../../../core/data/imena';
 import { SeoService } from '../../vodic/seo.service';
+import { padeziZaIme } from '../../../core/data/padezi';
 
 @Component({
   selector: 'app-ime-detalj',
@@ -23,6 +24,12 @@ export class ImeDetalj implements OnInit {
   readonly oznaka = OZNAKA_POREKLA;
   readonly genitiv = POREKLO_GENITIV;
   readonly ucestalost = tekstUcestalosti;
+
+  /** Prazno za imena kod kojih promena ne bi bila pouzdana — vidi padezi.ts. */
+  readonly padezi = computed(() => {
+    const i = this.ime();
+    return i ? padeziZaIme(i.ime, i.pol) : null;
+  });
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {

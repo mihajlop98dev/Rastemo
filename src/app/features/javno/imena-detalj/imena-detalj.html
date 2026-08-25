@@ -34,6 +34,19 @@
     <p class="ime__tekst">{{ i.objasnjenje }}</p>
   </ui-card>
 
+  <ui-card padding="lg" *ngIf="padezi() as p">
+    <h2>Kako se menja</h2>
+    <dl class="ime__padezi">
+      <div><dt>Nominativ</dt><dd>{{ p.nominativ }}</dd></div>
+      <div><dt>Genitiv</dt><dd>{{ p.genitiv }}</dd></div>
+      <div><dt>Dativ</dt><dd>{{ p.dativ }}</dd></div>
+      <div><dt>Akuzativ</dt><dd>{{ p.akuzativ }}</dd></div>
+      <div><dt>Vokativ</dt><dd>{{ p.vokativ }}</dd></div>
+      <div><dt>Instrumental</dt><dd>{{ p.instrumental }}</dd></div>
+      <div><dt>Lokativ</dt><dd>{{ p.lokativ }}</dd></div>
+    </dl>
+  </ui-card>
+
   <section *ngIf="slicna().length">
     <h2 class="ime__naslov-grupe">Imena istog porekla</h2>
     <div class="ime__slicna">

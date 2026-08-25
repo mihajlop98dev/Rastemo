@@ -7,6 +7,7 @@ import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService } from '../../../core/services/admin.service';
+import { SeoService } from '../../vodic/seo.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,11 @@ export class Login {
     private auth: AuthService,
     private admin: AdminService,
     private router: Router,
-  ) {}
+    seo: SeoService,
+  ) {
+    // Ekran nema šta da ponudi nekome ko dolazi sa pretraživača.
+    seo.bezIndeksiranja('Prijava');
+  }
 
   async submit() {
     if (!this.email || !this.password) {

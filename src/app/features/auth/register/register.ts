@@ -6,6 +6,7 @@ import { LucideAngularModule, Heart } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { AuthService } from '../../../core/services/auth.service';
+import { SeoService } from '../../vodic/seo.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,11 @@ export class Register {
   constructor(
     private auth: AuthService,
     private router: Router,
-  ) {}
+    seo: SeoService,
+  ) {
+    // Ekran nema šta da ponudi nekome ko dolazi sa pretraživača.
+    seo.bezIndeksiranja('Otvori nalog');
+  }
 
   async submit() {
     if (!this.fullName || !this.email || !this.password) {

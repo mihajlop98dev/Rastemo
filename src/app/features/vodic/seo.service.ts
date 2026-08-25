@@ -43,6 +43,18 @@ export class SeoService {
     this.kanonska(url);
   }
 
+  /**
+   * Sklanja stranicu iz pretrage.
+   *
+   * Za ekrane koji nemaju šta da ponude nekome ko dolazi sa pretraživača —
+   * prijava, registracija, potvrde. Bez ovoga se takve stranice indeksiraju
+   * kao tanak sadržaj i razblažuju ono što zaista treba da se nađe.
+   */
+  bezIndeksiranja(naslov: string) {
+    this.title.setTitle(`${naslov} — Dnevnik trudnoće`);
+    this.meta.updateTag({ name: 'robots', content: 'noindex, follow' });
+  }
+
   /** Isti tekst dostupan na više adresa deluje kao umnožen sadržaj. */
   private kanonska(url: string) {
     let veza = this.doc.querySelector<HTMLLinkElement>('link[rel="canonical"]');

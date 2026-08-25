@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
-import { Ime, imeZaSlug, slicnaImena, slugZaIme, OZNAKA_POREKLA, POREKLO_GENITIV } from '../../../core/data/imena';
+import { Ime, imeZaSlug, slicnaImena, slugZaIme, OZNAKA_POREKLA, POREKLO_GENITIV, tekstUcestalosti } from '../../../core/data/imena';
 import { SeoService } from '../../vodic/seo.service';
 
 @Component({
@@ -22,6 +22,7 @@ export class ImeDetalj implements OnInit {
   readonly slug = slugZaIme;
   readonly oznaka = OZNAKA_POREKLA;
   readonly genitiv = POREKLO_GENITIV;
+  readonly ucestalost = tekstUcestalosti;
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
@@ -48,7 +49,7 @@ export class ImeDetalj implements OnInit {
         description: `${i.znacenje} (${this.oznaka[i.poreklo]} poreklo)`,
         inDefinedTermSet: {
           '@type': 'DefinedTermSet',
-          name: 'Značenje srpskih imena',
+          name: 'Značenje imena',
           url: 'https://dnevniktrudnoce.com/imena',
         },
         url: `https://dnevniktrudnoce.com${putanja}`,

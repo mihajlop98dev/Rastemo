@@ -11,10 +11,22 @@
       <span class="ime__oznaka">Poreklo</span>
       <strong>{{ oznaka[i.poreklo] }}</strong>
     </div>
+    <div class="ime__red" *ngIf="ucestalost(i) as u">
+      <span class="ime__oznaka">Koliko je često</span>
+      <strong class="ime__cesto">{{ u }}</strong>
+    </div>
     <div class="ime__red" *ngIf="i.varijante?.length">
       <span class="ime__oznaka">Varijante</span>
       <strong>{{ i.varijante!.join(', ') }}</strong>
     </div>
+  </ui-card>
+
+  <ui-card padding="lg" class="ime__izvor-napomena" *ngIf="ucestalost(i)">
+    <p>
+      Podaci o učestalosti su iz Republičkog zavoda za statistiku. Zvanično se
+      objavljuje samo prvih deset imena, pa za imena van te liste tačan broj
+      nosilaca nije javno dostupan.
+    </p>
   </ui-card>
 
   <ui-card padding="lg">

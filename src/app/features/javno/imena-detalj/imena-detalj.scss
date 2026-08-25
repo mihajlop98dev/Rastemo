@@ -83,3 +83,14 @@
     &__red { flex-direction: column; gap: 2px; }
   }
 }
+
+.ime__cesto { font-weight: 500 !important; line-height: 1.5; }
+
+/* Odakle podatak dolazi i dokle seže — bez toga bi izgledalo kao da znamo
+   učestalost svakog imena, a znamo je samo za prvih deset. */
+.ime__izvor-napomena p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0;
+}

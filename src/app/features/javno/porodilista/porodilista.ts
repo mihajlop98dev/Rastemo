@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -75,17 +75,11 @@ export class Porodilista implements OnInit {
   readonly ukupno = computed(() => this.clinics.all().length);
   readonly prikazano = computed(() => this.poGradovima().reduce((n, g) => n + g.ustanove.length, 0));
 
-  /**
-   * Klik na ustanovu je centrira na mapi. Mapa je iznad spiska, pa se posle
-   * klika mora i doskrolovati — inače se na telefonu ništa vidljivo ne desi.
-   */
+  /** Klik na ustanovu je centrira na mapi; mapa se sama dovodi u vidokrug. */
   prikaziNaMapi(u: ClinicRow) {
     if (u.lat === null || u.lng === null) return;
     this.fokus.set(u);
-    this.platnoMape?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-
-  @ViewChild('mapaElement') platnoMape?: ElementRef<HTMLElement>;
 
   /**
    * Link koji na telefonu otvara Google mape, po mogućstvu odmah sa putanjom.

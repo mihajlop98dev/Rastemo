@@ -12,9 +12,7 @@
            placeholder="Pretraži po gradu ili nazivu ustanove..." />
   </div>
 
-  <div #mapaElement>
-    <app-mapa-klinika *ngIf="zaMapu().length" [klinike]="zaMapu()" [fokus]="fokus()" />
-  </div>
+  <app-mapa-klinika *ngIf="zaMapu().length" [klinike]="zaMapu()" [fokus]="fokus()" />
 
   <!-- Gradova je preko pedeset. Na širem ekranu stoje kao dugmad i vide se svi
        odjednom; na telefonu bi zauzeli ceo ekran pre prve ustanove, pa tamo ide

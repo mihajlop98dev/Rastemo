@@ -1,5 +1,13 @@
 @use "leaflet/dist/leaflet.css";
 
+/* Bez ovoga je element inline i širina padne na nulu, pa Leaflet iscrta
+   praznu mapu. Sa encapsulation None `:host` se ne prevodi, pa selektor
+   mora da imenuje sam element. */
+app-mapa-klinika {
+  display: block;
+  width: 100%;
+}
+
 .mapa {
   position: relative;
 

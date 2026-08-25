@@ -103,6 +103,19 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
   private priblizi(k: ClinicRow) {
     const m = this.markeri.get(k.id);
     if (!m || k.lat === null || k.lng === null) return;
+
+    // Spisak je ispod mape, pa je posle klika mapa najčešće van ekrana —
+    // bez ovoga se ništa vidljivo ne desi, pogotovo na telefonu.
+    //
+    // Namerno `auto`, ne `smooth`: spisak je dugačak preko deset hiljada
+    // piksela, a glatko skrolovanje na toj razdaljini Chrome prekine na pola
+    // pa se stranica uopšte ne pomeri.
+    const platno = this.platno.nativeElement;
+    const okvir = platno.getBoundingClientRect();
+    if (okvir.bottom < 0 || okvir.top > window.innerHeight) {
+      platno.scrollIntoView({ behavior: 'auto', block: 'center' });
+    }
+
     this.mapa.flyTo([k.lat, k.lng], 15, { duration: 0.6 });
     m.openPopup();
   }

@@ -38,6 +38,51 @@ export class Profile implements OnInit {
 
   activeSection: Section = 'profil';
 
+  // --- korisničko ime ---
+  //
+  // Nalozi napravljeni pre uvođenja korisničkog imena, i oni preko Google
+  // prijave, nemaju ga — a bez njega se ne mogu potpisati na forumu.
+  novoKorisnicko = '';
+  readonly stanjeKorisnickog = signal<'prazno' | 'proveravam' | 'slobodno' | 'zauzeto'>('prazno');
+  readonly cuvamKorisnicko = signal(false);
+  readonly greskaKorisnickog = signal('');
+  private tajmerKorisnickog?: ReturnType<typeof setTimeout>;
+
+  proveriKorisnicko() {
+    clearTimeout(this.tajmerKorisnickog);
+    this.greskaKorisnickog.set('');
+    const ime = this.novoKorisnicko.trim();
+    if (ime.length < 3) {
+      this.stanjeKorisnickog.set('prazno');
+      return;
+    }
+    this.stanjeKorisnickog.set('proveravam');
+    this.tajmerKorisnickog = setTimeout(async () => {
+      const slobodno = await this.auth.korisnickoImeSlobodno(ime);
+      this.stanjeKorisnickog.set(slobodno ? 'slobodno' : 'zauzeto');
+    }, 400);
+  }
+
+  async sacuvajKorisnicko() {
+    const ime = this.novoKorisnicko.trim();
+    if (this.stanjeKorisnickog() !== 'slobodno') return;
+
+    this.cuvamKorisnicko.set(true);
+    this.greskaKorisnickog.set('');
+    try {
+      await this.profileSvc.update({ username: ime });
+      this.novoKorisnicko = '';
+      this.stanjeKorisnickog.set('prazno');
+    } catch (e) {
+      // Okidač u bazi vraća razumljivu poruku o tome šta ne valja sa imenom.
+      this.greskaKorisnickog.set(
+        (e as { message?: string }).message || 'Nije uspelo čuvanje. Probaj ponovo.',
+      );
+    } finally {
+      this.cuvamKorisnicko.set(false);
+    }
+  }
+
   // --- push notifikacije ---
   readonly vrstePusha: { kljuc: string; naziv: string; opis: string }[] = [
     { kljuc: 'push_pregledi', naziv: 'Podsetnik na pregled',

@@ -306,3 +306,49 @@
     font-weight: 600;
   }
 }
+
+.profile {
+  &__korisnicko-unos {
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__korisnicko-poziv {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  &__korisnicko-red {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1;
+      min-width: 160px;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+
+      &:focus { outline: none; border-color: var(--color-primary); }
+    }
+  }
+
+  &__korisnicko-pomoc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-text-soft);
+
+    &--lose { color: var(--color-danger, #c0392b); }
+  }
+}

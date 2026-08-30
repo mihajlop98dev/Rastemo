@@ -285,12 +285,44 @@
       <div class="profile__korisnicko-blok" *ngIf="profileSvc.profile() as p">
         <strong>Korisničko ime</strong>
         <span class="profile__korisnicko-vrednost" *ngIf="p.username">@{{ p.username }}</span>
-        <span class="text-soft" *ngIf="!p.username">Još nije podešeno</span>
+
         <p class="text-soft">
           Ovim se potpisuješ na forumu — tvoje ime i prezime tamo se nikad ne
           prikazuju. Njime možeš i da se prijaviš, umesto mejlom. Ako želiš da
           neka tema ostane bez potpisa, pri pisanju izaberi „Objavi anonimno".
         </p>
+
+        <!-- Nalozi napravljeni pre uvođenja korisničkog imena, i oni preko
+             Google prijave, nemaju ga — pa se ovde postavlja. -->
+        <div class="profile__korisnicko-unos" *ngIf="!p.username">
+          <p class="profile__korisnicko-poziv">
+            Tvoj nalog još nema korisničko ime. Izaberi ga da bi mogla da pišeš
+            na forumu.
+          </p>
+          <div class="profile__korisnicko-red">
+            <input type="text" [(ngModel)]="novoKorisnicko" (input)="proveriKorisnicko()"
+                   placeholder="npr. marija87" maxlength="20" autocomplete="username" />
+            <ui-button variant="primary" size="sm"
+                       [disabled]="stanjeKorisnickog() !== 'slobodno' || cuvamKorisnicko()"
+                       (click)="sacuvajKorisnicko()">
+              {{ cuvamKorisnicko() ? 'Čuvam…' : 'Sačuvaj' }}
+            </ui-button>
+          </div>
+
+          <small class="profile__korisnicko-pomoc"
+                 [class.profile__korisnicko-pomoc--lose]="stanjeKorisnickog() === 'zauzeto'">
+            <ng-container [ngSwitch]="stanjeKorisnickog()">
+              <ng-container *ngSwitchCase="'proveravam'">Proveravam…</ng-container>
+              <ng-container *ngSwitchCase="'slobodno'">Slobodno je.</ng-container>
+              <ng-container *ngSwitchCase="'zauzeto'">Zauzeto ili nije dozvoljeno.</ng-container>
+              <ng-container *ngSwitchDefault>
+                3 do 20 znakova: slova bez kvačica, brojevi, tačka, crtica i donja crta.
+              </ng-container>
+            </ng-container>
+          </small>
+          <small class="profile__korisnicko-pomoc profile__korisnicko-pomoc--lose"
+                 *ngIf="greskaKorisnickog()">{{ greskaKorisnickog() }}</small>
+        </div>
       </div>
       <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">
         Podesi kako se tvoje ime prikazuje drugima na Zajednici.

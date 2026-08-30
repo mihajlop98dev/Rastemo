@@ -11,7 +11,24 @@
     <form (ngSubmit)="submit()" class="authpage__form">
       <label>
         <span>Ime i prezime</span>
-        <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Marija Petrović" />
+        <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Marija Petrović"
+               (blur)="predloziIme()" />
+      </label>
+      <label>
+        <span>Korisničko ime</span>
+        <input type="text" [(ngModel)]="username" name="username" placeholder="marija87"
+               autocomplete="username" (input)="proveriIme()" />
+        <small class="authpage__pomoc" [class.authpage__pomoc--lose]="stanjeImena() === 'zauzeto'">
+          <ng-container [ngSwitch]="stanjeImena()">
+            <ng-container *ngSwitchCase="'proveravam'">Proveravam…</ng-container>
+            <ng-container *ngSwitchCase="'slobodno'">Slobodno je.</ng-container>
+            <ng-container *ngSwitchCase="'zauzeto'">Zauzeto ili nije dozvoljeno.</ng-container>
+            <ng-container *ngSwitchDefault>
+              Ovim se potpisuješ na forumu — tvoje pravo ime tamo se ne prikazuje.
+              Njime možeš i da se prijaviš.
+            </ng-container>
+          </ng-container>
+        </small>
       </label>
       <label>
         <span>Email</span>

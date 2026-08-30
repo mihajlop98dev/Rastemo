@@ -33,6 +33,9 @@
         <div class="profile__top-info" *ngIf="!editing()">
           <h2>{{ profileSvc.profile()?.full_name || 'Bez imena' }}</h2>
           <span class="text-soft">{{ profileSvc.profile()?.city || 'Grad nije podešen' }}</span>
+          <span class="profile__korisnicko" *ngIf="profileSvc.profile()?.username as ki">
+            @{{ ki }}
+          </span>
         </div>
         <input *ngIf="editing()" type="text" class="profile__name-input" [(ngModel)]="editName" placeholder="Ime i prezime" />
 
@@ -278,6 +281,17 @@
 
     <ui-card padding="lg" class="profile__content" *ngIf="activeSection === 'privatnost'">
       <h2>Privatnost</h2>
+
+      <div class="profile__korisnicko-blok" *ngIf="profileSvc.profile() as p">
+        <strong>Korisničko ime</strong>
+        <span class="profile__korisnicko-vrednost" *ngIf="p.username">@{{ p.username }}</span>
+        <span class="text-soft" *ngIf="!p.username">Još nije podešeno</span>
+        <p class="text-soft">
+          Ovim se potpisuješ na forumu — tvoje ime i prezime tamo se nikad ne
+          prikazuju. Njime možeš i da se prijaviš, umesto mejlom. Ako želiš da
+          neka tema ostane bez potpisa, pri pisanju izaberi „Objavi anonimno".
+        </p>
+      </div>
       <p class="text-soft" style="margin: var(--space-2) 0 var(--space-5)">
         Podesi kako se tvoje ime prikazuje drugima na Zajednici.
       </p>

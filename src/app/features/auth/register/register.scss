@@ -185,3 +185,13 @@
   color: var(--color-primary-dark);
   text-decoration: underline;
 }
+
+.authpage__pomoc {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  margin-top: 4px;
+
+  &--lose { color: var(--color-danger, #c0392b); }
+}

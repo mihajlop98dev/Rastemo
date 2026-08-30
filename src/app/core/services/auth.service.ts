@@ -41,13 +41,15 @@ export class AuthService {
    * registracije ne može ništa da upiše u bazu. Zato prihvatanje uslova putuje
    * kroz metapodatke — okidač handle_new_user ih prepisuje u profil.
    */
-  async signUp(email: string, password: string, fullName: string) {
+  async signUp(email: string, password: string, fullName: string, username: string) {
     return this.supabase.client.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
+          // Ime pod kojim se potpisuje na forumu; okidač ga prepisuje u profil.
+          username,
           terms_version: TERMS_VERSION,
           terms_accepted_at: new Date().toISOString(),
         },
@@ -82,6 +84,49 @@ export class AuthService {
 
   async signIn(email: string, password: string) {
     return this.supabase.client.auth.signInWithPassword({ email, password });
+  }
+
+  /** Prepoznaje da li je uneto mejl ili korisničko ime. */
+  private jeMejl(s: string): boolean {
+    return s.includes('@');
+  }
+
+  /**
+   * Prijava mejlom ili korisničkim imenom.
+   *
+   * Kod korisničkog imena posao radi funkcija na serveru: prevod imena u mejl
+   * ne sme da bude javan, jer korisnička imena stoje na forumu pa bi se preko
+   * njih došlo do adresa svih korisnica.
+   */
+  async prijaviSe(unos: string, lozinka: string): Promise<{ error: { message: string } | null }> {
+    const cist = unos.trim();
+
+    if (this.jeMejl(cist)) {
+      const { error } = await this.signIn(cist, lozinka);
+      return { error: error ? { message: error.message } : null };
+    }
+
+    const { data, error } = await this.supabase.client.functions.invoke(
+      'prijava-korisnickim-imenom',
+      { body: { korisnicko_ime: cist, lozinka } },
+    );
+
+    if (error || !data?.access_token) {
+      return { error: { message: 'Korisničko ime ili lozinka nisu tačni.' } };
+    }
+
+    // Sesija stiže kao par tokena; ovim se upisuje u pregledač kao i obično.
+    const { error: greskaSesije } = await this.supabase.client.auth.setSession({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+    });
+    return { error: greskaSesije ? { message: greskaSesije.message } : null };
+  }
+
+  /** Da li je korisničko ime slobodno i ispravno. */
+  async korisnickoImeSlobodno(ime: string): Promise<boolean> {
+    const { data } = await this.supabase.client.rpc('korisnicko_ime_slobodno', { p_ime: ime });
+    return data === true;
   }
 
   async signInWithGoogle() {

@@ -37,14 +37,14 @@ export class Login {
 
   async submit() {
     if (!this.email || !this.password) {
-      this.error.set('Unesi email i lozinku.');
+      this.error.set('Unesi email ili korisničko ime i lozinku.');
       return;
     }
 
     this.loading.set(true);
     this.error.set('');
 
-    const { error } = await this.auth.signIn(this.email, this.password);
+    const { error } = await this.auth.prijaviSe(this.email, this.password);
 
     this.loading.set(false);
 

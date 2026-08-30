@@ -6,6 +6,8 @@ import { TERMS_VERSION } from '../data/legal';
 export interface Profile {
   id: string;
   full_name: string | null;
+  /** Potpis na forumu; njime se može i prijaviti. */
+  username: string | null;
   city: string | null;
   avatar_url: string | null;
   birth_date: string | null;

@@ -17,9 +17,14 @@ import { SeoService } from '../../vodic/seo.service';
 })
 export class Register {
   fullName = '';
+  username = '';
   email = '';
   password = '';
   acceptedTerms = false;
+
+  /** Provera zauzetosti dok korisnica kuca, da ne sazna tek pri slanju. */
+  readonly stanjeImena = signal<'prazno' | 'proveravam' | 'slobodno' | 'zauzeto'>('prazno');
+  private tajmerProvere?: ReturnType<typeof setTimeout>;
 
   readonly loading = signal(false);
   readonly error = signal('');
@@ -35,9 +40,41 @@ export class Register {
     seo.bezIndeksiranja('Otvori nalog');
   }
 
+  /** Predlaže korisničko ime iz imena, da polje ne bude prazan zadatak. */
+  predloziIme() {
+    if (this.username || !this.fullName.trim()) return;
+    const osnova = this.fullName.trim().toLowerCase()
+      .replace(/[čć]/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z').replace(/đ/g, 'dj')
+      .replace(/[^a-z0-9]+/g, '')
+      .slice(0, 14);
+    if (osnova.length >= 3) {
+      this.username = osnova;
+      this.proveriIme();
+    }
+  }
+
+  proveriIme() {
+    clearTimeout(this.tajmerProvere);
+    const ime = this.username.trim();
+    if (ime.length < 3) {
+      this.stanjeImena.set('prazno');
+      return;
+    }
+    this.stanjeImena.set('proveravam');
+    // Kratka pauza da se ne šalje upit na svaki pritisak tastera.
+    this.tajmerProvere = setTimeout(async () => {
+      const slobodno = await this.auth.korisnickoImeSlobodno(ime);
+      this.stanjeImena.set(slobodno ? 'slobodno' : 'zauzeto');
+    }, 400);
+  }
+
   async submit() {
-    if (!this.fullName || !this.email || !this.password) {
+    if (!this.fullName || !this.username || !this.email || !this.password) {
       this.error.set('Popuni sva polja.');
+      return;
+    }
+    if (this.stanjeImena() === 'zauzeto') {
+      this.error.set('To korisničko ime je zauzeto ili nije dozvoljeno.');
       return;
     }
     if (this.password.length < 6) {
@@ -52,7 +89,7 @@ export class Register {
     this.loading.set(true);
     this.error.set('');
 
-    const { data, error } = await this.auth.signUp(this.email, this.password, this.fullName);
+    const { data, error } = await this.auth.signUp(this.email, this.password, this.fullName, this.username.trim());
     this.loading.set(false);
 
     if (error) {

@@ -280,3 +280,29 @@
     small { display: block; font-size: 12.5px; margin-top: 1px; }
   }
 }
+
+.profile {
+  &__korisnicko {
+    font-size: 13px;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+  }
+
+  &__korisnicko-blok {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-4) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-4);
+
+    strong { font-size: 14px; }
+    p { font-size: 13px; line-height: 1.6; margin: 4px 0 0; }
+  }
+
+  &__korisnicko-vrednost {
+    font-size: 16px;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+  }
+}

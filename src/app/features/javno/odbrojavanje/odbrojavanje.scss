@@ -1,0 +1,88 @@
+.odbroj {
+  &__polje {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    span { font-size: 14px; font-weight: 600; }
+
+    input {
+      width: 100%;
+      padding: 11px 13px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+
+      &:focus { outline: none; border-color: var(--color-primary); }
+    }
+  }
+
+  &__nemas {
+    font-size: 13px;
+    color: var(--color-text-soft);
+    margin: var(--space-3) 0 0;
+
+    a { color: var(--color-primary-dark); }
+  }
+
+  &__rezultat ::ng-deep .ui-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--color-primary-soft), var(--color-peach-light));
+  }
+
+  &__uvod {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--color-text-soft);
+  }
+
+  &__broj {
+    font-size: 72px;
+    line-height: 1;
+    color: var(--color-primary-dark);
+    font-family: var(--font-heading);
+  }
+
+  &__jedinica { font-size: 19px; }
+
+  &__detalj {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+    margin: var(--space-2) 0 0;
+  }
+
+  &__traka {
+    width: 100%;
+    max-width: 380px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-border);
+    overflow: hidden;
+    margin-top: var(--space-3);
+  }
+
+  &__traka-puna {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 999px;
+  }
+
+  &__procenat {
+    font-size: 12.5px;
+    color: var(--color-text-soft);
+    margin-bottom: var(--space-2);
+  }
+
+  &__sacuvano { font-size: 12.5px; color: var(--color-text-soft); }
+
+  /* Platno služi samo za crtanje slike; na stranici se ne prikazuje. */
+  &__platno { display: none; }
+}

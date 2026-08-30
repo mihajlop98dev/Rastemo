@@ -1,0 +1,73 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Kako ime zvuči uz prezime</h1>
+    <p>
+      Ime se bira jednom, a izgovara ceo život — uz prezime. Upiši oba pa vidi
+      kako stoje zajedno.
+    </p>
+  </header>
+
+  <ui-card padding="lg" class="izgovor__forma">
+    <label class="izgovor__polje">
+      <span>Ime</span>
+      <input type="text" [ngModel]="ime()" (ngModelChange)="ime.set($event)" name="ime" placeholder="npr. Milica" />
+    </label>
+    <label class="izgovor__polje">
+      <span>Prezime</span>
+      <input type="text" [ngModel]="prezime()" (ngModelChange)="prezime.set($event)" name="prezime" placeholder="npr. Petrović" />
+    </label>
+  </ui-card>
+
+  <ui-card padding="lg" class="izgovor__rezultat" *ngIf="nalazi().length">
+    <strong class="izgovor__puno">{{ ime() }} {{ prezime() }}</strong>
+
+    <div class="izgovor__nalaz" *ngFor="let n of nalazi()" [class.izgovor__nalaz--pazi]="n.vrsta === 'pazi'">
+      <span class="izgovor__znak">{{ n.vrsta === 'pazi' ? '!' : '✓' }}</span>
+      <span>{{ n.tekst }}</span>
+    </div>
+
+    <p class="izgovor__napomena">
+      Ovo nije pravilo nego zapažanje. Mnogo imena koja „ne prolaze" po ovim
+      merilima zvuče sasvim lepo — na kraju odlučuje uho, ne račun.
+    </p>
+  </ui-card>
+
+  <section *ngIf="predlozi().length">
+    <h2 class="izgovor__naslov">Imena koja se dobro slažu sa prezimenom {{ prezime() }}</h2>
+    <p class="izgovor__uvod">Birana po dužini i po tome da se glasovi ne sudaraju.</p>
+    <div class="izgovor__predlozi">
+      <a *ngFor="let i of predlozi()" [routerLink]="['/imena', slug(i.ime)]" class="izgovor__predlog">
+        <strong>{{ i.ime }}</strong>
+        <span>{{ i.znacenje }}</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="strana__tekst">
+    <h2>Šta se u govoru zaista primeti</h2>
+    <p>
+      Kad se ime i prezime izgovaraju zajedno, najviše smeta kad se
+      <strong>isti glas nađe na sastavu</strong> — „Nikola Aleksić" se u brzom
+      govoru stopi u jednu reč. Isto važi i za rimu: „Marina Perina" zvuči kao
+      stih, što nekome bude simpatično a nekome ne.
+    </p>
+    <p>
+      Drugo je ritam. Ime i prezime iste dužine daju ravan zvuk; kad se
+      razlikuju za slog ili dva, celina obično zvuči prirodnije. To je razlog
+      zašto uz kratka prezimena često lepše stoje duža imena.
+    </p>
+
+    <h2>Na šta se često zaboravi</h2>
+    <p>
+      Inicijali — proveri šta ispadne, jer dete će ih pisati ceo život. I dužina:
+      puno ime preko dvadesetak slova teško staje u obrasce, a nadimak se ionako
+      napravi sam.
+    </p>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Još biraš ime?</h2>
+    <p>Pogledaj odakle imena dolaze i šta zaista znače.</p>
+    <ui-button routerLink="/imena" variant="primary" size="lg">Značenje imena</ui-button>
+  </ui-card>
+</div>

@@ -39,6 +39,27 @@ export class Zabava implements OnInit {
       oznaka: 'za zabavu',
     },
     {
+      putanja: '/ime-uz-prezime',
+      emoji: '🔤',
+      naslov: 'Ime uz prezime',
+      opis: 'Kako izabrano ime zvuči uz vaše prezime — ritam, glasovi, inicijali.',
+      oznaka: 'za zabavu',
+    },
+    {
+      putanja: '/odbrojavanje',
+      emoji: '⏳',
+      naslov: 'Odbrojavanje do termina',
+      opis: 'Koliko je još ostalo, sa slikom koju možeš da podeliš.',
+      oznaka: 'sa slikom',
+    },
+    {
+      putanja: '/kalkulator-zaceca',
+      emoji: '📅',
+      naslov: 'Kalkulator začeća',
+      opis: 'Kada je došlo do začeća, iz termina ili nedelje u kojoj si sada.',
+      oznaka: 'kalkulator',
+    },
+    {
       putanja: '/horoskopski-znak',
       emoji: '✨',
       naslov: 'Horoskopski znak bebe',

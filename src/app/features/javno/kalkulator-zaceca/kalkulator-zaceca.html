@@ -1,0 +1,99 @@
+<div class="strana">
+  <header class="strana__zaglavlje">
+    <h1>Kalkulator začeća</h1>
+    <p>
+      Kada je došlo do začeća? Izračunaj iz termina porođaja ili iz nedelje
+      trudnoće u kojoj si sada.
+    </p>
+  </header>
+
+  <ui-card padding="lg">
+    <div class="kalk__prekidac">
+      <button type="button" [class.kalk__prekidac-dugme--tekuci]="nacin === 'termin'"
+              (click)="nacin = 'termin'">Znam termin porođaja</button>
+      <button type="button" [class.kalk__prekidac-dugme--tekuci]="nacin === 'nedelja'"
+              (click)="nacin = 'nedelja'">Znam koja sam nedelja</button>
+    </div>
+
+    <label class="kalk__polje" *ngIf="nacin === 'termin'">
+      <span>Termin porođaja</span>
+      <input type="date" [(ngModel)]="datumTermina" name="datumTermina" />
+    </label>
+
+    <label class="kalk__polje" *ngIf="nacin === 'nedelja'">
+      <span>U kojoj si nedelji trudnoće?</span>
+      <input type="number" min="1" max="42" [(ngModel)]="nedeljaSada" name="nedeljaSada"
+             placeholder="npr. 12" inputmode="numeric" />
+    </label>
+
+    <p class="kalk__greska" *ngIf="greska()">{{ greska() }}</p>
+
+    <ui-button variant="primary" size="lg" (click)="izracunaj()">Izračunaj začeće</ui-button>
+  </ui-card>
+
+  <ui-card padding="lg" class="kalk__rezultat" *ngIf="rezultat() as r">
+    <span class="kalk__oznaka">Do začeća je najverovatnije došlo</span>
+    <strong class="kalk__termin">{{ formatiraj(r.najverovatnije) }}</strong>
+
+    <p class="kalk__opseg">
+      Moguć raspon: <strong>{{ formatirajKratko(r.zaceceOd) }} — {{ formatirajKratko(r.zaceceDo) }}</strong>
+    </p>
+
+    <div class="kalk__stavke">
+      <div>
+        <span>Poslednja menstruacija</span>
+        <strong>{{ formatirajKratko(r.poslednjaMenstruacija) }}</strong>
+      </div>
+      <div>
+        <span>Nedelja trudnoće danas</span>
+        <strong>{{ r.nedeljaSada }}.</strong>
+      </div>
+    </div>
+
+    <p class="kalk__napomena">
+      Začeće se ne može svesti na jedan dan. Ovulacija ne pada uvek na 14. dan
+      ciklusa, a spermatozoidi žive do pet dana — zato je ovde raspon, a ne datum.
+      Ako ti je odgovor važan zbog očinstva, jedini pouzdan put je DNK analiza.
+    </p>
+
+    <div class="kalk__dalje">
+      <a [routerLink]="['/trudnoca', r.nedeljaSada]" class="kalk__veza" *ngIf="r.nedeljaSada >= 4">
+        Pogledaj šta se dešava u {{ r.nedeljaSada }}. nedelji →
+      </a>
+      <ui-button routerLink="/kalkulator-termina" variant="outline" size="md">Kalkulator termina</ui-button>
+    </div>
+  </ui-card>
+
+  <section class="strana__tekst">
+    <h2>Kako se računa unazad</h2>
+    <p>
+      Trudnoća se broji od <strong>prvog dana poslednje menstruacije</strong>, a ne
+      od začeća — tako računaju i lekari. Termin je 280 dana od tog dana. Kad se
+      od termina oduzme 280 dana, dobija se poslednja menstruacija; začeće je
+      obično oko dve nedelje posle nje.
+    </p>
+    <p>
+      To znači da si u trenutku začeća već „dve nedelje trudna" po ovom računu,
+      iako trudnoće još nije bilo. Zvuči čudno, ali je tako po dogovoru koji
+      koristi cela medicina.
+    </p>
+
+    <h2>Zašto raspon a ne datum</h2>
+    <p>
+      Spermatozoidi u telu žive do pet dana, pa je odnos od pre nedelju dana
+      mogao dovesti do začeća isto kao i onaj od juče. Uz to ovulacija varira od
+      ciklusa do ciklusa, čak i kod žena sa urednim ciklusom.
+    </p>
+    <p>
+      Ako ti je datum začeća važan iz pravnih razloga ili zbog utvrđivanja
+      očinstva, nijedan kalkulator nije dokaz. Ultrazvuk u prvom tromesečju daje
+      procenu tačniju od računa, a DNK analiza je jedini pouzdan odgovor.
+    </p>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Prati trudnoću od početka</h2>
+    <p>Nedelja po nedelja, sa pregledima i nalazima na jednom mestu.</p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+  </ui-card>
+</div>

@@ -1,4 +1,10 @@
 .topicdetail {
+  /* Stranica je sada na javnom sajtu, gde nema okvira aplikacije koji je
+     davao razmak sa strane. Prati .strana sa ostalih javnih stranica. */
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -17,6 +23,14 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
+
+    /* Na telefonu avatar i dugme za čuvanje ostavljaju naslovu trećinu reda,
+       pa se lomi na tri. Slika se sklanja — naslov je ono zbog čega se tema
+       otvara. */
+    @media (max-width: 640px) {
+      ui-avatar,
+      .topicdetail__anon { display: none; }
+    }
   }
 
   &__head-body { flex: 1; min-width: 0; }
@@ -35,6 +49,11 @@
     gap: var(--space-2);
     margin-top: 4px;
     font-size: 12.5px;
+    flex-wrap: wrap;
+
+    /* Ime i vreme su celina; bez ovoga se „Anonimna trudnica · pre 9d"
+       raspadne u tri reda. */
+    .text-muted { white-space: nowrap; }
   }
 
   &__anon {

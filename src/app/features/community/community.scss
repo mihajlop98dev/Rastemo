@@ -2,7 +2,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  max-width: 1360px;
+
+  /* Forum je sada na javnom sajtu, gde nema okvira aplikacije koji je davao
+     razmak sa strane. Širina i razmak prate ostale javne stranice. */
+  /* Isti razmak kao na ostalim javnim stranicama (.strana), da forum ne
+     odskače od ostatka sajta. Širi je jer ima dve kolone. */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  width: 100%;
 
   &__header {
     display: flex;
@@ -76,6 +84,16 @@
 
     &:last-child { border-bottom: none; }
     &:hover { background: var(--color-bg-soft); }
+
+    /* Na telefonu avatar i dugmad zauzimaju previše širine, pa naslovu ostane
+       trećina reda. Slika se sklanja, a broj odgovora ide uz ostale podatke. */
+    @media (max-width: 640px) {
+      gap: var(--space-3);
+      padding: var(--space-4);
+
+      ui-avatar,
+      .community__topic-anon { display: none; }
+    }
   }
 
   &__topic-anon {
@@ -100,15 +118,16 @@
 
   &__topic-title {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 6px;
 
     strong {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      /* Naslov se prelama umesto da se seče. Na telefonu je „Privatno ili
+         drzavno poro…" ostavljalo pitanje bez poente, a upravo naslov je ono
+         zbog čega se tema otvara. */
+      overflow-wrap: anywhere;
     }
   }
 
@@ -117,6 +136,10 @@
     align-items: center;
     gap: 8px;
     font-size: 12px;
+    flex-wrap: wrap;
+
+    /* Ime i vreme čine celinu i ne smeju da se rastave u dva reda. */
+    .text-muted { white-space: nowrap; }
   }
 
   &__topic-replies {

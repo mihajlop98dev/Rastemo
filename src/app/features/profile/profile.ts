@@ -12,7 +12,7 @@ import { ClinicService } from '../../core/services/clinic.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { PregnancyService, BabyGender } from '../../core/services/pregnancy.service';
-import { NotificationService } from '../../core/services/notification.service';
+import { NotificationService, NotificationRow } from '../../core/services/notification.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { PushService, StanjePusha } from '../../core/services/push.service';
@@ -295,6 +295,12 @@ export class Profile implements OnInit {
 
   async markNotificationRead(id: string) {
     await this.notifications.markRead(id);
+  }
+
+  /** Klik na notifikaciju je otvara tamo gde se dogodila. */
+  async otvoriNotifikaciju(n: NotificationRow) {
+    await this.notifications.markRead(n.id);
+    if (n.link) this.router.navigateByUrl(n.link);
   }
 
   async markAllNotificationsRead() {

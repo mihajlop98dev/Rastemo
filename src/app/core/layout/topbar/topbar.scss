@@ -192,3 +192,15 @@
     @media (max-width: 560px) { display: none; }
   }
 }
+
+/* Notifikacija koja vodi negde dobija strelicu — bez nje se ne vidi da je
+   uopšte klikabilna. */
+.topbar__dropdown-item--vodi {
+  cursor: pointer;
+
+  .topbar__dropdown-strelica {
+    margin-left: auto;
+    flex: none;
+    color: var(--color-text-soft);
+  }
+}

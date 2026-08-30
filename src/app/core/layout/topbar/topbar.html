@@ -49,11 +49,13 @@
           *ngFor="let n of notifications.items()"
           class="topbar__dropdown-item"
           [class.topbar__dropdown-item--unread]="!n.is_read"
-          (click)="openNotification(n.id)">
+          [class.topbar__dropdown-item--vodi]="n.link"
+          (click)="openNotification(n)">
           <span class="topbar__dropdown-text">
             <strong>{{ n.title }}</strong>
             <span class="text-muted" *ngIf="n.body">{{ n.body }}</span>
           </span>
+          <lucide-icon *ngIf="n.link" [img]="StrelicaIcon" [size]="15" class="topbar__dropdown-strelica"></lucide-icon>
         </button>
         <p class="topbar__dropdown-empty text-soft" *ngIf="!notifications.items().length">Nemaš notifikacija.</p>
       </div>

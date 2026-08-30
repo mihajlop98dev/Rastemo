@@ -2,11 +2,11 @@ import { Component, HostListener, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, Search, Bell, MessageCircle, ChevronDown, Stethoscope, MessageSquare, Heart } from 'lucide-angular';
+import { LucideAngularModule, Search, Bell, MessageCircle, ChevronDown, Stethoscope, MessageSquare, Heart, ChevronRight } from 'lucide-angular';
 import { UiAvatar } from '../../../shared/ui/avatar/avatar';
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
-import { NotificationService } from '../../services/notification.service';
+import { NotificationService, NotificationRow } from '../../services/notification.service';
 import { MessagesService } from '../../services/messages.service';
 import { SupabaseService } from '../../services/supabase.service';
 
@@ -94,8 +94,11 @@ export class Topbar implements OnInit {
     this.notifOpen.update(v => !v);
   }
 
-  async openNotification(id: string) {
-    await this.notifications.markRead(id);
+  async openNotification(n: NotificationRow) {
+    await this.notifications.markRead(n.id);
+    if (!n.link) return;
+    this.notifOpen.set(false);
+    this.router.navigateByUrl(n.link);
   }
 
   @HostListener('document:click', ['$event'])
@@ -113,6 +116,7 @@ export class Topbar implements OnInit {
   readonly BellIcon = Bell;
   readonly MessageIcon = MessageCircle;
   readonly ChevronIcon = ChevronDown;
+  readonly StrelicaIcon = ChevronRight;
   readonly DoctorIcon = Stethoscope;
   readonly TopicIcon = MessageSquare;
   readonly HeartIcon = Heart;

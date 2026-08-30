@@ -352,3 +352,9 @@
     &--lose { color: var(--color-danger, #c0392b); }
   }
 }
+
+.profile__notif-row--vodi {
+  cursor: pointer;
+
+  &:hover { background: var(--color-surface-soft, rgba(0, 0, 0, .03)); }
+}

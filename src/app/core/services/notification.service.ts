@@ -10,6 +10,8 @@ export interface NotificationRow {
   body: string | null;
   is_read: boolean;
   created_at: string;
+  /** Putanja u aplikaciji na koju klik vodi; prazno za starije notifikacije. */
+  link: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +52,7 @@ export class NotificationService {
   }
 
   /** Insert a notification for another user (e.g. a forum reply or a new DM). RLS allows any authenticated user to notify. */
-  async notify(userId: string, type: string, title: string, body?: string) {
-    await this.supabase.client.from('notifications').insert({ user_id: userId, type, title, body });
+  async notify(userId: string, type: string, title: string, body?: string, link?: string) {
+    await this.supabase.client.from('notifications').insert({ user_id: userId, type, title, body, link });
   }
 }

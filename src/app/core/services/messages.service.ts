@@ -152,6 +152,6 @@ export class MessagesService {
     if (error) throw error;
 
     this.messages.update(list => [...list, data as MessageRow]);
-    await this.notifications.notify(otherUserId, 'message', 'Nova poruka', content.slice(0, 120));
+    await this.notifications.notify(otherUserId, 'message', 'Nova poruka', content.slice(0, 120), `/messages/${conversationId}`);
   }
 }

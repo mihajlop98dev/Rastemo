@@ -229,7 +229,10 @@
         </ui-button>
       </div>
 
-      <div class="profile__notif-row" *ngFor="let n of notifications.items()" [class.profile__notif-row--unread]="!n.is_read" (click)="markNotificationRead(n.id)">
+      <div class="profile__notif-row" *ngFor="let n of notifications.items()"
+           [class.profile__notif-row--unread]="!n.is_read"
+           [class.profile__notif-row--vodi]="n.link"
+           (click)="otvoriNotifikaciju(n)">
         <div>
           <strong>{{ n.title }}</strong>
           <p class="text-soft" *ngIf="n.body">{{ n.body }}</p>

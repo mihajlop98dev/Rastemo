@@ -65,6 +65,29 @@
     </div>
   </ui-card>
 
+  <ui-card padding="lg" *ngIf="rezultat() as r">
+    <h2 class="kalk__naslov-datuma">Ključni datumi tvoje trudnoće</h2>
+    <p class="kalk__uvod-datuma">
+      Svi se računaju iz istog podatka koji si upisala. Prošli su označeni kvačicom.
+    </p>
+
+    <div class="kalk__datum" *ngFor="let d of r.datumi" [class.kalk__datum--proslo]="d.proslo">
+      <div class="kalk__datum-kad">
+        <span class="kalk__datum-oznaka">{{ d.proslo ? '✓' : '' }}</span>
+        <strong>{{ formatirajKratko(d.datum) }}</strong>
+      </div>
+      <div class="kalk__datum-sta">
+        <strong>{{ d.naziv }}</strong>
+        <span>{{ d.opis }}</span>
+      </div>
+    </div>
+
+    <p class="kalk__napomena">
+      Nedelje su iz uobičajene prakse i kod svake trudnoće se pomeraju za koji dan.
+      Tvoj lekar ima tačniju sliku nego bilo koji kalkulator.
+    </p>
+  </ui-card>
+
   <section class="strana__tekst">
     <h2>Kako se računa termin porođaja</h2>
     <p>

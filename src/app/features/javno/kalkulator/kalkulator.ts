@@ -13,7 +13,35 @@ interface Rezultat {
   dan: number;
   preostaloDana: number;
   trimestar: number;
+  datumi: KljucniDatum[];
 }
+
+interface KljucniDatum {
+  naziv: string;
+  datum: Date;
+  opis: string;
+  proslo: boolean;
+}
+
+/**
+ * Datumi koji se svi računaju iz istog unosa, a žene ih traže odvojeno:
+ * kada je došlo do začeća, kada se čuje srce, kada se oseti prvi pokret.
+ *
+ * Nedelje su iz uobičajene akušerske prakse i namerno su date kao raspon
+ * tamo gde raspon i postoji — prvi pokret se kod prve trudnoće oseti kasnije
+ * nego kod druge, i tvrditi tačan dan bilo bi netačno.
+ */
+const KLJUCNE_NEDELJE: { nedelja: number; naziv: string; opis: string }[] = [
+  { nedelja: 2, naziv: 'Začeće', opis: 'Otprilike dve nedelje posle početka poslednje menstruacije.' },
+  { nedelja: 6, naziv: 'Prvi otkucaji srca', opis: 'Mogu da se vide na ultrazvuku, ponekad i nedelju dana kasnije.' },
+  { nedelja: 12, naziv: 'Kraj prvog tromesečja', opis: 'Rizik od gubitka trudnoće znatno opada.' },
+  { nedelja: 13, naziv: 'Prvi skrining', opis: 'Dabl test i merenje nuhalnog nabora rade se između 11. i 14. nedelje.' },
+  { nedelja: 20, naziv: 'Pol bebe na ultrazvuku', opis: 'Obično se pouzdano vidi, ako beba zauzme povoljan položaj.' },
+  { nedelja: 20, naziv: 'Prvi pokreti', opis: 'Kod prve trudnoće oko 20. nedelje, kod sledećih i ranije.' },
+  { nedelja: 24, naziv: 'Granica održivosti', opis: 'Od ove nedelje beba ima šanse da preživi uz intenzivnu negu.' },
+  { nedelja: 28, naziv: 'Kraj drugog tromesečja', opis: 'Počinje poslednja trećina trudnoće.' },
+  { nedelja: 37, naziv: 'Trudnoća je donešena', opis: 'Od ove nedelje porođaj se više ne smatra prevremenim.' },
+];
 
 @Component({
   selector: 'app-kalkulator',
@@ -102,7 +130,27 @@ export class Kalkulator implements OnInit {
       dan: protekloDana % 7,
       preostaloDana: Math.max(0, Math.ceil((termin.getTime() - danas.getTime()) / 86400000)),
       trimestar: nedelja < 13 ? 1 : nedelja < 28 ? 2 : 3,
+      datumi: this.kljucniDatumi(pocetak, danas),
     });
+  }
+
+  /** Svi ključni datumi se broje od prvog dana poslednje menstruacije. */
+  private kljucniDatumi(pocetak: Date, danas: Date): KljucniDatum[] {
+    // Kod poznatog začeća uneti datum je već 2. nedelja, pa se nulta tačka
+    // pomera unazad da bi se svi ostali datumi poklopili.
+    const nula = new Date(pocetak);
+    if (this.nacin === 'zaceće') nula.setDate(nula.getDate() - 14);
+
+    return KLJUCNE_NEDELJE.map(k => {
+      const d = new Date(nula);
+      d.setDate(d.getDate() + k.nedelja * 7);
+      return { naziv: k.naziv, datum: d, opis: k.opis, proslo: d < danas };
+    });
+  }
+
+  /** Kratak oblik za spisak datuma — pun datum bi tu bio preglasan. */
+  formatirajKratko(d: Date): string {
+    return d.toLocaleDateString(LOKAL, { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
   formatirajDatum(d: Date): string {

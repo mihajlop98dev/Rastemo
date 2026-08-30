@@ -127,6 +127,18 @@
 
   </div>
 
+  <!-- Na telefonu je donji meni pun, pa je ovo jedini ulaz u javne alatke. -->
+  <a routerLink="/zabava" class="home__zabava">
+    <span class="home__zabava-ikona">
+      <lucide-icon [img]="ZabavaIcon" [size]="20"></lucide-icon>
+    </span>
+    <span class="home__zabava-tekst">
+      <strong>Zabava</strong>
+      <span class="text-soft">Značenje imena, anketa za ime, odbrojavanje, horoskop bebe.</span>
+    </span>
+    <lucide-icon [img]="ChevronIcon" [size]="16" class="home__zabava-strelica"></lucide-icon>
+  </a>
+
   <div class="home__viewer" *ngIf="viewerOpen()">
     <button type="button" class="home__viewer-close" (click)="closeViewer()">
       <lucide-icon [img]="XIcon" [size]="20"></lucide-icon>

@@ -17,6 +17,9 @@ export const navItems: NavItem[] = [
   // Forum je javan; ista adresa i iz aplikacije i sa sajta.
   { label: 'Zajednica', path: '/zajednica', icon: 'users' },
   { label: 'Priprema', path: '/preparation', icon: 'shopping-bag' },
+  // Vodi na javni deo sajta. Prijavljena korisnica inace nema kako da dodje do
+  // imena, kalkulatora i ostalih alatki — sve to zivi van aplikacije.
+  { label: 'Zabava', path: '/zabava', icon: 'sparkles' },
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];
 

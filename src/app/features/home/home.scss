@@ -409,3 +409,41 @@
     }
   }
 }
+
+.home__zabava {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s ease;
+
+  &:hover { border-color: var(--color-primary); }
+
+  &-ikona {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-primary-soft, rgba(233, 106, 130, .12));
+    color: var(--color-primary);
+  }
+
+  &-tekst {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    span { font-size: 13px; }
+  }
+
+  &-strelica { margin-left: auto; flex: none; color: var(--color-text-soft); }
+}

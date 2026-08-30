@@ -2,7 +2,7 @@ import {
   Home, Activity, ClipboardList, Stethoscope, Users, ShoppingBag,
   Heart, User, Search, Bell, MessageCircle, Baby, Info, Phone,
   Calendar, ChevronRight, ChevronLeft, Plus, Check, Smile, Scale, PenLine,
-  FileText, Star, MapPin, Filter, Send, X, Camera, Droplet, Moon, Shield,
+  FileText, Star, MapPin, Filter, Send, X, Camera, Droplet, Moon, Shield, Sparkles,
 } from 'lucide-angular';
 
 export const iconMap: Record<string, any> = {
@@ -38,4 +38,5 @@ export const iconMap: Record<string, any> = {
   droplet: Droplet,
   moon: Moon,
   shield: Shield,
+  sparkles: Sparkles,
 };

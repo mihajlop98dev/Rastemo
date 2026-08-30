@@ -143,6 +143,18 @@ export class ForumService {
       p_telo: body.slice(0, 120),
     });
 
+    // Push ide odmah, jer odgovor na forumu vredi dok je razgovor živ.
+    // Ko je autor teme utvrđuje funkcija, ne aplikacija — tema može biti
+    // anonimna. Neuspeh se ćuti: odgovor je upisan i notifikacija u
+    // aplikaciji postoji, pa push koji nije otišao ne sme da sruši slanje.
+    try {
+      await this.supabase.client.functions.invoke('posalji-push-odgovor', {
+        body: { topic_id: topicId },
+      });
+    } catch {
+      // namerno prazno
+    }
+
     return data as ForumPostRow;
   }
 

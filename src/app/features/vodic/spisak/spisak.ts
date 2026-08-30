@@ -26,8 +26,8 @@ export class VodicSpisak implements OnInit {
 
   ngOnInit() {
     this.seo.postavi(
-      'Trudnoća nedelju po nedelju',
-      'Šta se dešava sa bebom i sa tobom u svakoj nedelji trudnoće, od 4. do 42. Na srpskom, jednostavno i pregledno.',
+      'Kalendar trudnoće — nedelju po nedelju',
+      'Kalendar trudnoće po nedeljama: šta se dešava sa bebom i sa tobom u svakoj nedelji, od 4. do 42. Jednostavno i pregledno.',
       '/trudnoca',
     );
 

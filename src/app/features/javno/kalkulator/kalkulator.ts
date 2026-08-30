@@ -34,8 +34,8 @@ export class Kalkulator implements OnInit {
 
   ngOnInit() {
     this.seo.postavi(
-      'Kalkulator termina porođaja',
-      'Izračunaj termin porođaja i nedelju trudnoće na osnovu poslednje menstruacije ili datuma začeća. Uz objašnjenje kako se termin računa i koliko je tačan.',
+      'Kalkulator trudnoće i termina porođaja',
+      'Kalkulator trudnoće: izračunaj termin porođaja i nedelju u kojoj si, po poslednjoj menstruaciji ili datumu začeća. Uz kalendar trudnoće po nedeljama.',
       '/kalkulator-termina',
     );
 

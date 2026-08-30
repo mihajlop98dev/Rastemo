@@ -31,8 +31,8 @@ export class KineskiHoroskop implements OnInit {
 
   ngOnInit() {
     this.seo.postavi(
-      'Kineski horoskop za bebu',
-      'Koji je kineski znak tvoje bebe po terminu porođaja — i zašto kineska godina ne počinje prvog januara.',
+      'Kineski horoskop za bebu i trudnoću',
+      'Kineski horoskop: koji je znak tvoje bebe po terminu porođaja, i zašto kineska godina ne počinje prvog januara.',
       '/kineski-horoskop',
     );
     this.seo.strukturirano([

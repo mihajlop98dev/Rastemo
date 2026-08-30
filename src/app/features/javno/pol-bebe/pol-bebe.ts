@@ -33,8 +33,8 @@ export class PolBebe implements OnInit {
 
   ngOnInit() {
     this.seo.postavi(
-      'Kinesko računanje pola bebe',
-      'Stara kineska tablica koja iz godina majke i meseca začeća pogađa pol bebe. Zabava, ne metod — tačnost je kao kod bacanja novčića.',
+      'Kineski kalendar trudnoće — pol bebe',
+      'Kineski kalendar trudnoće: stara tablica koja iz godina majke i meseca začeća pogađa pol bebe. Zabava, ne metod — tačnost je kao kod bacanja novčića.',
       '/pol-bebe',
     );
     this.seo.strukturirano([

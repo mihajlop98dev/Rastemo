@@ -1,5 +1,9 @@
 <div class="topicdetail" *ngIf="!loading()">
 
+  <app-trazi-korisnicko *ngIf="traziKorisnicko()"
+                        (gotovo)="korisnickoPostavljeno()"
+                        (odustala)="traziKorisnicko.set(false)" />
+
   <ng-container *ngIf="topic() as t; else notFound">
     <a routerLink="/zajednica" class="text-muted topicdetail__back">
       <lucide-icon [img]="BackIcon" [size]="15"></lucide-icon>

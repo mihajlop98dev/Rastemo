@@ -13,11 +13,13 @@ import { MessagesService } from '../../../core/services/messages.service';
 import { ReportService, ReportTarget } from '../../../core/services/report.service';
 import { SeoService } from '../../vodic/seo.service';
 import { inject } from '@angular/core';
+import { TraziKorisnicko } from '../../../shared/trazi-korisnicko/trazi-korisnicko';
+import { ProfileService } from '../../../core/services/profile.service';
 
 @Component({
   selector: 'app-topic-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiBadge, UiAvatar],
+  imports: [TraziKorisnicko, CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiBadge, UiAvatar],
   templateUrl: './topic-detail.html',
   styleUrl: './topic-detail.scss'
 })
@@ -66,6 +68,7 @@ export class TopicDetail implements OnInit {
     readonly forumSvc: ForumService,
     readonly messagesSvc: MessagesService,
     readonly reportSvc: ReportService,
+    readonly profileSvc: ProfileService,
   ) {}
 
   async ngOnInit() {
@@ -131,9 +134,23 @@ export class TopicDetail implements OnInit {
     this.router.navigate(['/messages', conversationId]);
   }
 
+  readonly traziKorisnicko = signal(false);
+
+  async korisnickoPostavljeno() {
+    this.traziKorisnicko.set(false);
+    await this.profileSvc.load();
+    await this.submitReply();
+  }
+
   async submitReply() {
     const t = this.topic();
     if (!t || !this.reply.trim()) return;
+
+    // Bez korisničkog imena odgovor ne bi imao čime da se potpiše.
+    if (!this.profileSvc.profile()?.username) {
+      this.traziKorisnicko.set(true);
+      return;
+    }
     this.sending.set(true);
     try {
       await this.forumSvc.createPost(t.id, this.reply.trim(), this.replyAnonymous);

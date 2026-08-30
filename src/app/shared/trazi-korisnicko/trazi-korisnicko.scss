@@ -1,0 +1,58 @@
+.trazikor {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: 0 18px 50px rgba(55, 46, 42, .22);
+
+  h2 { font-size: 19px; margin: 0; }
+
+  p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-soft);
+    margin: 0;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 13px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+
+    &:focus { outline: none; border-color: var(--color-primary); }
+  }
+
+  &__pomoc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-text-soft);
+
+    &--lose { color: var(--color-danger, #c0392b); }
+  }
+
+  &__dugmad {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  &__pozadina {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    background: rgba(55, 46, 42, .45);
+  }
+}

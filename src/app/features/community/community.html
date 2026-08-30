@@ -1,5 +1,9 @@
 <div class="community">
 
+  <app-trazi-korisnicko *ngIf="traziKorisnicko()"
+                        (gotovo)="korisnickoPostavljeno()"
+                        (odustala)="traziKorisnicko.set(false)" />
+
   <header class="community__header">
     <div>
       <h1>Zajednica</h1>

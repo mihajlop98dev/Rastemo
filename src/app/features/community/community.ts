@@ -13,11 +13,13 @@ import { ForumService, ForumTopicRow } from '../../core/services/forum.service';
 import { Router } from '@angular/router';
 import { SeoService } from '../vodic/seo.service';
 import { inject } from '@angular/core';
+import { TraziKorisnicko } from '../../shared/trazi-korisnicko/trazi-korisnicko';
+import { ProfileService } from '../../core/services/profile.service';
 
 @Component({
   selector: 'app-community',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiBadge, UiAvatar, UiTabs],
+  imports: [TraziKorisnicko, CommonModule, FormsModule, RouterLink, LucideAngularModule, UiCard, UiButton, UiBadge, UiAvatar, UiTabs],
   templateUrl: './community.html',
   styleUrl: './community.scss'
 })
@@ -57,7 +59,11 @@ export class Community implements OnInit {
   newAnonymous = false;
 
   // Šablon proverava prijavu, pa auth mora da bude dostupan i njemu.
-  constructor(readonly auth: AuthService, readonly forumSvc: ForumService) {}
+  constructor(
+    readonly auth: AuthService,
+    readonly forumSvc: ForumService,
+    readonly profileSvc: ProfileService,
+  ) {}
 
   async ngOnInit() {
     this.seo.postavi(
@@ -112,9 +118,26 @@ export class Community implements OnInit {
     return `pre ${days}d`;
   }
 
+  readonly traziKorisnicko = signal(false);
+
+  /** Bez korisničkog imena nema čime da se potpiše, pa se prvo traži ono. */
+  private nemaKorisnicko(): boolean {
+    return !this.profileSvc.profile()?.username;
+  }
+
+  async korisnickoPostavljeno() {
+    this.traziKorisnicko.set(false);
+    await this.profileSvc.load();
+    this.openCreate();
+  }
+
   openCreate() {
     if (!this.auth.user()) {
       this.naPrijavu();
+      return;
+    }
+    if (this.nemaKorisnicko()) {
+      this.traziKorisnicko.set(true);
       return;
     }
     this.newTitle = '';

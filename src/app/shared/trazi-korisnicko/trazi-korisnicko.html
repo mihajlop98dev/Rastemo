@@ -1,0 +1,33 @@
+<div class="trazikor__pozadina" (click)="odustala.emit()">
+  <div class="trazikor" (click)="$event.stopPropagation()">
+    <h2>Izaberi korisničko ime</h2>
+    <p>
+      Njime se potpisuješ na forumu. Tvoje ime, prezime i mejl se tamo nikad
+      ne prikazuju, a i dalje možeš da objaviš anonimno kad hoćeš.
+      Predlog ispod slobodno promeni.
+    </p>
+
+    <input type="text" [(ngModel)]="ime" (input)="proveri()" (keyup.enter)="sacuvaj()"
+           placeholder="npr. marija87" maxlength="20" autocomplete="username" />
+
+    <small class="trazikor__pomoc" [class.trazikor__pomoc--lose]="stanje() === 'zauzeto'">
+      <ng-container [ngSwitch]="stanje()">
+        <ng-container *ngSwitchCase="'proveravam'">Proveravam…</ng-container>
+        <ng-container *ngSwitchCase="'slobodno'">Slobodno je.</ng-container>
+        <ng-container *ngSwitchCase="'zauzeto'">Zauzeto ili nije dozvoljeno.</ng-container>
+        <ng-container *ngSwitchDefault>
+          3 do 20 znakova: slova bez kvačica, brojevi, tačka, crtica i donja crta.
+        </ng-container>
+      </ng-container>
+    </small>
+    <small class="trazikor__pomoc trazikor__pomoc--lose" *ngIf="greska()">{{ greska() }}</small>
+
+    <div class="trazikor__dugmad">
+      <ui-button variant="ghost" size="sm" (click)="odustala.emit()">Ne sada</ui-button>
+      <ui-button variant="primary" size="sm"
+                 [disabled]="stanje() !== 'slobodno' || cuvam()" (click)="sacuvaj()">
+        {{ cuvam() ? 'Čuvam…' : 'Sačuvaj i nastavi' }}
+      </ui-button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="adminlay">
+
+  <aside class="adminlay__meni" [class.adminlay__meni--otvoren]="meniOtvoren()">
+    <div class="adminlay__brend">
+      <span class="adminlay__brend-ikona">
+        <lucide-icon [img]="ShieldIcon" [size]="17"></lucide-icon>
+      </span>
+      <div>
+        <strong>Administracija</strong>
+        <small>Dnevnik trudnoće</small>
+      </div>
+    </div>
+
+    <nav class="adminlay__nav">
+      <a *ngFor="let s of stavke" [routerLink]="s.putanja"
+         routerLinkActive="adminlay__veza--tekuca"
+         [routerLinkActiveOptions]="{ exact: s.tacno }"
+         (click)="meniOtvoren.set(false)" class="adminlay__veza">
+        <lucide-icon [img]="s.ikona" [size]="17"></lucide-icon>
+        <span>{{ s.naziv }}</span>
+        <span class="adminlay__oznaka" *ngIf="oznaka(s.putanja) as n">{{ n }}</span>
+      </a>
+    </nav>
+
+    <button class="adminlay__odjava" (click)="odjaviSe()">
+      <lucide-icon [img]="LogOutIcon" [size]="16"></lucide-icon>
+      Odjavi se
+    </button>
+  </aside>
+
+  <div class="adminlay__zavesa" *ngIf="meniOtvoren()" (click)="meniOtvoren.set(false)"></div>
+
+  <main class="adminlay__sadrzaj">
+    <button class="adminlay__hamburger" (click)="meniOtvoren.set(!meniOtvoren())"
+            [attr.aria-label]="meniOtvoren() ? 'Zatvori meni' : 'Otvori meni'">
+      <lucide-icon [img]="meniOtvoren() ? XIcon : MenuIcon" [size]="20"></lucide-icon>
+    </button>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

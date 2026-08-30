@@ -71,9 +71,24 @@ export const routes: Routes = [
       { path: 'messages', loadComponent: () => import('./features/messages/inbox/inbox').then(c => c.MessagesInbox) },
       { path: 'messages/:id', loadComponent: () => import('./features/messages/thread/thread').then(c => c.MessagesThread) },
       { path: 'profile', loadComponent: () => import('./features/profile/profile').then(c => c.Profile) },
-      { path: 'admin', loadComponent: () => import('./features/admin/admin').then(c => c.Admin), canActivate: [adminGuard] },
     ],
   },
+
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./features/admin/layout/admin-layout').then(c => c.AdminLayout),
+    children: [
+      { path: '', loadComponent: () => import('./features/admin/pregled/admin-pregled').then(c => c.AdminPregled) },
+      { path: 'prijave', data: { sekcija: 'prijave' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'zajednica', data: { sekcija: 'zajednica' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'korisnice', data: { sekcija: 'korisnice' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'lekari', data: { sekcija: 'lekari' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'imena', data: { sekcija: 'imena' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'dnevnik', data: { sekcija: 'dnevnik' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+    ],
+  },
+
   // Prava stranica sa porukom, a ne tiho preusmeravanje na početnu:
   // preusmereni 404 pretraživači vide kao grešku u sadržaju.
   { path: '**', loadComponent: () => import('./features/javno/nema-strane/nema-strane').then(m => m.NemaStrane) },

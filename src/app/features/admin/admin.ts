@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Shield, Trash2, Check, X, AlertTriangle, Search, BadgeCheck } from 'lucide-angular';
@@ -7,7 +7,7 @@ import { UiButton } from '../../shared/ui/button/button';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
 import { AdminService, AdminContentRow, AdminUserRow, STRIKE_LIMIT } from '../../core/services/admin.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DoctorService } from '../../core/services/doctor.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 
@@ -40,6 +40,22 @@ export class Admin implements OnInit {
     { id: 'dnevnik', label: 'Dnevnik' },
   ];
   activeTab: Section = 'pregled';
+
+  private route = inject(ActivatedRoute);
+
+  /** Naslov stranice; menja se uz sekciju iz adrese. */
+  readonly naslovi: Record<string, { naslov: string; opis: string }> = {
+    prijave: { naslov: 'Prijave', opis: 'Sadržaj koji su korisnice prijavile.' },
+    zajednica: { naslov: 'Zajednica', opis: 'Teme i odgovori na forumu.' },
+    korisnice: { naslov: 'Korisnice', opis: 'Nalozi, opomene i brisanje.' },
+    lekari: { naslov: 'Lekari', opis: 'Unosi korisnica koji čekaju proveru.' },
+    imena: { naslov: 'Predložena imena', opis: 'Imena upisana u ankete kojih nema na spisku.' },
+    dnevnik: { naslov: 'Dnevnik rada', opis: 'Šta je i kada urađeno u panelu.' },
+  };
+
+  get naslovSekcije() {
+    return this.naslovi[this.activeTab] ?? { naslov: 'Administracija', opis: '' };
+  }
 
   readonly STRIKE_LIMIT = STRIKE_LIMIT;
 
@@ -107,6 +123,9 @@ export class Admin implements OnInit {
   }
 
   async ngOnInit() {
+    const sekcija = this.route.snapshot.data['sekcija'] as Section | undefined;
+    if (sekcija) this.activeTab = sekcija;
+
     this.admin.loading.set(true);
     await Promise.all([
       this.admin.loadStats(),

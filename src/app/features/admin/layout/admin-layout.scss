@@ -1,0 +1,146 @@
+.adminlay {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-bg);
+
+  &__meni {
+    width: 248px;
+    flex-shrink: 0;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5) var(--space-3);
+    gap: var(--space-5);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  &__brend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 var(--space-2);
+
+    strong { display: block; font-size: 15px; }
+    small { display: block; font-size: 11.5px; color: var(--color-text-muted); }
+  }
+
+  &__brend-ikona {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-text);
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  &__veza {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px var(--space-2);
+    border-radius: var(--radius-md);
+    color: var(--color-text-soft);
+    text-decoration: none;
+    font-size: 14px;
+
+    span:first-of-type { flex: 1; }
+
+    &:hover { background: var(--color-bg-soft); color: var(--color-text); }
+
+    &--tekuca {
+      background: var(--color-primary-soft);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+    }
+  }
+
+  /* Broj uz stavku znači posao koji čeka — prijave i nepotvrđeni lekari. */
+  &__oznaka {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__odjava {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px var(--space-2);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-soft);
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover { background: var(--color-bg-soft); color: var(--color-text); }
+  }
+
+  &__sadrzaj {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-6);
+    max-width: 1240px;
+  }
+
+  &__hamburger {
+    display: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    cursor: pointer;
+    margin-bottom: var(--space-4);
+  }
+
+  &__zavesa { display: none; }
+
+  @media (max-width: 900px) {
+    &__meni {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 40;
+      transform: translateX(-100%);
+      transition: transform .2s ease;
+
+      &--otvoren { transform: translateX(0); }
+    }
+
+    &__zavesa {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(55, 46, 42, .4);
+    }
+
+    &__hamburger { display: inline-flex; }
+    &__sadrzaj { padding: var(--space-4); }
+  }
+}

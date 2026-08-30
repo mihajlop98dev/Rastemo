@@ -1,57 +1,10 @@
 <div class="admin">
-
-  <header class="admin__header">
-    <div class="admin__header-icon"><lucide-icon [img]="ShieldIcon" [size]="18"></lucide-icon></div>
-    <div>
-      <h1>Administracija</h1>
-      <p class="text-soft">Moderacija sadržaja, nalozi i pregled aplikacije.</p>
-    </div>
-    <button type="button" class="admin__logout" (click)="logOut()">Odjavi se</button>
+  <header class="admin__zaglavlje">
+    <h1>{{ naslovSekcije.naslov }}</h1>
+    <p class="text-soft">{{ naslovSekcije.opis }}</p>
   </header>
 
-  <div class="admin__notice">
-    Panel namerno ne prikazuje simptome, raspoloženje, težinu, dnevnik, terapiju ni privatne poruke —
-    to su zdravstveni podaci i politika privatnosti kaže da im se ne pristupa.
-  </div>
-
-  <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $any($event)"></ui-tabs>
-
-  <!-- ---------------- PREGLED ---------------- -->
-  <div class="admin__stats" *ngIf="activeTab === 'pregled'">
-    <ui-card padding="lg" *ngIf="admin.stats() as s">
-      <h2>Brojke</h2>
-      <div class="admin__stat-grid">
-        <div class="admin__stat"><strong>{{ s.users }}</strong><span>korisnica</span></div>
-        <div class="admin__stat"><strong>{{ s.newUsers7d }}</strong><span>novih (7 dana)</span></div>
-        <div class="admin__stat"><strong>{{ s.pregnancies }}</strong><span>aktivnih trudnoća</span></div>
-        <div class="admin__stat"><strong>{{ s.topics }}</strong><span>tema</span></div>
-        <div class="admin__stat"><strong>{{ s.posts }}</strong><span>komentara</span></div>
-        <div class="admin__stat"><strong>{{ s.doctors }}</strong><span>lekara</span></div>
-        <div class="admin__stat" [class.admin__stat--warn]="s.unverifiedDoctors > 0">
-          <strong>{{ s.unverifiedDoctors }}</strong><span>nepotvrđenih lekara</span>
-        </div>
-        <div class="admin__stat" [class.admin__stat--warn]="s.pendingReports > 0">
-          <strong>{{ s.pendingReports }}</strong><span>prijava na čekanju</span>
-        </div>
-      </div>
-    </ui-card>
-
-    <ui-card padding="lg" class="admin__flagged" *ngIf="usersAtLimit.length">
-      <h2><lucide-icon [img]="AlertIcon" [size]="16"></lucide-icon> Nalozi za brisanje</h2>
-      <p class="text-soft">Ovi nalozi imaju {{ STRIKE_LIMIT }} ili više opomena.</p>
-      <div class="admin__row" *ngFor="let u of usersAtLimit">
-        <div>
-          <strong>{{ u.full_name || 'Bez imena' }}</strong>
-          <span class="text-muted">{{ u.strikes }} opomena · od {{ formatDate(u.created_at) }}</span>
-        </div>
-        <ui-button variant="outline" size="sm" (click)="startDeleteUser(u)">Obriši nalog</ui-button>
-      </div>
-    </ui-card>
-  </div>
-
-  <!-- ---------------- PRIJAVE ---------------- -->
   <ui-card padding="lg" *ngIf="activeTab === 'prijave'">
-    <h2>Prijave korisnica</h2>
     <p class="text-soft admin__empty" *ngIf="!admin.reports().length">Nema prijava.</p>
 
     <div class="admin__row" *ngFor="let r of admin.reports()">
@@ -68,7 +21,6 @@
 
   <!-- ---------------- ZAJEDNICA ---------------- -->
   <ui-card padding="lg" *ngIf="activeTab === 'zajednica'">
-    <h2>Teme i komentari</h2>
 
     <div class="admin__search">
       <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
@@ -96,7 +48,6 @@
 
   <!-- ---------------- KORISNICE ---------------- -->
   <ui-card padding="lg" *ngIf="activeTab === 'korisnice'">
-    <h2>Korisnice</h2>
 
     <div class="admin__search">
       <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
@@ -122,7 +73,6 @@
 
   <!-- ---------------- LEKARI ---------------- -->
   <ui-card padding="lg" *ngIf="activeTab === 'lekari'">
-    <h2>Lekari koje su dodale korisnice</h2>
     <p class="text-soft">
       Potvrdi unos ako je tačan, ili ukloni ako nije. Lekari preuzeti iz registra
       Lekarske komore se ovde ne prikazuju — njih niko nije ručno unosio.
@@ -151,7 +101,6 @@
   <!-- ---------------- DNEVNIK ---------------- -->
   <section *ngIf="activeTab === 'imena'" class="admin__sekcija">
     <div class="admin__sekcija-head">
-      <h2>Predložena imena</h2>
       <p class="text-soft">
         Imena koja su korisnice upisale u ankete, a nema ih na našem spisku.
         Ništa ne ulazi samo — ovo je predlog, ti biraš šta vredi dodati.
@@ -192,7 +141,6 @@
   </section>
 
   <ui-card padding="lg" *ngIf="activeTab === 'dnevnik'">
-    <h2>Dnevnik moderacije</h2>
     <p class="text-soft">Svaka uklonjena objava, sa razlogom i snimkom sadržaja.</p>
 
     <p class="text-soft admin__empty" *ngIf="!admin.actions().length">Još nema uklonjenog sadržaja.</p>

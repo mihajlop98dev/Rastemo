@@ -1,0 +1,57 @@
+<div class="apregled">
+  <header class="apregled__zaglavlje">
+    <h1>Pregled</h1>
+    <p class="text-soft">Šta traži tvoju pažnju i kako aplikacija stoji.</p>
+  </header>
+
+  <p class="apregled__ucitavanje" *ngIf="admin.loading()">Učitavam…</p>
+
+  <!-- Poslovi prvo: to je razlog zbog kog se panel i otvara. -->
+  <section class="apregled__zadaci" *ngIf="zadaci().length">
+    <a *ngFor="let z of zadaci()" [routerLink]="z.putanja" class="apregled__zadatak">
+      <span class="apregled__zadatak-broj">{{ z.broj }}</span>
+      <span class="apregled__zadatak-telo">
+        <strong>{{ z.naziv }}</strong>
+        <small>{{ z.opis }}</small>
+      </span>
+      <lucide-icon [img]="StrelicaIcon" [size]="16"></lucide-icon>
+    </a>
+  </section>
+
+  <ui-card padding="lg" class="apregled__cisto" *ngIf="!zadaci().length && !admin.loading()">
+    <strong>Nema posla na čekanju</strong>
+    <span class="text-soft">Sve prijave su obrađene i nema nepotvrđenih unosa.</span>
+  </ui-card>
+
+  <!-- Brojke opisuju stanje; gledaju se rede od poslova, pa stoje ispod. -->
+  <section class="apregled__brojke">
+    <ui-card padding="md" *ngFor="let b of brojke()" class="apregled__brojka">
+      <span class="apregled__brojka-ikona"><lucide-icon [img]="b.ikona" [size]="17"></lucide-icon></span>
+      <strong>{{ b.vrednost }}</strong>
+      <span class="apregled__brojka-naziv">{{ b.naziv }}</span>
+      <small class="text-muted" *ngIf="b.dodatak">{{ b.dodatak }}</small>
+    </ui-card>
+  </section>
+
+  <ui-card padding="lg" class="apregled__opomene" *ngIf="naliciZaBrisanje().length">
+    <h2>
+      <lucide-icon [img]="AlertIcon" [size]="16"></lucide-icon>
+      Nalozi sa {{ STRIKE_LIMIT }} i više opomena
+    </h2>
+    <p class="text-soft">
+      Toliko im je sadržaja uklonjeno zbog kršenja pravila. Odluka o nalogu je na tebi.
+    </p>
+    <div class="apregled__red" *ngFor="let u of naliciZaBrisanje()">
+      <div>
+        <strong>{{ u.full_name || 'Bez imena' }}</strong>
+        <span class="text-muted">{{ u.strikes }} opomena · nalog od {{ formatirajDatum(u.created_at) }}</span>
+      </div>
+      <ui-button variant="outline" size="sm" routerLink="/admin/korisnice">Otvori</ui-button>
+    </div>
+  </ui-card>
+
+  <p class="apregled__napomena">
+    Panel ne prikazuje simptome, raspoloženje, težinu, dnevnik, terapiju ni privatne
+    poruke — to su zdravstveni podaci i politika privatnosti kaže da im se ne pristupa.
+  </p>
+</div>

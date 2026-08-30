@@ -4,6 +4,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { pregnancyGuard } from './core/guards/pregnancy.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { pocetnaGuard } from './core/guards/pocetna.guard';
+import { adminPocetnaGuard } from './core/guards/admin-pocetna.guard';
 
 export const routes: Routes = [
   { path: 'register', loadComponent: () => import('./features/auth/register/register').then(c => c.Register) },
@@ -57,7 +58,7 @@ export const routes: Routes = [
     component: Shell,
     canActivate: [authGuard, pregnancyGuard],
     children: [
-      { path: 'home', loadComponent: () => import('./features/home/home').then(c => c.Home) },
+      { path: 'home', canActivate: [adminPocetnaGuard], loadComponent: () => import('./features/home/home').then(c => c.Home) },
       { path: 'calendar', loadComponent: () => import('./features/calendar/calendar').then(c => c.CalendarPage) },
       { path: 'tracking', loadComponent: () => import('./features/tracking/tracking').then(c => c.Tracking) },
       { path: 'baby-development', loadComponent: () => import('./features/baby-development/baby-development').then(c => c.BabyDevelopment) },

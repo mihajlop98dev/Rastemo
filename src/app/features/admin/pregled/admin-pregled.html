@@ -1,7 +1,13 @@
 <div class="apregled">
   <header class="apregled__zaglavlje">
-    <h1>Pregled</h1>
-    <p class="text-soft">Šta traži tvoju pažnju i kako aplikacija stoji.</p>
+    <div>
+      <h1>Pregled</h1>
+      <p class="text-soft">Šta traži tvoju pažnju i kako aplikacija stoji.</p>
+    </div>
+    <ui-button variant="outline" size="sm" [disabled]="osvezavam()" (click)="osvezi()">
+      <lucide-icon [img]="OsveziIkona" [size]="14"></lucide-icon>
+      {{ osvezavam() ? 'Osvežavam…' : 'Osveži' }}
+    </ui-button>
   </header>
 
   <p class="apregled__ucitavanje" *ngIf="admin.loading()">Učitavam…</p>
@@ -25,13 +31,50 @@
 
   <!-- Brojke opisuju stanje; gledaju se rede od poslova, pa stoje ispod. -->
   <section class="apregled__brojke">
-    <ui-card padding="md" *ngFor="let b of brojke()" class="apregled__brojka">
-      <span class="apregled__brojka-ikona"><lucide-icon [img]="b.ikona" [size]="17"></lucide-icon></span>
-      <strong>{{ b.vrednost }}</strong>
-      <span class="apregled__brojka-naziv">{{ b.naziv }}</span>
-      <small class="text-muted" *ngIf="b.dodatak">{{ b.dodatak }}</small>
-    </ui-card>
+    <a *ngFor="let b of brojke()" [routerLink]="b.putanja"
+       class="apregled__brojka" [class.apregled__brojka--vodi]="b.putanja">
+      <ui-card padding="md">
+        <span class="apregled__brojka-ikona"><lucide-icon [img]="b.ikona" [size]="17"></lucide-icon></span>
+        <strong>{{ b.vrednost }}</strong>
+        <span class="apregled__brojka-naziv">{{ b.naziv }}</span>
+        <small class="text-muted" *ngIf="b.dodatak">{{ b.dodatak }}</small>
+      </ui-card>
+    </a>
   </section>
+
+  <div class="apregled__dve-kolone">
+    <ui-card padding="lg" class="apregled__rast">
+      <div class="apregled__rast-vrh">
+        <div>
+          <h2>Rast</h2>
+          <span class="text-soft">Ukupno korisnica, poslednjih 30 dana</span>
+        </div>
+        <strong class="apregled__rast-broj">+{{ rast().ukupnoNovih }}</strong>
+      </div>
+
+      <svg class="apregled__grafikon" viewBox="0 0 100 100" preserveAspectRatio="none"
+           role="img" aria-label="Kretanje broja korisnica">
+        <path [attr.d]="rast().putanja + ' L100,100 L0,100 Z'" class="apregled__grafikon-povrsina" />
+        <path [attr.d]="rast().putanja" class="apregled__grafikon-linija" />
+      </svg>
+
+      <div class="apregled__rast-dno">
+        <span>pre 30 dana</span>
+        <span>danas</span>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg" class="apregled__aktivnost">
+      <h2>Poslednje se desilo</h2>
+      <p class="text-soft" *ngIf="!aktivnost().length">Još nema aktivnosti.</p>
+
+      <div class="apregled__stavka" *ngFor="let a of aktivnost()">
+        <span class="apregled__tacka" [class.apregled__tacka--forum]="a.vrsta === 'forum'"></span>
+        <span class="apregled__stavka-tekst">{{ a.tekst }}</span>
+        <span class="apregled__stavka-kada">{{ pre(a.kada) }}</span>
+      </div>
+    </ui-card>
+  </div>
 
   <ui-card padding="lg" class="apregled__opomene" *ngIf="naliciZaBrisanje().length">
     <h2>

@@ -31,6 +31,9 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'anketa-imena', renderMode: RenderMode.Prerender },
   // Pojedinačna anketa se ne peče: sadržaj zavisi od koda i menja se sa svakim glasom.
   { path: 'anketa-imena/:kod', renderMode: RenderMode.Client },
+  { path: 'zajednica', renderMode: RenderMode.Prerender },
+  // Tema se ne peče: sadržaj se menja sa svakim odgovorom.
+  { path: 'zajednica/tema/:id', renderMode: RenderMode.Client },
   { path: 'zabava', renderMode: RenderMode.Prerender },
   { path: 'pol-bebe', renderMode: RenderMode.Prerender },
   { path: 'kineski-horoskop', renderMode: RenderMode.Prerender },

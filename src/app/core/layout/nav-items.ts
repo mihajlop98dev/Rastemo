@@ -14,7 +14,8 @@ export const navItems: NavItem[] = [
   { label: 'Praćenje trudnoće', path: '/tracking', icon: 'activity' },
   { label: 'Pregledi i nalazi', path: '/calendar', icon: 'clipboard-list' },
   { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },
-  { label: 'Zajednica', path: '/community', icon: 'users' },
+  // Forum je javan; ista adresa i iz aplikacije i sa sajta.
+  { label: 'Zajednica', path: '/zajednica', icon: 'users' },
   { label: 'Priprema', path: '/preparation', icon: 'shopping-bag' },
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];
@@ -27,7 +28,7 @@ export const adminNavItem: NavItem = { label: 'Administracija', path: '/admin', 
 export const mobileNavItems: NavItem[] = [
   { label: 'Početna', path: '/home', icon: 'home' },
   { label: 'Prati', path: '/tracking', icon: 'activity' },
-  { label: 'Forum', path: '/community', icon: 'users' },
+  { label: 'Forum', path: '/zajednica', icon: 'users' },
   { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];

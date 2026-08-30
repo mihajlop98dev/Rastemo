@@ -4,10 +4,13 @@
     <div>
       <h1>Zajednica</h1>
       <p class="text-soft">Podeli iskustva i postavi pitanja drugim trudnicama.</p>
+      <p class="community__javno text-soft" *ngIf="!auth.user()">
+        Čitanje je otvoreno svima. Za pisanje treba nalog.
+      </p>
     </div>
     <ui-button variant="primary" size="md" (click)="openCreate()">
       <lucide-icon [img]="PlusIcon" [size]="16"></lucide-icon>
-      Nova tema
+      {{ auth.user() ? 'Nova tema' : 'Prijavi se i piši' }}
     </ui-button>
   </header>
 
@@ -15,11 +18,11 @@
 
     <div class="community__main">
       <div class="community__toolbar">
-        <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
+        <ui-tabs [tabs]="vidljiviTabovi" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
       </div>
 
       <ui-card padding="none" class="community__list">
-        <a class="community__topic" *ngFor="let t of visibleTopics" [routerLink]="['/community/topic', t.id]">
+        <a class="community__topic" *ngFor="let t of visibleTopics" [routerLink]="['/zajednica/tema', t.id]">
           <ui-avatar *ngIf="!t.is_anonymous" [name]="authorLabel(t)" size="md" />
           <div class="community__topic-anon" *ngIf="t.is_anonymous">
             <lucide-icon [img]="AnonIcon" [size]="16"></lucide-icon>

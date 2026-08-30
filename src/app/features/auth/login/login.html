@@ -35,7 +35,7 @@
     </ui-button>
 
     <p class="authpage__switch">
-      Nemaš nalog? <a routerLink="/register">Kreiraj ga</a>
+      Nemaš nalog? <a routerLink="/register" [queryParams]="{ nazad: nazadUrl }">Kreiraj ga</a>
     </p>
   </ui-card>
 

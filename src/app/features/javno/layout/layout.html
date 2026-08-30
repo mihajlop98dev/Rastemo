@@ -13,8 +13,13 @@
       </nav>
 
       <div class="javno__akcije">
-        <a routerLink="/login" class="javno__prijava">Prijavi se</a>
-        <a routerLink="/register" class="javno__dugme">Otvori dnevnik</a>
+        <ng-container *ngIf="!auth.user(); else prijavljena">
+          <a routerLink="/login" class="javno__prijava">Prijavi se</a>
+          <a routerLink="/register" class="javno__dugme">Otvori dnevnik</a>
+        </ng-container>
+        <ng-template #prijavljena>
+          <a routerLink="/home" class="javno__dugme">Moj dnevnik</a>
+        </ng-template>
         <button class="javno__hamburger" (click)="meniOtvoren.set(!meniOtvoren())" [attr.aria-label]="meniOtvoren() ? 'Zatvori meni' : 'Otvori meni'">
           <lucide-icon [img]="meniOtvoren() ? XIcon : MenuIcon" [size]="20"></lucide-icon>
         </button>
@@ -46,6 +51,7 @@
 
       <div class="javno__podnozje-kolona">
         <h3>Zabava</h3>
+        <a routerLink="/zajednica">Zajednica</a>
         <a routerLink="/imena">Značenje imena</a>
         <a routerLink="/pol-bebe">Kinesko računanje pola</a>
         <a routerLink="/kineski-horoskop">Kineski znak bebe</a>

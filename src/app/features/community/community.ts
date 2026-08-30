@@ -10,6 +10,9 @@ import { UiAvatar } from '../../shared/ui/avatar/avatar';
 import { UiTabs, UiTabItem } from '../../shared/ui/tabs/tabs';
 import { AuthService } from '../../core/services/auth.service';
 import { ForumService, ForumTopicRow } from '../../core/services/forum.service';
+import { Router } from '@angular/router';
+import { SeoService } from '../vodic/seo.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-community',
@@ -26,6 +29,26 @@ export class Community implements OnInit {
   ];
   activeTab = 'forumi';
 
+  private router = inject(Router);
+  private seo = inject(SeoService);
+
+  /** Neulogovana vidi sve, ali „Pratim" i „Moje teme" nemaju smisla bez naloga. */
+  get vidljiviTabovi(): UiTabItem[] {
+    return this.auth.user() ? this.tabs : this.tabs.filter(t => t.id === 'forumi');
+  }
+
+  /**
+   * Vodi na prijavu i pamti gde se stalo.
+   *
+   * Bez toga bi se posle prijave završilo na Početnoj, a tema koja se čitala
+   * bila bi izgubljena — to je mesto na kom se odustaje.
+   */
+  naPrijavu() {
+    this.router.navigate(['/login'], {
+      queryParams: { nazad: this.router.url },
+    });
+  }
+
   readonly showCreate = signal(false);
   readonly saving = signal(false);
   newTitle = '';
@@ -33,10 +56,24 @@ export class Community implements OnInit {
   newCategoryId = '';
   newAnonymous = false;
 
-  constructor(private auth: AuthService, readonly forumSvc: ForumService) {}
+  // Šablon proverava prijavu, pa auth mora da bude dostupan i njemu.
+  constructor(readonly auth: AuthService, readonly forumSvc: ForumService) {}
 
   async ngOnInit() {
-    await Promise.all([this.forumSvc.loadCategories(), this.forumSvc.loadTopics(), this.forumSvc.loadSavedTopicIds()]);
+    this.seo.postavi(
+      'Zajednica trudnica — pitanja i iskustva',
+      'Pitanja i iskustva trudnica: simptomi, analize, pripreme za porođaj i sve ostalo. Čitanje je otvoreno svima.',
+      '/zajednica',
+    );
+
+    // „Sačuvane teme" postoje samo za prijavljene; neulogovanoj taj upit
+    // vraća grešku i bespotrebno usporava učitavanje.
+    const poslovi: Promise<unknown>[] = [
+      this.forumSvc.loadCategories(),
+      this.forumSvc.loadTopics(),
+    ];
+    if (this.auth.user()) poslovi.push(this.forumSvc.loadSavedTopicIds());
+    await Promise.all(poslovi);
   }
 
   get visibleTopics(): ForumTopicRow[] {
@@ -76,6 +113,10 @@ export class Community implements OnInit {
   }
 
   openCreate() {
+    if (!this.auth.user()) {
+      this.naPrijavu();
+      return;
+    }
     this.newTitle = '';
     this.newBody = '';
     this.newCategoryId = this.forumSvc.categories()[0]?.id ?? '';

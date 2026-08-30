@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule, Heart } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
@@ -25,10 +25,16 @@ export class Login {
 
   readonly HeartIcon = Heart;
 
+  /** Prosleđuje se registraciji, da i posle nje povratak radi. */
+  get nazadUrl(): string | null {
+    return this.route.snapshot.queryParamMap.get('nazad');
+  }
+
   constructor(
     private auth: AuthService,
     private admin: AdminService,
     private router: Router,
+    private route: ActivatedRoute,
     seo: SeoService,
   ) {
     // Ekran nema šta da ponudi nekome ko dolazi sa pretraživača.
@@ -50,6 +56,14 @@ export class Login {
 
     if (error) {
       this.error.set('Pogrešan email ili lozinka.');
+      return;
+    }
+
+    // Ako je stigla sa foruma, vraća se tačno na temu koju je čitala —
+    // inače bi završila na Početnoj i izgubila je.
+    const nazad = this.route.snapshot.queryParamMap.get('nazad');
+    if (nazad && nazad.startsWith('/') && !nazad.startsWith('//')) {
+      this.router.navigateByUrl(nazad);
       return;
     }
 

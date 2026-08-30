@@ -11,6 +11,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ForumService, ForumTopicRow } from '../../../core/services/forum.service';
 import { MessagesService } from '../../../core/services/messages.service';
 import { ReportService, ReportTarget } from '../../../core/services/report.service';
+import { SeoService } from '../../vodic/seo.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-topic-detail',
@@ -23,6 +25,8 @@ export class TopicDetail implements OnInit {
   readonly topic = signal<ForumTopicRow | null>(null);
   readonly loading = signal(true);
   readonly sending = signal(false);
+  private seo = inject(SeoService);
+
   reply = '';
   replyAnonymous = false;
 
@@ -58,7 +62,7 @@ export class TopicDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService,
+    readonly auth: AuthService,
     readonly forumSvc: ForumService,
     readonly messagesSvc: MessagesService,
     readonly reportSvc: ReportService,
@@ -68,13 +72,29 @@ export class TopicDetail implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
 
-    const [topic] = await Promise.all([
-      this.forumSvc.getTopicById(id),
-      this.forumSvc.loadPosts(id),
-      this.forumSvc.loadSavedTopicIds(),
-    ]);
-    this.topic.set(topic);
+    // Sačuvane teme postoje samo za prijavljene; neulogovanoj taj upit pada.
+    const poslovi: Promise<unknown>[] = [this.forumSvc.getTopicById(id), this.forumSvc.loadPosts(id)];
+    if (this.auth.user()) poslovi.push(this.forumSvc.loadSavedTopicIds());
+
+    const [topic] = await Promise.all(poslovi);
+    this.topic.set(topic as ForumTopicRow | null);
     this.loading.set(false);
+
+    const t = this.topic();
+    if (t) {
+      // Anonimne teme se ne indeksiraju: žena koja bira anonimnost ne bira i
+      // da tekst završi u pretrazi.
+      if (t.is_anonymous) {
+        this.seo.bezIndeksiranja(t.title);
+      } else {
+        this.seo.postavi(t.title, (t.body ?? '').slice(0, 155), `/zajednica/tema/${t.id}`);
+      }
+    }
+  }
+
+  /** Vodi na prijavu i pamti temu, da se posle nje vrati tačno ovde. */
+  naPrijavu() {
+    this.router.navigate(['/login'], { queryParams: { nazad: this.router.url } });
   }
 
   authorLabel(entry: { is_anonymous: boolean; autor: string | null }): string {

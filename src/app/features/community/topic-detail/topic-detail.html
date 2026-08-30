@@ -68,7 +68,13 @@
 
       <p class="text-soft topicdetail__empty" *ngIf="!forumSvc.posts().length">Budi prva koja odgovara.</p>
 
-      <form class="topicdetail__form" (ngSubmit)="submitReply()">
+      <!-- Neulogovana vidi zašto ne može da piše, umesto praznog polja. -->
+      <div class="topicdetail__poziv" *ngIf="!auth.user()">
+        <p>Da odgovoriš, uđi u svoj dnevnik. Vratićemo te tačno na ovu temu.</p>
+        <ui-button variant="primary" size="sm" (click)="naPrijavu()">Prijavi se i odgovori</ui-button>
+      </div>
+
+      <form class="topicdetail__form" *ngIf="auth.user()" (ngSubmit)="submitReply()">
         <textarea [(ngModel)]="reply" name="reply" rows="3" placeholder="Napiši odgovor..."></textarea>
         <div class="topicdetail__form-actions">
           <label class="topicdetail__checkbox">

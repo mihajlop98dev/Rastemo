@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule, Heart } from 'lucide-angular';
 import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
@@ -34,6 +34,7 @@ export class Register {
   constructor(
     private auth: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     seo: SeoService,
   ) {
     // Ekran nema šta da ponudi nekome ko dolazi sa pretraživača.

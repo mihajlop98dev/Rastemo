@@ -27,6 +27,18 @@
       <input type="text" [(ngModel)]="contentSearch" name="contentSearch" placeholder="Pretraži sadržaj ili autora..." />
     </div>
 
+    <div class="admin__filteri">
+      <div class="admin__cipovi">
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="contentKind === 'sve'"
+                (click)="contentKind = 'sve'">Sve</button>
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="contentKind === 'topic'"
+                (click)="contentKind = 'topic'">Teme</button>
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="contentKind === 'post'"
+                (click)="contentKind = 'post'">Komentari</button>
+      </div>
+      <span class="text-muted admin__brojac">{{ filteredContent.length }} {{ filteredContent.length === 1 ? 'stavka' : 'stavki' }}</span>
+    </div>
+
     <p class="text-soft admin__empty" *ngIf="!filteredContent.length">Nema sadržaja.</p>
 
     <div class="admin__content-item" *ngFor="let c of filteredContent">
@@ -51,12 +63,30 @@
 
     <div class="admin__search">
       <lucide-icon [img]="SearchIcon" [size]="15"></lucide-icon>
-      <input type="text" [(ngModel)]="userSearch" name="userSearch" placeholder="Pretraži po imenu ili gradu..." />
+      <input type="text" [(ngModel)]="userSearch" name="userSearch" placeholder="Pretraži po imenu, korisničkom imenu ili gradu..." />
     </div>
+
+    <div class="admin__filteri">
+      <div class="admin__cipovi">
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="userSort === 'novo'"
+                (click)="userSort = 'novo'">Najnovije</button>
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="userSort === 'staro'"
+                (click)="userSort = 'staro'">Najstarije</button>
+        <button type="button" class="admin__cip" [class.admin__cip--aktivan]="userSort === 'opomene'"
+                (click)="userSort = 'opomene'">Po opomenama</button>
+      </div>
+      <span class="text-muted admin__brojac">{{ filteredUsers.length }} {{ filteredUsers.length === 1 ? 'korisnica' : 'korisnica' }}</span>
+    </div>
+
+    <p class="text-soft admin__empty" *ngIf="!filteredUsers.length">Nema korisnica koje odgovaraju pretrazi.</p>
 
     <div class="admin__row" *ngFor="let u of filteredUsers">
       <div>
-        <strong>{{ u.full_name || 'Bez imena' }}</strong>
+        <strong>
+          {{ u.full_name || 'Bez imena' }}
+          <span class="admin__username" *ngIf="u.username">&#64;{{ u.username }}</span>
+          <span class="admin__username admin__username--nema" *ngIf="!u.username">bez korisničkog imena</span>
+        </strong>
         <span class="text-muted">
           {{ u.city || 'bez grada' }} · {{ u.role }} · od {{ formatDate(u.created_at) }}
           <ng-container *ngIf="!u.terms_accepted_at"> · nije prihvatila uslove</ng-container>
@@ -76,6 +106,10 @@
     <p class="text-soft">
       Potvrdi unos ako je tačan, ili ukloni ako nije. Lekari preuzeti iz registra
       Lekarske komore se ovde ne prikazuju — njih niko nije ručno unosio.
+    </p>
+
+    <p class="text-soft admin__empty" *ngIf="!doctorSvc.userAdded().length">
+      Nema ručno unetih lekara na čekanju.
     </p>
 
     <div class="admin__row" *ngFor="let d of doctorSvc.userAdded()">

@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 export interface AdminUserRow {
   id: string;
   full_name: string | null;
+  username: string | null;
   city: string | null;
   role: string;
   created_at: string;
@@ -112,7 +113,7 @@ export class AdminService {
   async loadUsers() {
     const { data } = await this.supabase.client
       .from('profiles')
-      .select('id, full_name, city, role, created_at, terms_accepted_at')
+      .select('id, full_name, username, city, role, created_at, terms_accepted_at')
       .order('created_at', { ascending: false });
 
     const { data: strikes } = await this.supabase.client

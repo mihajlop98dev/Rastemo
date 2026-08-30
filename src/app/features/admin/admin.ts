@@ -90,6 +90,11 @@ export class Admin implements OnInit {
   contentSearch = '';
   userSearch = '';
 
+  /** Filter po vrsti sadrzaja u Zajednici. */
+  contentKind: 'sve' | 'topic' | 'post' = 'sve';
+  /** Redosled korisnica; podrazumevano najnovije jer se najcesce trazi ko se skoro registrovao. */
+  userSort: 'novo' | 'staro' | 'opomene' = 'novo';
+
   /** Sadržaj koji se briše — modal traži razlog pre nego što se išta obriše. */
   readonly removing = signal<AdminContentRow | null>(null);
   removeReason = '';
@@ -140,7 +145,8 @@ export class Admin implements OnInit {
 
   get filteredContent(): AdminContentRow[] {
     const t = this.contentSearch.trim().toLowerCase();
-    const list = this.admin.content();
+    let list = this.admin.content();
+    if (this.contentKind !== 'sve') list = list.filter(c => c.kind === this.contentKind);
     if (!t) return list;
     return list.filter(c =>
       c.body.toLowerCase().includes(t) ||
@@ -151,9 +157,22 @@ export class Admin implements OnInit {
 
   get filteredUsers(): AdminUserRow[] {
     const t = this.userSearch.trim().toLowerCase();
-    const list = this.admin.users();
-    if (!t) return list;
-    return list.filter(u => (u.full_name ?? '').toLowerCase().includes(t) || (u.city ?? '').toLowerCase().includes(t));
+    let list = this.admin.users();
+    if (t) {
+      list = list.filter(u =>
+        (u.full_name ?? '').toLowerCase().includes(t) ||
+        (u.city ?? '').toLowerCase().includes(t) ||
+        (u.username ?? '').toLowerCase().includes(t)
+      );
+    }
+    // Kopija pre sortiranja — sort menja niz u mestu, a ovo je signal iz servisa.
+    const kopija = [...list];
+    if (this.userSort === 'opomene') {
+      return kopija.sort((a, b) => b.strikes - a.strikes);
+    }
+    const smer = this.userSort === 'novo' ? -1 : 1;
+    return kopija.sort((a, b) =>
+      smer * (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()));
   }
 
   get usersAtLimit(): AdminUserRow[] {

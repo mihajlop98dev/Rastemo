@@ -347,4 +347,45 @@
   }
 
   &__red--obradjen { opacity: .5; }
+
+  &__filteri {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+
+  &__cipovi { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  &__cip {
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-soft);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+
+    &:hover { border-color: var(--color-primary); }
+
+    &--aktivan {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+  }
+
+  &__brojac { font-size: 13px; }
+
+  &__username {
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--color-text-soft);
+    margin-left: 6px;
+
+    &--nema { font-style: italic; opacity: .7; }
+  }
 }

@@ -77,7 +77,12 @@ export class TopicDetail implements OnInit {
 
     // Sačuvane teme postoje samo za prijavljene; neulogovanoj taj upit pada.
     const poslovi: Promise<unknown>[] = [this.forumSvc.getTopicById(id), this.forumSvc.loadPosts(id)];
-    if (this.auth.user()) poslovi.push(this.forumSvc.loadSavedTopicIds());
+    if (this.auth.user()) {
+      poslovi.push(this.forumSvc.loadSavedTopicIds());
+      // Bez profila provera korisničkog imena nema šta da pročita, pa bi se
+      // prozor otvarao i onima koji ime već imaju.
+      if (!this.profileSvc.profile()) poslovi.push(this.profileSvc.load());
+    }
 
     const [topic] = await Promise.all(poslovi);
     this.topic.set(topic as ForumTopicRow | null);

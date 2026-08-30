@@ -78,7 +78,10 @@ export class Community implements OnInit {
       this.forumSvc.loadCategories(),
       this.forumSvc.loadTopics(),
     ];
-    if (this.auth.user()) poslovi.push(this.forumSvc.loadSavedTopicIds());
+    if (this.auth.user()) {
+      poslovi.push(this.forumSvc.loadSavedTopicIds());
+      if (!this.profileSvc.profile()) poslovi.push(this.profileSvc.load());
+    }
     await Promise.all(poslovi);
   }
 

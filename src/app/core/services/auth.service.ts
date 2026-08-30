@@ -129,11 +129,34 @@ export class AuthService {
     return data === true;
   }
 
-  async signInWithGoogle() {
+  private static readonly KLJUC_POVRATKA = 'dnevnik-povratak';
+
+  /**
+   * Google prijava.
+   *
+   * Adresa na koju se vraća mora da bude na spisku dozvoljenih u Supabase
+   * podešavanjima, pa se povratna putanja ne šalje kroz nju nego se ostavlja
+   * u pregledaču. Tako obećanje „vratićemo te na temu" važi i za ovaj put
+   * prijave, bez diranja podešavanja projekta.
+   */
+  async signInWithGoogle(nazad?: string | null) {
+    if (nazad && nazad.startsWith('/') && !nazad.startsWith('//')) {
+      sessionStorage.setItem(AuthService.KLJUC_POVRATKA, nazad);
+    } else {
+      sessionStorage.removeItem(AuthService.KLJUC_POVRATKA);
+    }
+
     return this.supabase.client.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin + '/home' },
     });
+  }
+
+  /** Vraća i briše zapamćenu putanju; koristi se jednom, posle povratka. */
+  uzmiPovratak(): string | null {
+    const p = sessionStorage.getItem(AuthService.KLJUC_POVRATKA);
+    if (p) sessionStorage.removeItem(AuthService.KLJUC_POVRATKA);
+    return p;
   }
 
   async signOut() {

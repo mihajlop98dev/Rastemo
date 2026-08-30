@@ -72,7 +72,7 @@ export class Login {
 
   async withGoogle() {
     this.error.set('');
-    const { error } = await this.auth.signInWithGoogle();
+    const { error } = await this.auth.signInWithGoogle(this.nazadUrl);
     if (error) this.error.set(error.message);
   }
 }

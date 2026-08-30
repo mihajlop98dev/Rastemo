@@ -120,7 +120,10 @@ export class Register {
       return;
     }
     this.error.set('');
-    const { error } = await this.auth.signInWithGoogle();
+    // Isti povratak kao kod prijave: ko je krenuo sa foruma, vraća se tamo.
+    const { error } = await this.auth.signInWithGoogle(
+      this.route.snapshot.queryParamMap.get('nazad'),
+    );
     if (error) this.error.set(error.message);
   }
 }

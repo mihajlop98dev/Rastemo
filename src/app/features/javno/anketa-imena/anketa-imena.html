@@ -1,0 +1,119 @@
+<div class="strana">
+
+  <p class="anketa__ucitavanje" *ngIf="ucitavanje()">Učitavam…</p>
+
+  <!-- Glasanje: stiglo se preko deljenog linka -->
+  <ng-container *ngIf="!ucitavanje() && anketa() as a">
+    <header class="strana__zaglavlje">
+      <h1>{{ a.naslov || 'Koje ime vam se najviše sviđa?' }}</h1>
+      <p *ngIf="!mojGlas()">Izaberi jedno. Glasa se jednom sa istog uređaja.</p>
+      <p *ngIf="mojGlas()">Hvala, glas je zabeležen.</p>
+    </header>
+
+    <ui-card padding="lg">
+      <button *ngFor="let r of rezultati()" type="button" class="anketa__opcija"
+              [class.anketa__opcija--moja]="mojGlas() === r.ime"
+              [disabled]="!!mojGlas()" (click)="glasaj(r.ime)">
+        <span class="anketa__opcija-ime">{{ r.ime }}</span>
+
+        <ng-container *ngIf="mojGlas()">
+          <span class="anketa__traka">
+            <span class="anketa__traka-puna" [style.width.%]="procenat(r)"></span>
+          </span>
+          <span class="anketa__brojka">{{ r.glasova }}</span>
+        </ng-container>
+      </button>
+
+      <p class="anketa__ukupno" *ngIf="mojGlas()">
+        Ukupno glasova: {{ ukupnoGlasova }}
+      </p>
+      <p class="anketa__greska" *ngIf="greska()">{{ greska() }}</p>
+    </ui-card>
+
+    <ui-card padding="lg" class="strana__poziv">
+      <h2>I ti biraš ime?</h2>
+      <p>Pogledaj odakle imena dolaze, pa napravi svoju anketu.</p>
+      <ui-button routerLink="/anketa-imena" variant="primary" size="lg">Napravi anketu</ui-button>
+    </ui-card>
+  </ng-container>
+
+  <!-- Pravljenje ankete -->
+  <ng-container *ngIf="!ucitavanje() && !anketa()">
+    <header class="strana__zaglavlje">
+      <h1>Anketa za ime bebe</h1>
+      <p>
+        Izaberi imena koja su vam u igri, pošalji link porodici i vidi ko za koje
+        glasa. Bez naloga, i za tebe i za njih.
+      </p>
+    </header>
+
+    <p class="anketa__greska" *ngIf="greska() && !napravljenKod()">{{ greska() }}</p>
+
+    <ng-container *ngIf="!napravljenKod(); else gotovo">
+      <ui-card padding="lg">
+        <label class="anketa__polje">
+          <span>Pitanje (nije obavezno)</span>
+          <input type="text" [(ngModel)]="naslov" name="naslov"
+                 placeholder="npr. Koje ime za našu devojčicu?" />
+        </label>
+
+        <label class="anketa__polje">
+          <span>Dodaj ime</span>
+          <input type="text" [ngModel]="pojam()" (ngModelChange)="pojam.set($event)"
+                 name="pojam" placeholder="Počni da kucaš…" autocomplete="off" />
+        </label>
+
+        <div class="anketa__predlozi" *ngIf="predlozi().length">
+          <button type="button" *ngFor="let i of predlozi()" (click)="dodaj(i.ime)">
+            {{ i.ime }} <small>{{ i.znacenje }}</small>
+          </button>
+        </div>
+
+        <div class="anketa__izabrana" *ngIf="izabrana().length">
+          <span class="anketa__izabrana-naslov">Na spisku ({{ izabrana().length }}/10):</span>
+          <button type="button" *ngFor="let i of izabrana()" (click)="ukloni(i)" class="anketa__cip">
+            {{ i }} <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <ui-button variant="primary" size="lg" [disabled]="pravi() || izabrana().length < 2"
+                   (click)="napravi()">
+          {{ pravi() ? 'Pravim…' : 'Napravi anketu' }}
+        </ui-button>
+      </ui-card>
+    </ng-container>
+
+    <ng-template #gotovo>
+      <ui-card padding="lg" class="anketa__gotovo">
+        <h2>Anketa je spremna 🎉</h2>
+        <p>Pošalji ovaj link porodici — mogu da glasaju bez naloga.</p>
+        <div class="anketa__link">
+          <input type="text" [value]="link" readonly />
+          <ui-button variant="primary" size="sm" (click)="kopirajLink()">
+            {{ linkKopiran() ? 'Kopirano' : 'Kopiraj' }}
+          </ui-button>
+        </div>
+        <a [routerLink]="['/anketa-imena', napravljenKod()]" class="anketa__veza">
+          Otvori anketu →
+        </a>
+        <p class="anketa__nota">
+          Sačuvaj link — anketa se otvara samo preko njega i traje 90 dana.
+        </p>
+      </ui-card>
+    </ng-template>
+
+    <section class="strana__tekst">
+      <h2>Kako radi</h2>
+      <p>
+        Praviš spisak od dva do deset imena i dobijaš link. Ko ga otvori, vidi
+        imena i bira jedno — bez registracije i bez ostavljanja podataka.
+        Rezultat se vidi tek pošto se glasa, da prvi glasovi ne bi povukli ostale.
+      </p>
+      <p>
+        Sa jednog uređaja glasa se jednom. Ko glasa, ne ostavlja ime niti bilo
+        kakav podatak o sebi — pamti se samo nasumična oznaka pregledača, koliko
+        da isti telefon ne glasa dvaput.
+      </p>
+    </section>
+  </ng-container>
+</div>

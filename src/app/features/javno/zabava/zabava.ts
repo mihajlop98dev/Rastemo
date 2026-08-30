@@ -39,6 +39,13 @@ export class Zabava implements OnInit {
       oznaka: 'za zabavu',
     },
     {
+      putanja: '/anketa-imena',
+      emoji: '🗳️',
+      naslov: 'Anketa za ime',
+      opis: 'Napravi spisak imena i pošalji link porodici da glasa.',
+      oznaka: 'bez naloga',
+    },
+    {
       putanja: '/ime-uz-prezime',
       emoji: '🔤',
       naslov: 'Ime uz prezime',

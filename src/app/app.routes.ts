@@ -29,6 +29,8 @@ export const routes: Routes = [
       { path: 'kalkulator-zaceca', loadComponent: () => import('./features/javno/kalkulator-zaceca/kalkulator-zaceca').then(m => m.KalkulatorZaceca) },
       { path: 'ime-uz-prezime', loadComponent: () => import('./features/javno/ime-uz-prezime/ime-uz-prezime').then(m => m.ImeUzPrezime) },
       { path: 'odbrojavanje', loadComponent: () => import('./features/javno/odbrojavanje/odbrojavanje').then(m => m.Odbrojavanje) },
+      { path: 'anketa-imena', loadComponent: () => import('./features/javno/anketa-imena/anketa-imena').then(m => m.AnketaImena) },
+      { path: 'anketa-imena/:kod', loadComponent: () => import('./features/javno/anketa-imena/anketa-imena').then(m => m.AnketaImena) },
       { path: 'zabava', loadComponent: () => import('./features/javno/zabava/zabava').then(m => m.Zabava) },
       { path: 'pol-bebe', loadComponent: () => import('./features/javno/pol-bebe/pol-bebe').then(m => m.PolBebe) },
       { path: 'kineski-horoskop', loadComponent: () => import('./features/javno/kineski-horoskop/kineski-horoskop').then(m => m.KineskiHoroskop) },

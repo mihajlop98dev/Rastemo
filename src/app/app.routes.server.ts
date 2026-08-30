@@ -28,6 +28,9 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'kalkulator-zaceca', renderMode: RenderMode.Prerender },
   { path: 'ime-uz-prezime', renderMode: RenderMode.Prerender },
   { path: 'odbrojavanje', renderMode: RenderMode.Prerender },
+  { path: 'anketa-imena', renderMode: RenderMode.Prerender },
+  // Pojedinačna anketa se ne peče: sadržaj zavisi od koda i menja se sa svakim glasom.
+  { path: 'anketa-imena/:kod', renderMode: RenderMode.Client },
   { path: 'zabava', renderMode: RenderMode.Prerender },
   { path: 'pol-bebe', renderMode: RenderMode.Prerender },
   { path: 'kineski-horoskop', renderMode: RenderMode.Prerender },

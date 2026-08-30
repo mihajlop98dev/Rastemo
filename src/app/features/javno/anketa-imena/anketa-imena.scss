@@ -146,3 +146,20 @@
   &__veza { font-size: 14px; color: var(--color-primary-dark); }
   &__nota { font-size: 12.5px; color: var(--color-text-soft); margin: 0; }
 }
+
+.anketa {
+  &__pomoc {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--color-text-soft);
+    margin-top: -3px;
+  }
+
+  /* Unos van spiska se vizuelno razlikuje od predloga, da bude jasno
+     da se dodaje nešto novo a ne bira postojeće. */
+  &__svoje {
+    border-style: dashed !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary-dark);
+  }
+}

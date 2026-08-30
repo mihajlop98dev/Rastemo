@@ -59,13 +59,19 @@
 
         <label class="anketa__polje">
           <span>Dodaj ime</span>
+          <small class="anketa__pomoc">Biraj sa spiska ili upiši svoje.</small>
           <input type="text" [ngModel]="pojam()" (ngModelChange)="pojam.set($event)"
-                 name="pojam" placeholder="Počni da kucaš…" autocomplete="off" />
+                 name="pojam" placeholder="Počni da kucaš…" autocomplete="off"
+                 (keyup.enter)="dodajSvoje()" />
         </label>
 
-        <div class="anketa__predlozi" *ngIf="predlozi().length">
+        <div class="anketa__predlozi" *ngIf="predlozi().length || mozeSvoje">
           <button type="button" *ngFor="let i of predlozi()" (click)="dodaj(i.ime)">
             {{ i.ime }} <small>{{ i.znacenje }}</small>
+          </button>
+
+          <button type="button" *ngIf="mozeSvoje" (click)="dodajSvoje()" class="anketa__svoje">
+            Dodaj „{{ pojam() }}" <small>nije na našem spisku, ali može</small>
           </button>
         </div>
 

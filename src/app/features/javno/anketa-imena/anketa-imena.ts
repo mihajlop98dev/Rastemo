@@ -78,9 +78,32 @@ export class AnketaImena implements OnInit {
   }
 
   dodaj(ime: string) {
-    if (this.izabrana().length >= 10) return;
-    this.izabrana.update(l => [...l, ime]);
+    const cisto = ime.trim();
+    if (!cisto || this.izabrana().length >= 10) return;
+    if (this.izabrana().some(i => i.toLowerCase() === cisto.toLowerCase())) {
+      this.pojam.set('');
+      return;
+    }
+    this.izabrana.update(l => [...l, cisto]);
     this.pojam.set('');
+    this.greska.set('');
+  }
+
+  /**
+   * Spisak od 442 imena ne pokriva sve — neko će hteti ime koje nemamo, ili
+   * oblik kakav se koristi u njihovoj porodici. Zato se sme upisati i ono što
+   * nije na spisku; sadržaj proverava okidač u bazi, isti koji čuva unos
+   * lekara i ustanova.
+   */
+  get mozeSvoje(): boolean {
+    const p = this.pojam().trim();
+    if (p.length < 2 || p.length > 30) return false;
+    return !this.predlozi().some(i => i.ime.toLowerCase() === p.toLowerCase())
+      && !this.izabrana().some(i => i.toLowerCase() === p.toLowerCase());
+  }
+
+  dodajSvoje() {
+    this.dodaj(this.pojam());
   }
 
   ukloni(ime: string) {
@@ -97,8 +120,15 @@ export class AnketaImena implements OnInit {
       const kod = await this.svc.napravi(this.izabrana(), this.naslov);
       this.napravljenKod.set(kod);
       this.greska.set('');
-    } catch {
-      this.greska.set('Nešto je pošlo naopako. Probaj ponovo.');
+    } catch (e) {
+      // Okidač u bazi vraća razumljivu poruku (npr. da ime nije prihvatljivo);
+      // vredi je pokazati umesto opšteg „nešto nije u redu".
+      const poruka = (e as { message?: string }).message ?? '';
+      this.greska.set(
+        poruka.includes('prihvatljiv')
+          ? 'Jedno od imena nije prihvatljivo. Proveri spisak.'
+          : 'Nešto je pošlo naopako. Probaj ponovo.',
+      );
     } finally {
       this.pravi.set(false);
     }

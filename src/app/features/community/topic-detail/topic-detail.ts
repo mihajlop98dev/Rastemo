@@ -140,6 +140,30 @@ export class TopicDetail implements OnInit {
   }
 
   readonly traziKorisnicko = signal(false);
+  readonly brisem = signal<string | null>(null);
+
+  /**
+   * Uklanja svoj odgovor, uz potvrdu.
+   *
+   * Potvrda postoji jer je radnja nepovratna, a dugme stoji odmah uz tekst.
+   */
+  async obrisiOdgovor(id: string) {
+    if (!confirm('Da uklonim ovaj odgovor? Ne može da se vrati.')) return;
+    this.brisem.set(id);
+    try {
+      await this.forumSvc.obrisiSvojOdgovor(id);
+    } finally {
+      this.brisem.set(null);
+    }
+  }
+
+  async ukloniTemu() {
+    const t = this.topic();
+    if (!t) return;
+    if (!confirm('Da uklonim ovu temu? Ne može da se vrati.')) return;
+    await this.forumSvc.ukloniSvojuTemu(t.id);
+    this.router.navigateByUrl('/zajednica');
+  }
 
   async korisnickoPostavljeno() {
     this.traziKorisnicko.set(false);

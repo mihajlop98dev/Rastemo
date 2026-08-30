@@ -35,7 +35,7 @@
           <div class="community__topic-body">
             <div class="community__topic-title">
               <lucide-icon *ngIf="t.is_pinned" [img]="PinIcon" [size]="13" class="text-primary"></lucide-icon>
-              <strong>{{ t.title }}</strong>
+              <strong>{{ t.uklonjeno_u ? "Uklonjena tema" : t.title }}</strong>
             </div>
             <div class="community__topic-meta">
               <ui-badge tone="lavender" *ngIf="t.forum_categories">{{ t.forum_categories.name }}</ui-badge>

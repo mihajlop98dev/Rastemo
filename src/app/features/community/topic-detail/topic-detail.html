@@ -45,6 +45,8 @@
           <lucide-icon [img]="FlagIcon" [size]="13"></lucide-icon>
           {{ reportSvc.isReported(t.id) ? 'Prijavljeno' : 'Prijavi' }}
         </button>
+        <button type="button" class="topicdetail__ukloni" *ngIf="t.moja && !t.uklonjeno_u"
+                (click)="ukloniTemu()">Ukloni temu</button>
       </div>
     </ui-card>
 
@@ -61,12 +63,22 @@
             <strong>{{ authorLabel(p) }}</strong>
             <span class="text-muted">{{ timeAgo(p.created_at) }}</span>
           </div>
-          <p>{{ p.body }}</p>
-          <button type="button" class="topicdetail__report"
-                  [disabled]="reportSvc.isReported(p.id)" (click)="startReport('post', p.id)">
-            <lucide-icon [img]="FlagIcon" [size]="13"></lucide-icon>
-            {{ reportSvc.isReported(p.id) ? 'Prijavljeno' : 'Prijavi' }}
-          </button>
+          <p *ngIf="!p.uklonjeno_u">{{ p.body }}</p>
+          <p class="topicdetail__uklonjeno" *ngIf="p.uklonjeno_u">
+            Autor je uklonio ovaj odgovor.
+          </p>
+
+          <div class="topicdetail__radnje">
+            <button type="button" class="topicdetail__report" *ngIf="!p.moj && !p.uklonjeno_u"
+                    [disabled]="reportSvc.isReported(p.id)" (click)="startReport('post', p.id)">
+              <lucide-icon [img]="FlagIcon" [size]="13"></lucide-icon>
+              {{ reportSvc.isReported(p.id) ? 'Prijavljeno' : 'Prijavi' }}
+            </button>
+            <button type="button" class="topicdetail__ukloni" *ngIf="p.moj && !p.uklonjeno_u"
+                    [disabled]="brisem() === p.id" (click)="obrisiOdgovor(p.id)">
+              {{ brisem() === p.id ? 'Uklanjam…' : 'Ukloni' }}
+            </button>
+          </div>
         </div>
       </div>
 

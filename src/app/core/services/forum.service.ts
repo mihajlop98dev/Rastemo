@@ -23,6 +23,8 @@ export interface ForumTopicRow {
   created_at: string;
   /** Ime autora, ili prazno ako je tema anonimna. */
   autor: string | null;
+  /** Popunjeno kad je autor uklonio tekst, a red ostao zbog odgovora. */
+  uklonjeno_u: string | null;
   /** Da li je temu napisala prijavljena korisnica. */
   moja: boolean;
   forum_categories: { name: string } | null;
@@ -37,6 +39,8 @@ export interface ForumPostRow {
   created_at: string;
   autor: string | null;
   moj: boolean;
+  /** Popunjeno kad je autor uklonio tekst. */
+  uklonjeno_u: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -168,5 +172,32 @@ export class ForumService {
       await this.supabase.client.from('saved_topics').insert({ user_id: userId, topic_id: topicId });
       this.savedTopicIds.update(set => new Set(set).add(topicId));
     }
+  }
+
+  /**
+   * Uklanja svoj odgovor.
+   *
+   * Odgovor se briše u celosti — ništa ne visi o njemu, za razliku od teme.
+   */
+  async obrisiSvojOdgovor(id: string) {
+    const { error } = await this.supabase.client
+      .from('forum_posts')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+    this.posts.update(l => l.filter(p => p.id !== id));
+  }
+
+  /**
+   * Uklanja svoju temu.
+   *
+   * Posao radi funkcija u bazi: temu bez odgovora briše, a temu sa odgovorima
+   * samo prazni — brisanje bi povuklo i tuđe odgovore, koji nisu njeni da ih
+   * uklanja.
+   */
+  async ukloniSvojuTemu(id: string) {
+    const { error } = await this.supabase.client.rpc('ukloni_svoju_temu', { p_id: id });
+    if (error) throw error;
+    this.topics.update(l => l.filter(t => t.id !== id));
   }
 }

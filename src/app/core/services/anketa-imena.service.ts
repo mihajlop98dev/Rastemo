@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
+import { IMENA } from '../data/imena';
 
 export interface Anketa {
   id: string;
@@ -62,7 +63,24 @@ export class AnketaImenaService {
       user_id: this.auth.user()?.id ?? null,
     });
     if (error) throw error;
+
+    // Beleži se šta ljudi upisuju mimo spiska — to je spisak imena koja nam
+    // fale, sastavljen od korisnica. Ne ulazi nigde samo; admin kasnije bira
+    // šta vredi dodati. Namerno se ne čeka: ako ovo padne, anketa je već
+    // napravljena i ne treba da trpi.
+    void this.zabeleziNepoznata(imena);
+
     return kod;
+  }
+
+  private async zabeleziNepoznata(imena: string[]) {
+    const naSpisku = new Set(IMENA.map(i => i.ime.toLowerCase()));
+    for (const ime of imena) {
+      if (naSpisku.has(ime.trim().toLowerCase())) continue;
+      await this.supabase.client
+        .rpc('zabelezi_predlozeno_ime', { p_ime: ime })
+        .then(() => undefined, () => undefined);
+    }
   }
 
   async ucitaj(kod: string): Promise<Anketa | null> {

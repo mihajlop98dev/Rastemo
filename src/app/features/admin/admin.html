@@ -149,6 +149,48 @@
   </ui-card>
 
   <!-- ---------------- DNEVNIK ---------------- -->
+  <section *ngIf="activeTab === 'imena'" class="admin__sekcija">
+    <div class="admin__sekcija-head">
+      <h2>Predložena imena</h2>
+      <p class="text-soft">
+        Imena koja su korisnice upisale u ankete, a nema ih na našem spisku.
+        Ništa ne ulazi samo — ovo je predlog, ti biraš šta vredi dodati.
+      </p>
+    </div>
+
+    <div class="admin__akcije-red">
+      <ui-button variant="outline" size="sm" (click)="ucitajPredlozena()">
+        {{ ucitavamImena() ? 'Učitavam…' : 'Osveži' }}
+      </ui-button>
+      <label class="admin__prekidac">
+        <input type="checkbox" [(ngModel)]="prikaziObradjena" (change)="ucitajPredlozena()" />
+        Prikaži i već obrađena
+      </label>
+    </div>
+
+    <p class="text-soft" *ngIf="!predlozenaImena().length && !ucitavamImena()">
+      Još nema predloga. Pojaviće se kad neko u anketi upiše ime koje nemamo.
+    </p>
+
+    <table class="admin__tabela" *ngIf="predlozenaImena().length">
+      <thead>
+        <tr><th>Ime</th><th>Puta</th><th>Poslednji put</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of predlozenaImena()" [class.admin__red--obradjen]="p.obradjeno">
+          <td><strong>{{ p.ime }}</strong></td>
+          <td>{{ p.broj_unosa }}</td>
+          <td>{{ p.poslednji_put | date: 'd. MMM yyyy.' }}</td>
+          <td>
+            <ui-button variant="ghost" size="sm" (click)="oznaciObradjeno(p.id, !p.obradjeno)">
+              {{ p.obradjeno ? 'Vrati' : 'Obrađeno' }}
+            </ui-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
   <ui-card padding="lg" *ngIf="activeTab === 'dnevnik'">
     <h2>Dnevnik moderacije</h2>
     <p class="text-soft">Svaka uklonjena objava, sa razlogom i snimkom sadržaja.</p>

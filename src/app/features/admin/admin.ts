@@ -9,8 +9,18 @@ import { AdminService, AdminContentRow, AdminUserRow, STRIKE_LIMIT } from '../..
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { DoctorService } from '../../core/services/doctor.service';
+import { SupabaseService } from '../../core/services/supabase.service';
 
-type Section = 'pregled' | 'prijave' | 'zajednica' | 'korisnice' | 'lekari' | 'dnevnik';
+interface PredlozenoIme {
+  id: string;
+  ime: string;
+  broj_unosa: number;
+  prvi_put: string;
+  poslednji_put: string;
+  obradjeno: boolean;
+}
+
+type Section = 'pregled' | 'prijave' | 'zajednica' | 'korisnice' | 'lekari' | 'imena' | 'dnevnik';
 
 @Component({
   selector: 'app-admin',
@@ -26,11 +36,40 @@ export class Admin implements OnInit {
     { id: 'zajednica', label: 'Zajednica' },
     { id: 'korisnice', label: 'Korisnice' },
     { id: 'lekari', label: 'Lekari' },
+    { id: 'imena', label: 'Predložena imena' },
     { id: 'dnevnik', label: 'Dnevnik' },
   ];
   activeTab: Section = 'pregled';
 
   readonly STRIKE_LIMIT = STRIKE_LIMIT;
+
+  // --- imena koja su korisnice upisale u ankete, a nema ih na spisku ---
+  readonly predlozenaImena = signal<PredlozenoIme[]>([]);
+  readonly ucitavamImena = signal(false);
+  prikaziObradjena = false;
+
+  async ucitajPredlozena() {
+    this.ucitavamImena.set(true);
+    let upit = this.supabase.client
+      .from('predlozena_imena')
+      .select('*')
+      .order('broj_unosa', { ascending: false })
+      .limit(200);
+    if (!this.prikaziObradjena) upit = upit.eq('obradjeno', false);
+
+    const { data } = await upit;
+    this.predlozenaImena.set((data as PredlozenoIme[]) ?? []);
+    this.ucitavamImena.set(false);
+  }
+
+  /** Označava da je ime prebačeno u spisak, da se ne obrađuje dvaput. */
+  async oznaciObradjeno(id: string, obradjeno: boolean) {
+    await this.supabase.client
+      .from('predlozena_imena')
+      .update({ obradjeno })
+      .eq('id', id);
+    await this.ucitajPredlozena();
+  }
 
   contentSearch = '';
   userSearch = '';
@@ -57,6 +96,7 @@ export class Admin implements OnInit {
     readonly doctorSvc: DoctorService,
     private auth: AuthService,
     private router: Router,
+    private supabase: SupabaseService,
   ) {}
 
   async logOut() {

@@ -147,3 +147,10 @@ app-mapa-klinika {
 
   a { color: var(--color-text-soft); }
 }
+
+/* OpenStreetMap podloga je šarena i vuče pažnju sa oznaka ustanova, koje su
+   ovde jedino važne. Filter je stišava do nivoa na kom se uklapa sa ostatkom
+   sajta, a da se ulice i imena mesta i dalje čitaju. */
+app-mapa-klinika .leaflet-tile-pane {
+  filter: saturate(0.18) brightness(1.09) contrast(0.92);
+}

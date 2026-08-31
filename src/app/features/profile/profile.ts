@@ -16,6 +16,7 @@ import { NotificationService, NotificationRow } from '../../core/services/notifi
 import { SupabaseService } from '../../core/services/supabase.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { PushService, StanjePusha } from '../../core/services/push.service';
+import { WeightService } from '../../core/services/weight.service';
 
 type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'lozinka' | 'izvestaj';
 
@@ -189,12 +190,36 @@ export class Profile implements OnInit {
     readonly clinics: ClinicService,
     readonly analytics: AnalyticsService,
     readonly push: PushService,
+    readonly weight: WeightService,
   ) {}
 
   async ngOnInit() {
     await this.push.procitajStanje();
     if (!this.profileSvc.profile()) await this.profileSvc.load();
     await Promise.all([this.notifications.load(), this.clinics.load()]);
+
+    // Težina se u „Osnovnim informacijama" čita iz praćenja, pa mora da bude
+    // učitana i kad korisnica nikad nije otvorila taj tab.
+    const trudnoca = this.pregnancy.active();
+    if (trudnoca) await this.weight.loadAll(trudnoca.id);
+  }
+
+  /**
+   * Težina za prikaz, po redu pouzdanosti.
+   *
+   * Pri početnom podešavanju se unosi težina pre trudnoće i ona ide u tabelu
+   * trudnoće, ne u profil. Zato je „Osnovne informacije" nisu prikazivale:
+   * gledale su samo `profiles.weight_kg`, koji tada niko ne popuni, pa je
+   * ispadalo da je visina uneta a težina nestala.
+   */
+  tezinaZaPrikaz(): number | null {
+    const izPracenja = this.weight.latest?.weight_kg;
+    if (izPracenja != null) return izPracenja;
+
+    const izProfila = this.profileSvc.profile()?.weight_kg;
+    if (izProfila != null) return izProfila;
+
+    return this.pregnancy.active()?.pre_pregnancy_weight_kg ?? null;
   }
 
   selectSection(id: Section) {

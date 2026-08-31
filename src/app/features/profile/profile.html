@@ -86,9 +86,9 @@
             <span class="text-muted">Visina / Težina</span>
             <strong>
               <ng-container *ngIf="profileSvc.profile()?.height_cm">{{ profileSvc.profile()?.height_cm }} cm</ng-container>
-              <ng-container *ngIf="profileSvc.profile()?.height_cm && profileSvc.profile()?.weight_kg"> / </ng-container>
-              <ng-container *ngIf="profileSvc.profile()?.weight_kg">{{ profileSvc.profile()?.weight_kg }} kg</ng-container>
-              <ng-container *ngIf="!profileSvc.profile()?.height_cm && !profileSvc.profile()?.weight_kg">—</ng-container>
+              <ng-container *ngIf="profileSvc.profile()?.height_cm && tezinaZaPrikaz()"> / </ng-container>
+              <ng-container *ngIf="tezinaZaPrikaz()">{{ tezinaZaPrikaz() }} kg</ng-container>
+              <ng-container *ngIf="!profileSvc.profile()?.height_cm && !tezinaZaPrikaz()">—</ng-container>
             </strong>
           </div>
         </div>

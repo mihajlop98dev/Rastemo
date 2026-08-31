@@ -59,14 +59,19 @@ export class MapaKlinika implements AfterViewInit, OnChanges, OnDestroy {
     this.L = modul.default ?? modul;
     this.mapa = this.L.map(this.platno.nativeElement, { scrollWheelZoom: false });
 
-    // CARTO Positron: svetle pločice bez jakih boja. Šarena podloga
-    // OpenStreetMap-a se tukla sa toplom paletom ostatka sajta i vukla pažnju
-    // sa samih ustanova, koje su ovde jedino važne.
-    this.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Pločice idu direktno sa OpenStreetMap-a.
+    //
+    // Ranije je ovde stajao CARTO Positron, zbog svetle podloge koja ne vuče
+    // pažnju sa samih ustanova. Ali CARTO iznad besplatnog nivoa ucrta
+    // „API key required" u samu pločicu i vrati je sa statusom 200 — Leaflet
+    // to ne vidi kao grešku, pa se rezervni sloj ne bi ni okinuo, a korisnica
+    // gleda mapu ispisanu tim natpisom.
+    //
+    // Blediji izgled se dobija filterom u `mapa-klinika.scss`, pa mapa i dalje
+    // ne odudara od tople palete ostatka sajta.
+    this.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution:
-        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · '
-        + '© <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.mapa);
 
     this.nacrtaj();

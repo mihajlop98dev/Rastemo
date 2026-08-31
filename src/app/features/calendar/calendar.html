@@ -62,10 +62,11 @@
             <strong>{{ day.day }}</strong>
           </div>
           <div class="calpage__week-day-apts">
-            <div class="calpage__week-apt" *ngFor="let a of day.appointments">
+            <a class="calpage__week-apt" *ngFor="let a of day.appointments"
+               [routerLink]="['/appointment', a.id]">
               <strong>{{ formatTime(a.scheduled_at) }}</strong>
               <span>{{ a.title }}</span>
-            </div>
+            </a>
             <p class="text-soft calpage__week-empty" *ngIf="!day.appointments.length">—</p>
           </div>
         </div>
@@ -94,12 +95,12 @@
             <strong>{{ formatDay(apt.scheduled_at) }}</strong>
             <span>{{ formatMonth(apt.scheduled_at) }}</span>
           </div>
-          <div class="calpage__upcoming-info">
+          <a class="calpage__upcoming-info" [routerLink]="['/appointment', apt.id]">
             <strong>{{ apt.title }}</strong>
             <span class="text-soft">{{ formatTime(apt.scheduled_at) }}</span>
             <span class="calpage__ustanova" *ngIf="apt.clinics">{{ apt.clinics.name }}</span>
             <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
-          </div>
+          </a>
           <div class="calpage__akcije">
             <button type="button" title="Dodaj u kalendar telefona" (click)="uKalendarTelefona(apt)">
               <lucide-icon [img]="ExportIcon" [size]="14"></lucide-icon>
@@ -126,11 +127,11 @@
             <strong>{{ formatDay(apt.scheduled_at) }}</strong>
             <span>{{ formatMonth(apt.scheduled_at) }}</span>
           </div>
-          <div class="calpage__upcoming-info">
+          <a class="calpage__upcoming-info" [routerLink]="['/appointment', apt.id]">
             <strong>{{ apt.title }}</strong>
             <span class="text-soft">{{ formatTime(apt.scheduled_at) }} <ng-container *ngIf="apt.clinics"> · {{ apt.clinics.name }}</ng-container></span>
             <span class="calpage__napomena" *ngIf="apt.notes">{{ apt.notes }}</span>
-          </div>
+          </a>
           <div class="calpage__akcije">
             <button type="button" title="Dodaj u kalendar telefona" (click)="uKalendarTelefona(apt)">
               <lucide-icon [img]="ExportIcon" [size]="14"></lucide-icon>

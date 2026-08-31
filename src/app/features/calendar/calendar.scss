@@ -491,3 +491,14 @@
 
   .calpage__napomena { width: 100%; }
 }
+
+/* Naslov termina vodi na detalje. Dugmad za izmenu i brisanje stoje van veze,
+   pa ih klik na termin ne pokreće. */
+a.calpage__upcoming-info,
+a.calpage__week-apt {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover strong { text-decoration: underline; }
+}

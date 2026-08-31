@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule, ChevronLeft, ChevronRight, Plus, Sparkles, X, Pencil, Trash2, CalendarPlus } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
@@ -37,7 +37,7 @@ function toLocalIso(d: Date): string {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [PushPoziv, CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs, UiClinicPicker],
+  imports: [PushPoziv, CommonModule, FormsModule, LucideAngularModule, UiCard, UiButton, UiTabs, UiClinicPicker, RouterLink],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss'
 })

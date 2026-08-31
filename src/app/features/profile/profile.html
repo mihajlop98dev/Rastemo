@@ -293,6 +293,9 @@
           Ovim se potpisuješ na forumu — tvoje ime i prezime tamo se nikad ne
           prikazuju. Njime možeš i da se prijaviš, umesto mejlom. Ako želiš da
           neka tema ostane bez potpisa, pri pisanju izaberi „Objavi anonimno".
+          <ng-container *ngIf="p.username">
+            Korisničko ime se ne menja, jer pod njim stoje sve tvoje objave.
+          </ng-container>
         </p>
 
         <!-- Nalozi napravljeni pre uvođenja korisničkog imena, i oni preko
@@ -300,7 +303,7 @@
         <div class="profile__korisnicko-unos" *ngIf="!p.username">
           <p class="profile__korisnicko-poziv">
             Tvoj nalog još nema korisničko ime. Izaberi ga da bi mogla da pišeš
-            na forumu.
+            na forumu. Bira se jednom i kasnije se ne menja.
           </p>
           <div class="profile__korisnicko-red">
             <input type="text" [(ngModel)]="novoKorisnicko" (input)="proveriKorisnicko()"

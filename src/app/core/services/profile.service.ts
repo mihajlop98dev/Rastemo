@@ -72,19 +72,14 @@ export class ProfileService {
     const userId = this.auth.user()?.id;
     if (!userId) throw new Error('Not authenticated');
 
-    const patch = {
-      terms_accepted_at: new Date().toISOString(),
-      terms_version: TERMS_VERSION,
-    };
-
-    const { data, error } = await this.supabase.client
-      .from('profiles')
-      .update(patch)
-      .eq('id', userId)
-      .select()
-      .maybeSingle();
+    // Datum postavlja baza, ne aplikacija. Ranije je ovde išao običan update
+    // sa `new Date()` iz pregledača, pa je korisnica mogla da upiše bilo koji
+    // datum u svoje ime — a taj zapis postoji baš zato da bude dokaz da je
+    // uslove prihvatila i kada.
+    const { error } = await this.supabase.client
+      .rpc('prihvati_uslove', { p_verzija: TERMS_VERSION });
 
     if (error) throw error;
-    if (data) this.profile.set(data as Profile);
+    await this.load();
   }
 }

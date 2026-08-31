@@ -12,3 +12,14 @@ verify_jwt = true
 enabled = true
 # Prijava mora da radi i pre nego sto korisnica ima sesiju.
 verify_jwt = false
+
+[functions.posalji-push-odgovor]
+enabled = true
+# Zove je aplikacija, sa tokenom prijavljene korisnice.
+verify_jwt = true
+
+[functions.posalji-push-admin]
+enabled = true
+# Zove je okidac iz baze preko pg_net, a okidaci ne salju korisnicki token.
+# Zastita je poredjenje sa service_role kljucem unutar same funkcije.
+verify_jwt = false

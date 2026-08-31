@@ -1,6 +1,12 @@
-<div class="javno">
+<div class="javno" [class.javno--app]="uAplikaciji()">
 
-  <header class="javno__zaglavlje">
+  <app-sidebar *ngIf="uAplikaciji()"></app-sidebar>
+
+  <div class="javno__kolona">
+
+  <app-topbar *ngIf="uAplikaciji()"></app-topbar>
+
+  <header class="javno__zaglavlje" *ngIf="!uAplikaciji()">
     <div class="javno__traka">
       <a routerLink="/" class="javno__brend">
         <span class="javno__brend-ikona"><lucide-icon [img]="HeartIcon" [size]="17"></lucide-icon></span>
@@ -31,7 +37,7 @@
     <router-outlet></router-outlet>
   </main>
 
-  <footer class="javno__podnozje">
+  <footer class="javno__podnozje" *ngIf="!uAplikaciji()">
     <div class="javno__podnozje-mreza">
       <div class="javno__podnozje-o">
         <a routerLink="/" class="javno__brend">
@@ -98,4 +104,8 @@
       na <a href="https://www.vecteezy.com" target="_blank" rel="noopener nofollow">Vecteezy</a>
     </p>
   </footer>
+</div>
+
+  <app-mobile-nav *ngIf="uAplikaciji()"></app-mobile-nav>
+
 </div>

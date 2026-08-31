@@ -223,3 +223,31 @@
     &__dugme { padding: 7px 13px; font-size: 12.5px; }
   }
 }
+
+/* Okvir aplikacije na javnim stranicama.
+   Isti raspored kao Shell: meni levo, sadržaj u koloni desno. */
+.javno--app {
+  display: flex;
+  /* Osnovni `.javno` slaže sadržaj u kolonu; ovde meni mora da stoji sa
+     strane, pa se smer mora izričito vratiti u red. */
+  flex-direction: row;
+  min-height: 100vh;
+  background: var(--color-bg);
+
+  .javno__kolona {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .javno__sadrzaj {
+    flex: 1;
+    padding: var(--space-3) var(--space-7) var(--space-9);
+
+    @media (max-width: 1024px) {
+      padding: var(--space-3) var(--space-4)
+               calc(var(--mobile-nav-height) + env(safe-area-inset-bottom) + var(--space-6));
+    }
+  }
+}

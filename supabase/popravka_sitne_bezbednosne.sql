@@ -92,8 +92,11 @@ $$;
 revoke all     on function public.prihvati_uslove(text) from public;
 grant  execute on function public.prihvati_uslove(text) to authenticated;
 
--- Posle ovoga je funkcija jedini put do te dve kolone.
-revoke update (terms_accepted_at, terms_version) on public.profiles from anon, authenticated;
+-- PAŽNJA: red ispod NE RADI sam za sebe i ostavljen je samo kao trag greške.
+-- Ako rola već ima UPDATE nad celom tabelom, oduzimanje pojedinačne kolone
+-- nema efekta. Ispravno je u `popravka_uslovi_dozvole.sql`: prvo se oduzme
+-- dozvola nad tabelom, pa se vrate pojedinačne kolone.
+-- revoke update (terms_accepted_at, terms_version) on public.profiles from anon, authenticated;
 
 -- Provera (kao obična korisnica treba da baci gresku o dozvolama):
 -- update public.profiles set terms_accepted_at = '2020-01-01' where id = auth.uid();

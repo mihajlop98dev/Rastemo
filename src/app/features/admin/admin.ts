@@ -20,7 +20,7 @@ interface PredlozenoIme {
   obradjeno: boolean;
 }
 
-type Section = 'pregled' | 'prijave' | 'zajednica' | 'korisnice' | 'lekari' | 'imena' | 'dnevnik';
+type Section = 'pregled' | 'prijave' | 'zajednica' | 'korisnice' | 'aktivnost' | 'lekari' | 'imena' | 'dnevnik';
 
 @Component({
   selector: 'app-admin',
@@ -48,6 +48,7 @@ export class Admin implements OnInit {
     prijave: { naslov: 'Prijave', opis: 'Sadržaj koji su korisnice prijavile.' },
     zajednica: { naslov: 'Zajednica', opis: 'Teme i odgovori na forumu.' },
     korisnice: { naslov: 'Korisnice', opis: 'Nalozi, opomene i brisanje.' },
+    aktivnost: { naslov: 'Aktivnost', opis: 'Ko se vraća u aplikaciju, a ko je otvorio nalog i nestao.' },
     lekari: { naslov: 'Lekari', opis: 'Unosi korisnica koji čekaju proveru.' },
     imena: { naslov: 'Predložena imena', opis: 'Imena upisana u ankete kojih nema na spisku.' },
     dnevnik: { naslov: 'Dnevnik rada', opis: 'Šta je i kada urađeno u panelu.' },
@@ -141,6 +142,10 @@ export class Admin implements OnInit {
       this.doctorSvc.loadUserAdded(),
     ]);
     this.admin.loading.set(false);
+
+    // Aktivnost ide zasebno: upit prolazi kroz desetak tabela, pa ne treba da
+    // usporava otvaranje ostalih sekcija.
+    if (this.activeTab === 'aktivnost') await this.admin.loadAktivnost();
   }
 
   get filteredContent(): AdminContentRow[] {
@@ -250,6 +255,51 @@ export class Admin implements OnInit {
     await this.admin.deleteDoctor(doctorId);
     await this.doctorSvc.loadUserAdded();
     await this.admin.loadStats();
+  }
+
+  /** Koliko je dana prošlo; null kad datuma nema. */
+  danaOd(iso: string | null): number | null {
+    if (!iso) return null;
+    return Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+  }
+
+  /**
+   * Stanje naloga u jednoj reči.
+   *
+   * Granice su namerno grube — poenta je da se na prvi pogled razdvoji ko se
+   * vraća od onog ko je otvorio nalog i nestao, a ne precizno merenje.
+   */
+  stanje(r: { poslednja_aktivnost: string | null; poslednja_prijava: string | null }):
+    { oznaka: string; ton: string } {
+    const dana = this.danaOd(r.poslednja_aktivnost ?? r.poslednja_prijava);
+    if (dana === null) return { oznaka: 'Nikad nije ušla', ton: 'mrtva' };
+    if (dana <= 7)  return { oznaka: 'Aktivna', ton: 'ziva' };
+    if (dana <= 30) return { oznaka: 'Usporila', ton: 'mlaka' };
+    return { oznaka: 'Otišla', ton: 'mrtva' };
+  }
+
+  /** Sažetak za vrh sekcije. */
+  get sazetakAktivnosti() {
+    const svi = this.admin.aktivnost();
+    const broj = (t: string) => svi.filter(r => this.stanje(r).ton === t).length;
+    return {
+      ukupno: svi.length,
+      aktivnih: svi.filter(r => this.stanje(r).oznaka === 'Aktivna').length,
+      usporile: svi.filter(r => this.stanje(r).oznaka === 'Usporila').length,
+      otisle:   svi.filter(r => this.stanje(r).oznaka === 'Otišla').length,
+      nikad:    svi.filter(r => this.stanje(r).oznaka === 'Nikad nije ušla').length,
+    };
+  }
+
+  /** „pre 3 dana" umesto golog datuma — ovde je razmak važniji od datuma. */
+  preKoliko(iso: string | null): string {
+    const d = this.danaOd(iso);
+    if (d === null) return '—';
+    if (d === 0) return 'danas';
+    if (d === 1) return 'juče';
+    if (d < 31) return `pre ${d} dana`;
+    const m = Math.floor(d / 30);
+    return m === 1 ? 'pre mesec dana' : `pre ${m} meseca`;
   }
 
   formatDate(iso: string): string {

@@ -2,6 +2,16 @@ import { Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 
+export interface AdminAktivnostRow {
+  id: string;
+  full_name: string | null;
+  username: string | null;
+  registrovana: string;
+  poslednja_prijava: string | null;
+  poslednja_aktivnost: string | null;
+  broj_unosa: number;
+}
+
 export interface AdminUserRow {
   id: string;
   full_name: string | null;
@@ -108,6 +118,20 @@ export class AdminService {
     const { data, error } = await this.supabase.client.rpc('admin_stats');
     if (error) throw error;
     this.stats.set(data as AdminStats);
+  }
+
+  readonly aktivnost = signal<AdminAktivnostRow[]>([]);
+  readonly ucitavamAktivnost = signal(false);
+
+  /** Ko od korisnica zaista koristi aplikaciju — vidi `admin_aktivnost()`. */
+  async loadAktivnost() {
+    this.ucitavamAktivnost.set(true);
+    try {
+      const { data } = await this.supabase.client.rpc('admin_aktivnost');
+      this.aktivnost.set((data as AdminAktivnostRow[]) ?? []);
+    } finally {
+      this.ucitavamAktivnost.set(false);
+    }
   }
 
   async loadUsers() {

@@ -84,6 +84,7 @@ export const routes: Routes = [
       { path: 'prijave', data: { sekcija: 'prijave' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
       { path: 'zajednica', data: { sekcija: 'zajednica' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
       { path: 'korisnice', data: { sekcija: 'korisnice' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
+      { path: 'aktivnost', data: { sekcija: 'aktivnost' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
       { path: 'lekari', data: { sekcija: 'lekari' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
       { path: 'imena', data: { sekcija: 'imena' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },
       { path: 'dnevnik', data: { sekcija: 'dnevnik' }, loadComponent: () => import('./features/admin/admin').then(c => c.Admin) },

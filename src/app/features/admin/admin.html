@@ -132,6 +132,67 @@
     </div>
   </ui-card>
 
+
+  <!-- ---------------- AKTIVNOST ---------------- -->
+  <section *ngIf="activeTab === 'aktivnost'" class="admin__sekcija">
+
+    <div class="aktiv__sazetak">
+      <div class="aktiv__brojka aktiv__brojka--ziva">
+        <strong>{{ sazetakAktivnosti.aktivnih }}</strong><span>aktivne</span>
+        <small>nešto su unele u poslednjih 7 dana</small>
+      </div>
+      <div class="aktiv__brojka aktiv__brojka--mlaka">
+        <strong>{{ sazetakAktivnosti.usporile }}</strong><span>usporile</span>
+        <small>poslednji put pre 8 do 30 dana</small>
+      </div>
+      <div class="aktiv__brojka aktiv__brojka--mrtva">
+        <strong>{{ sazetakAktivnosti.otisle }}</strong><span>otišle</span>
+        <small>ništa duže od mesec dana</small>
+      </div>
+      <div class="aktiv__brojka aktiv__brojka--mrtva">
+        <strong>{{ sazetakAktivnosti.nikad }}</strong><span>nikad ušle</span>
+        <small>otvorile nalog i to je sve</small>
+      </div>
+    </div>
+
+    <ui-card padding="lg">
+      <p class="text-soft admin__empty" *ngIf="admin.ucitavamAktivnost()">Računam…</p>
+      <p class="text-soft admin__empty"
+         *ngIf="!admin.ucitavamAktivnost() && !admin.aktivnost().length">
+        Još nema korisnica.
+      </p>
+
+      <div class="aktiv__red" *ngFor="let r of admin.aktivnost()">
+        <div class="aktiv__ko">
+          <strong>
+            {{ r.full_name || 'Bez imena' }}
+            <span class="admin__username" *ngIf="r.username">&#64;{{ r.username }}</span>
+          </strong>
+          <span class="text-muted">nalog otvoren {{ preKoliko(r.registrovana) }}</span>
+        </div>
+
+        <div class="aktiv__kolone">
+          <div>
+            <span class="text-muted">poslednja prijava</span>
+            <strong>{{ preKoliko(r.poslednja_prijava) }}</strong>
+          </div>
+          <div>
+            <span class="text-muted">poslednji unos</span>
+            <strong>{{ preKoliko(r.poslednja_aktivnost) }}</strong>
+          </div>
+          <div>
+            <span class="text-muted">ukupno unosa</span>
+            <strong>{{ r.broj_unosa }}</strong>
+          </div>
+        </div>
+
+        <span class="aktiv__stanje" [ngClass]="'aktiv__stanje--' + stanje(r).ton">
+          {{ stanje(r).oznaka }}
+        </span>
+      </div>
+    </ui-card>
+  </section>
+
   <!-- ---------------- DNEVNIK ---------------- -->
   <section *ngIf="activeTab === 'imena'" class="admin__sekcija">
     <div class="admin__sekcija-head">

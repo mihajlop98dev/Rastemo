@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { LucideAngularModule, Shield, LayoutDashboard, Flag, MessagesSquare, Users, Stethoscope, Tag, ScrollText, LogOut, Menu, X } from 'lucide-angular';
+import { LucideAngularModule, Shield, LayoutDashboard, Flag, MessagesSquare, Users, Stethoscope, Tag, ScrollText, LogOut, Menu, X, Activity } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService } from '../../../core/services/admin.service';
 
@@ -31,6 +31,7 @@ export class AdminLayout {
     { putanja: '/admin/prijave', naziv: 'Prijave', ikona: Flag, tacno: false },
     { putanja: '/admin/zajednica', naziv: 'Zajednica', ikona: MessagesSquare, tacno: false },
     { putanja: '/admin/korisnice', naziv: 'Korisnice', ikona: Users, tacno: false },
+    { putanja: '/admin/aktivnost', naziv: 'Aktivnost', ikona: Activity, tacno: false },
     { putanja: '/admin/lekari', naziv: 'Lekari', ikona: Stethoscope, tacno: false },
     { putanja: '/admin/imena', naziv: 'Predložena imena', ikona: Tag, tacno: false },
     { putanja: '/admin/dnevnik', naziv: 'Dnevnik rada', ikona: ScrollText, tacno: false },

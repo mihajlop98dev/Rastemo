@@ -37,8 +37,27 @@ begin
 end;
 $$;
 
--- Okidač je već zaveden ranijom migracijom i pokriva insert i update kolone
--- `username`; ovde se menja samo telo funkcije koju poziva.
+-- Okidač se zavodi i ovde, ne samo funkcija.
+--
+-- Prva verzija ove skripte menjala je samo telo funkcije, uz pretpostavku da
+-- je okidač zaveo `migracija_korisnicko_ime.sql`. Nije: provera se u bazi nije
+-- okidala uopšte — prolazilo je i ime od dva znaka. Funkcija bez okidača je
+-- mrtvo slovo, pa se okidač ovde zavodi izričito.
+--
+-- `drop ... if exists` čini skriptu ponovljivom: svejedno je da li okidač
+-- postoji, fali ili je zastareo.
 
--- Provera da je zaključavanje aktivno (treba da baci grešku):
+drop trigger if exists profiles_username_provera on public.profiles;
+create trigger profiles_username_provera
+  before insert or update of username on public.profiles
+  for each row execute function public.proveri_username_okidac();
+
+-- Provera 1 — zaključavanje (treba da baci „Korisničko ime se ne može menjati."):
 -- update public.profiles set username = username || 'x' where id = auth.uid();
+--
+-- Provera 2 — oblik (treba da baci „mora imati bar 3 znaka"):
+-- update public.profiles set username = 'ab' where id = auth.uid();
+--
+-- Provera 3 — da je okidač stvarno na tabeli (treba da vrati jedan red):
+-- select tgname, tgenabled from pg_trigger
+-- where tgrelid = 'public.profiles'::regclass and not tgisinternal;

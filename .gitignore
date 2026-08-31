@@ -47,3 +47,6 @@ Thumbs.db
 .env
 .env.*
 supabase/.temp/
+
+# Lokalno stanje Supabase CLI-ja — ne pripada repozitorijumu.
+supabase/.temp/

@@ -1,0 +1,14 @@
+# Minimalna konfiguracija za `supabase functions deploy`.
+# project_id je referenca projekta iz njegovog URL-a.
+project_id = "wwippvsdyoexnheihzqg"
+
+[functions.posalji-podsetnike]
+enabled = true
+# Bez ovoga bi funkciju mogao da pozove bilo ko i pokrene masovno slanje.
+# Poziva je samo zakazani posao, sa service_role kljucem.
+verify_jwt = true
+
+[functions.prijava-korisnickim-imenom]
+enabled = true
+# Prijava mora da radi i pre nego sto korisnica ima sesiju.
+verify_jwt = false

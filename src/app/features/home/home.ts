@@ -2,7 +2,7 @@ import { Component, OnInit, computed, signal } from '@angular/core';
 import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, Baby, Heart, Info, Smile, Scale, PenLine, Stethoscope, ChevronRight, CalendarPlus, X, ChevronLeft, Sparkles } from 'lucide-angular';
+import { LucideAngularModule, Baby, Heart, Info, Smile, Scale, PenLine, Stethoscope, ChevronRight, CalendarPlus, X, ChevronLeft, Sparkles, ShoppingBag } from 'lucide-angular';
 import { UiCard } from '../../shared/ui/card/card';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiBadge } from '../../shared/ui/badge/badge';
@@ -39,6 +39,7 @@ export class Home implements OnInit {
 
   readonly ChevronIcon = ChevronRight;
   readonly ZabavaIcon = Sparkles;
+  readonly PripremaIcon = ShoppingBag;
   readonly ChevronLeftIcon = ChevronLeft;
   readonly XIcon = X;
 

@@ -5,6 +5,7 @@
     display: flex;
     position: fixed;
     bottom: 0; left: 0; right: 0;
+    transform-origin: bottom left;
     height: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
     background: var(--color-surface);

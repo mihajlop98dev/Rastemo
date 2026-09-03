@@ -68,7 +68,11 @@ export class MobileNav implements OnInit, OnDestroy {
 
       const offsetX = vv.offsetLeft;
       const offsetY = vv.offsetTop + vv.height - document.documentElement.clientHeight;
-      el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      // scale(1 / vv.scale) kontra-skalira traku tako da vizuelno ostane iste
+      // veličine dok se stranica zumira. Mora ostati usklađeno sa
+      // `transform-origin: bottom left` u mobile-nav.scss (ta dva mesta su
+      // međusobno zavisna).
+      el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${1 / vv.scale})`;
     });
   }
 }

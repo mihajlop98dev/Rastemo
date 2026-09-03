@@ -127,6 +127,15 @@ input, textarea, select {
   font-size: inherit;
 }
 
+/* iOS Safari automatski zumira stranicu pri fokusu na input/textarea/select
+   ako je efektivan font-size polja manji od 16px. !important je neophodan
+   da pobedi lokalna pravila veće specifičnosti po komponentama. */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
 img { max-width: 100%; display: block; }
 
 /* ---------------------------------------------------------------

@@ -14,7 +14,10 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.npm-global
 REPO="mihajlop98dev/Rastemo"
 PROJECT_DIR="/Volumes/Extreme Pro/Projects/Rastemo/rastemo-web"
 BASE_BRANCH="dev"
-MAX_ISSUES=1
+# Ne stvarni limit — samo sigurnosni plafon da jedno pokretanje ne pokupi
+# nekontrolisano puno issue-a odjednom. Obrađuju se svi agent-ready,
+# jedan po jedan, u istom pokretanju skripte.
+MAX_ISSUES=20
 
 STATE_DIR="$HOME/.rastemo-agent"
 WORKTREE_ROOT="$STATE_DIR/worktrees"
@@ -107,6 +110,32 @@ echo "$issues_json" | jq -c '.[]' | while IFS= read -r issue; do
     gh issue edit "$number" --repo "$REPO" --remove-label agent-in-progress --add-label agent-failed
     gh issue comment "$number" --repo "$REPO" --body "Agent nije uspeo da napravi radnu granu ($branch) — verovatno već postoji. Proveri ručno."
     notify "Issue #$number" "Neuspeh: ne mogu da napravim granu"
+    continue
+  fi
+
+  # .env.agent-test.local je namerno gitignore-ovan (sadrži kredencijale),
+  # pa ga git worktree ne kopira — moramo ručno, da bi tester-agent uopšte
+  # mogao da uradi vizuelnu proveru preko scripts/agent-visual-check.mjs.
+  if [ -f "$PROJECT_DIR/.env.agent-test.local" ]; then
+    cp "$PROJECT_DIR/.env.agent-test.local" "$worktree_dir/.env.agent-test.local"
+  fi
+
+  echo "--- npm install u worktree-u (node_modules nije git-praćen) ---"
+  install_log="$LOG_DIR/issue-${number}-install.log"
+  if ! (cd "$worktree_dir" && npm install) > "$install_log" 2>&1; then
+    echo "npm install nije uspeo za #$number — pogledaj $install_log."
+    tail_install=$(tail -n 40 "$install_log")
+    gh issue edit "$number" --repo "$REPO" --remove-label agent-in-progress --add-label agent-failed
+    gh issue comment "$number" --repo "$REPO" --body "Agent nije uspeo da instalira zavisnosti (npm install) u radnom direktorijumu, pre bilo kakvog rada.
+
+\`\`\`
+$tail_install
+\`\`\`
+
+Ovo je infrastrukturni problem, ne problem sa kodom iz issue-a — proveri ručno."
+    git worktree remove --force "$worktree_dir" 2>/dev/null
+    git branch -D "$branch" 2>/dev/null
+    notify "Issue #$number" "Neuspeh: npm install"
     continue
   fi
 

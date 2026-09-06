@@ -66,9 +66,17 @@
     </div>
   </ui-card>
 
+  <!-- Poziv nastavlja priču sa same stranice umesto da je prekida: tablica je
+       zabava, pravi odgovor stiže na ultrazvuku, a dotle ima šta da se prati. -->
   <ui-card padding="lg" class="strana__poziv">
-    <h2>Već biraš ime?</h2>
-    <p>Pogledaj odakle imena dolaze i šta zaista znače.</p>
-    <ui-button routerLink="/imena" variant="primary" size="lg">Značenje imena</ui-button>
+    <h2>Pravi odgovor stiže oko 20. nedelje</h2>
+    <p>
+      Do tada beba svake nedelje uradi nešto novo — otvori oči, počne da čuje,
+      prvi put se pomeri. Prati je nedelju po nedelju, besplatno.
+    </p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+    <p class="strana__poziv-uz">
+      Ili, ako još biraš ime: <a routerLink="/imena">značenje imena</a>.
+    </p>
   </ui-card>
 </div>

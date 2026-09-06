@@ -1,0 +1,172 @@
+<div class="strana">
+
+  <header class="strana__zaglavlje">
+    <h1>Japanski horoskop za bebu</h1>
+    <p>
+      Koji je eto znak tvog deteta — životinja, element, jin ili jang. Unesi
+      termin porođaja ili datum rođenja, a ako želiš i svoj datum, pa da vidiš
+      kako se ta dva znaka slažu.
+    </p>
+  </header>
+
+  <ui-card padding="lg" class="jap__unos">
+    <label>
+      <span>Termin porođaja ili datum rođenja bebe</span>
+      <input type="date" [(ngModel)]="datum" name="datum" (keyup.enter)="izracunaj()" />
+    </label>
+    <label>
+      <span>Tvoj datum rođenja <small class="text-muted">(nije obavezno)</small></span>
+      <input type="date" [(ngModel)]="datumMajke" name="datumMajke" (keyup.enter)="izracunaj()" />
+    </label>
+    <ui-button variant="primary" size="lg" (click)="izracunaj()">Vidi znak</ui-button>
+    <p class="jap__greska" *ngIf="greska()">{{ greska() }}</p>
+  </ui-card>
+
+  <ng-container *ngIf="eto() as e">
+
+    <ui-card padding="lg" class="jap__rezultat">
+      <span class="jap__emoji" aria-hidden="true">{{ e.znak.emoji }}</span>
+      <h2>{{ e.znak.srpski }}</h2>
+      <p class="jap__japanski">
+        <span class="jap__kanji">{{ e.znak.kanji }}</span>
+        {{ e.znak.japanski }}
+      </p>
+
+      <div class="jap__odlike">
+        <div><span class="text-muted">element</span><strong>{{ e.element }} {{ elementi[e.element].kanji }}</strong></div>
+        <div><span class="text-muted">jin ili jang</span><strong>{{ e.jinJang }}</strong></div>
+        <div><span class="text-muted">eto</span><strong>{{ e.naziv }}</strong></div>
+        <div><span class="text-muted">mesto u ciklusu</span><strong>{{ e.mesto }} / 60</strong></div>
+      </div>
+
+      <p class="jap__element-opis">{{ elementi[e.element].opis }}</p>
+
+      <p class="jap__granica text-soft">
+        Lunarna godina {{ e.godina }} počela je {{ granicaGodine(e) }}. Zato dete
+        rođeno u januaru najčešće nosi znak prethodne godine.
+      </p>
+    </ui-card>
+
+    <!-- Hinoe-Uma se vraća svakih šezdeset godina i 2026. je jedna od njih.
+         Ovo nije opšti tekst nego stvaran demografski trag jedne praznoverice. -->
+    <ui-card padding="lg" class="jap__hinoeuma" *ngIf="hinoeuma(e)">
+      <h2>Ovo je Hinoe-Uma godina</h2>
+      <p>
+        Kombinacija 丙午 — vatreni konj — vraća se jednom u šezdeset godina i
+        {{ e.godina }} je jedna od njih. Prethodna je bila 1966.
+      </p>
+      <p>
+        U Japanu se uz nju vezuje staro verovanje da devojčice rođene te godine
+        donose nesreću mužu. Godine 1966. je zbog toga broj rođenih u Japanu pao
+        za oko četvrtinu, i taj urez se i danas vidi u njihovoj starosnoj
+        piramidi. To je jedini poznat slučaj da je praznoverica ostavila
+        merljiv trag u demografiji jedne države.
+      </p>
+      <p class="text-soft">
+        Kod nas to verovanje nikad nije postojalo. Stoji ovde zato što je
+        zanimljivo, ne zato što nešto znači.
+      </p>
+    </ui-card>
+
+    <ui-card padding="lg">
+      <h2>Kakvo je to dete</h2>
+      <p>{{ e.znak.priroda }}</p>
+
+      <div class="jap__dve">
+        <div>
+          <h3>Snage</h3>
+          <ul><li *ngFor="let s of e.znak.snage">{{ s }}</li></ul>
+        </div>
+        <div>
+          <h3>Izazovi</h3>
+          <ul><li *ngFor="let i of e.znak.izazovi">{{ i }}</li></ul>
+        </div>
+      </div>
+
+      <div class="jap__roditeljima">
+        <h3>Šta mu najviše pomaže</h3>
+        <p>{{ e.znak.roditeljima }}</p>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg">
+      <h2>Sa kim se slaže</h2>
+      <p class="text-soft">
+        Predanje poznaje tri vrste veze između znakova. Ovo su one za
+        {{ e.znak.srpski.toLowerCase() }}a.
+      </p>
+      <div class="jap__veze">
+        <div>
+          <strong>Trojna sloga</strong>
+          <span>{{ sanhe(e.znak).join(', ') }}</span>
+        </div>
+        <div>
+          <strong>Tajna sloga</strong>
+          <span>{{ liuhe(e.znak) }}</span>
+        </div>
+        <div>
+          <strong>Sudar</strong>
+          <span>{{ chong(e.znak) }}</span>
+        </div>
+      </div>
+    </ui-card>
+
+    <ui-card padding="lg" class="jap__odnos" *ngIf="etoMajke() as m">
+      <h2>Ti i beba</h2>
+      <p class="jap__odnos-parovi">
+        <span>{{ m.znak.emoji }} {{ m.znak.srpski }}</span>
+        <span class="jap__odnos-znak">i</span>
+        <span>{{ e.znak.emoji }} {{ e.znak.srpski }}</span>
+      </p>
+      <ng-container *ngIf="odnos() as o">
+        <h3>{{ tekstOdnosa[o].naslov }}</h3>
+        <p>{{ tekstOdnosa[o].telo }}</p>
+      </ng-container>
+    </ui-card>
+
+  </ng-container>
+
+  <ui-card padding="lg" class="jap__objasnjenje">
+    <h2>Zašto je ovo isto što i kineski horoskop</h2>
+    <p>
+      Japanski eto (干支) nije zaseban sistem. Japan ga je preuzeo iz Kine, pa su
+      dvanaest životinja, deset nebeskih stabljika, šezdesetogodišnji ciklus,
+      pet elemenata i jin/jang isti. Razlikuju se imena — Nezumi umesto Pacov —
+      i to što je na dvanaestom mestu vepar tamo gde Kina ima svinju.
+    </p>
+    <p>
+      Zato ćeš dobiti istu životinju kao na našoj stranici o kineskom
+      horoskopu. Ovde su uz nju i stabljika, element i mesto u ciklusu, kako se
+      to u Japanu čita.
+    </p>
+    <p class="text-soft">
+      Sve ovo je predanje, ne nauka. Stoji ovde radi razonode.
+    </p>
+  </ui-card>
+
+  <section class="strana__sekcija">
+    <h2>Svih dvanaest znakova</h2>
+    <div class="jap__spisak">
+      <ui-card padding="md" *ngFor="let z of sviZnaci" class="jap__stavka">
+        <span class="jap__stavka-emoji" aria-hidden="true">{{ z.emoji }}</span>
+        <h3>{{ z.srpski }}</h3>
+        <p class="jap__stavka-jp">{{ z.kanji }} {{ z.japanski }}</p>
+        <p>{{ z.priroda }}</p>
+      </ui-card>
+    </div>
+  </section>
+
+  <ui-card padding="lg" class="strana__poziv">
+    <h2>Znak je zabava — nedelje su ono što se stvarno dešava</h2>
+    <p>
+      Dok čekaš tu bebu, svake nedelje se menja nešto konkretno. Vodi svoj
+      dnevnik trudnoće: termin, pregledi, simptomi i razvoj bebe na jednom
+      mestu, besplatno.
+    </p>
+    <ui-button routerLink="/register" variant="primary" size="lg">Otvori svoj dnevnik</ui-button>
+    <p class="strana__poziv-uz">
+      Ili pogledaj <a routerLink="/kineski-horoskop">kineski horoskop</a>.
+    </p>
+  </ui-card>
+
+</div>

@@ -37,6 +37,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'zabava', renderMode: RenderMode.Prerender },
   { path: 'pol-bebe', renderMode: RenderMode.Prerender },
   { path: 'kineski-horoskop', renderMode: RenderMode.Prerender },
+  { path: 'japanski-horoskop', renderMode: RenderMode.Prerender },
   { path: 'horoskopski-znak', renderMode: RenderMode.Prerender },
   { path: 'cesta-pitanja', renderMode: RenderMode.Prerender },
   { path: 'o-nama', renderMode: RenderMode.Prerender },

@@ -37,6 +37,7 @@ export const routes: Routes = [
       { path: 'zabava', loadComponent: () => import('./features/javno/zabava/zabava').then(m => m.Zabava) },
       { path: 'pol-bebe', loadComponent: () => import('./features/javno/pol-bebe/pol-bebe').then(m => m.PolBebe) },
       { path: 'kineski-horoskop', loadComponent: () => import('./features/javno/kineski-horoskop/kineski-horoskop').then(m => m.KineskiHoroskop) },
+      { path: 'japanski-horoskop', loadComponent: () => import('./features/javno/japanski-horoskop/japanski-horoskop').then(m => m.JapanskiHoroskop) },
       { path: 'horoskopski-znak', loadComponent: () => import('./features/javno/horoskopski-znak/horoskopski-znak').then(m => m.HoroskopskiZnak) },
       { path: 'porodilista', loadComponent: () => import('./features/javno/porodilista/porodilista').then(m => m.Porodilista) },
       { path: 'cesta-pitanja', loadComponent: () => import('./features/javno/pitanja/pitanja').then(m => m.Pitanja) },

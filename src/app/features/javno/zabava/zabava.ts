@@ -32,6 +32,13 @@ export class Zabava implements OnInit {
       oznaka: 'za zabavu',
     },
     {
+      putanja: '/japanski-horoskop',
+      emoji: '🎏',
+      naslov: 'Japanski znak bebe',
+      opis: 'Eto znak, element i jin ili jang — i kako se slaže sa tvojim znakom.',
+      oznaka: 'za zabavu',
+    },
+    {
       putanja: '/kineski-horoskop',
       emoji: '🐉',
       naslov: 'Kineski znak bebe',

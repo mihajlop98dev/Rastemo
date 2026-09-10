@@ -65,11 +65,11 @@ from (values
   ('Prvi trimestar', 'Kada ste rekli porodici i prijateljima?',
    'Neke sačekaju prvi ultrazvuk, neke dvanaestu nedelju, a neke kažu odmah jer ne umeju da ćute. Kada ste vi rekli, i da li biste sada uradile isto?'),
   ('Drugi trimestar', 'Kada ste prvi put osetile bebu?',
-   'U knjigama piše između 16. i 22. nedelje, ali svaka priča je drugačija — neke opisuju leptiriće, neke mehuriće, neke ništa dugo pa odjednom udarac. Kada je bilo kod vas i na šta je ličilo?'),
+   'U knjigama piše između 16. i 22. nedelje, ali svaka priča je drugačija — neke opisuju leptiriće, neke mehuriće, neke ništa dugo pa odjednom udarac. Kada se to desilo kod vas i na šta je ličilo?'),
   ('Treci trimestar', 'Kako spavate u poslednjim nedeljama?',
    'Poslednji mesec obično donese neispavane noći: ne može se na stomak, na leđima nije preporučljivo, a jastuka nikad dosta. Šta je vama pomoglo da nađete položaj?'),
   ('Ishrana', 'Šta vam se gadilo, a šta ste mogle da jedete?',
-   'Kod nekih trudnica se ukusi potpuno preokrenu — omiljeno jelo odjednom ne može da se pogleda, a nešto što nikad niste voleli postane jedino što prolazi. Kako je bilo kod vas?'),
+   'Kod nekih trudnica se ukusi potpuno preokrenu — omiljeno jelo odjednom ne može da se pogleda, a nešto što nikad niste voleli postane jedino što prolazi. Kako se to odrazilo na vas?'),
   ('Simptomi', 'Šta je stvarno pomoglo protiv mučnine?',
    'Saveta ima na sve strane — đumbir, slani krekeri, jesti pre ustajanja, jesti češće a manje. Zanima nas šta je od toga vama zaista pomoglo, a šta se pokazalo kao prazna priča.'),
   ('Analize i pregledi', 'Kako ste birale ginekologa?',
@@ -81,13 +81,13 @@ from (values
   ('Oprema', 'Koja kupovina se najviše isplatila, a koja najmanje?',
    'Oprema za bebe ume da košta kao mali automobil, a neke stvari se koriste dva puta. Šta bi vama bilo pametno da kupite ponovo, a šta biste preskočile?'),
   ('Iskustva', 'Kako ste birale porodilište?',
-   'Po lekaru, po gradu, po preporuci ili po tome gde je bilo mesta? Zanima nas šta je presudilo i da li ste zadovoljne izborom.'),
+   'Po lekaru, po gradu, po preporuci ili po tome gde je uopšte imalo mesta? Zanima nas šta je presudilo i da li ste zadovoljne izborom.'),
   ('Iskustva', 'Šta biste rekle sebi na početku trudnoće?',
-   'Kad se sve završi, obično ostane par rečenica koje bi čovek voleo da je čuo na vreme. Šta biste rekle sebi od pre devet meseci?'),
+   'Kad se sve završi, obično ostanu one dve rečenice koje čovek voli da je čuo na vreme. Šta biste rekle sebi od pre devet meseci?'),
   ('Partner', 'Kako je partner primio vest i kako se snašao?',
-   'Neki odmah krenu da čitaju i pakuju, neki se izgube pa se snađu kasnije. Kako je bilo kod vas i šta je najviše pomoglo?'),
+   'Neki odmah krenu da čitaju i pakuju, neki se izgube pa se snađu kasnije. Kako se to odigralo kod vas i šta je najviše pomoglo?'),
   ('Nakon porodjaja', 'Šta vas je najviše iznenadilo u prvim nedeljama sa bebom?',
-   'O trudnoći se priča mnogo, o prvim nedeljama kod kuće mnogo manje. Šta je bilo drugačije nego što ste očekivale?')
+   'O trudnoći se priča mnogo, o prvim nedeljama kod kuće mnogo manje. Šta se pokazalo drugačijim nego što ste očekivale?')
 ) as p(kategorija, naslov, telo)
 join public.forum_categories k on k.name = p.kategorija
 where not exists (

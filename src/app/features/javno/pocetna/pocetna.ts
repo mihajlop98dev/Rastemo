@@ -41,10 +41,15 @@ export class JavnaPocetna implements OnInit {
   ];
 
   ngOnInit() {
+    // Ime sajta ide prvo, bez uobičajenog dodatka na kraj: za upit
+    // „dnevnik trudnoće" ovo je navigaciona pretraga i brend mora da se
+    // prepozna odmah.
     this.seo.postavi(
-      'Prati trudnoću nedelju po nedelju',
+      'Dnevnik trudnoće — prati trudnoću nedelju po nedelju',
       'Prati trudnoću na srpskom: razvoj bebe po nedeljama, kalkulator termina, porodilišta u Srbiji, značenje imena, simptomi, težina i zajednica trudnica.',
       '/',
+      '/icon-512.png',
+      false,
     );
 
     this.seo.strukturirano([

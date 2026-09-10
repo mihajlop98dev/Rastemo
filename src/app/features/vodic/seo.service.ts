@@ -17,8 +17,14 @@ export class SeoService {
   private meta = inject(Meta);
   private doc = inject(DOCUMENT);
 
-  postavi(naslov: string, opis: string, putanja: string, slika = '/icon-512.png') {
-    const pun = `${naslov} — Dnevnik trudnoće`;
+  /**
+   * `dodajBrend` se gasi samo na naslovnoj. Na podstranicama ime sajta ide na
+   * kraj, jer je tamo važnije o čemu je stranica. Na naslovnoj je obrnuto:
+   * ko kuca „dnevnik trudnoće" traži sam sajt, pa ime mora da bude prvo što
+   * vidi u rezultatu.
+   */
+  postavi(naslov: string, opis: string, putanja: string, slika = '/icon-512.png', dodajBrend = true) {
+    const pun = dodajBrend ? `${naslov} — Dnevnik trudnoće` : naslov;
     const url = OSNOVA + putanja;
     // Google odseca opis oko 160 znakova; duži samo razvodni poruku.
     const kratakOpis = opis.length > 158 ? opis.slice(0, 155).trimEnd() + '…' : opis;

@@ -47,25 +47,16 @@
       </p>
     </ui-card>
 
-    <!-- Hinoe-Uma se vraća svakih šezdeset godina i 2026. je jedna od njih.
-         Ovo nije opšti tekst nego stvaran demografski trag jedne praznoverice. -->
+    <!-- Kratka i lična; cela priča stoji niže, u odeljku koji se uvek
+         prikazuje, da ga i pretraživač vidi. -->
     <ui-card padding="lg" class="jap__hinoeuma" *ngIf="hinoeuma(e)">
-      <h2>Ovo je Hinoe-Uma godina</h2>
+      <h2>Tvoja beba je Hinoe-Uma</h2>
       <p>
-        Kombinacija 丙午 — vatreni konj — vraća se jednom u šezdeset godina i
-        {{ e.godina }} je jedna od njih. Prethodna je bila 1966.
+        {{ e.godina }} je godina vatrenog konja — kombinacija koja se vraća
+        jednom u šezdeset godina. Prethodna je bila 1966, i uz nju ide
+        najneobičnija priča u celom ovom krugu.
       </p>
-      <p>
-        U Japanu se uz nju vezuje staro verovanje da devojčice rođene te godine
-        donose nesreću mužu. Godine 1966. je zbog toga broj rođenih u Japanu pao
-        za oko četvrtinu, i taj urez se i danas vidi u njihovoj starosnoj
-        piramidi. To je jedini poznat slučaj da je praznoverica ostavila
-        merljiv trag u demografiji jedne države.
-      </p>
-      <p class="text-soft">
-        Kod nas to verovanje nikad nije postojalo. Stoji ovde zato što je
-        zanimljivo, ne zato što nešto znači.
-      </p>
+      <a class="jap__hinoeuma-veza" href="#vatreni-konj">Pročitaj zašto</a>
     </ui-card>
 
     <ui-card padding="lg">
@@ -125,6 +116,40 @@
     </ui-card>
 
   </ng-container>
+
+  <!-- Stalan odeljak: ovo je najosobeniji sadržaj na stranici i mora da bude
+       u predrenderovanom HTML-u. Ranije je stajao iza uslova i pretraživač ga
+       nije video, pa stranica nije mogla da se pojavi ni na jedan upit o
+       vatrenom konju. -->
+  <ui-card padding="lg" class="jap__vatreni" id="vatreni-konj">
+    <h2>Godina vatrenog konja: zašto je 2026. posebna</h2>
+    <p>
+      Kombinacija <strong>丙午</strong> — Hinoe-Uma, vatreni konj — stoji na
+      43. mestu u šezdesetogodišnjem krugu i vraća se tačno jednom u šezdeset
+      godina. Poslednja je bila 1966, a sledeća je <strong>2026</strong>, koja
+      je počela 17. februara.
+    </p>
+    <p>
+      U Japanu se uz tu godinu vezuje staro verovanje da devojčice rođene u
+      njoj imaju tešku narav i donose nesreću mužu. Verovanje je bilo toliko
+      rašireno da je 1966. broj rođenih u Japanu pao za <strong>oko
+      četvrtinu</strong> u odnosu na godine oko nje.
+    </p>
+    <p>
+      Taj pad se i danas vidi kao urez u japanskoj starosnoj piramidi.
+      Demografi ga navode kao jedini poznat slučaj da je praznoverica ostavila
+      merljiv trag u brojkama jedne države — ne rat, ne kriza, nego verovanje.
+    </p>
+    <p>
+      Ostaje da se vidi da li će 2026. imati isti odjek. Japan danas ima
+      znatno niži natalitet nego šezdesetih, a i samo verovanje je kod mlađih
+      naraštaja mnogo slabije.
+    </p>
+    <p class="text-soft">
+      Kod nas ovo verovanje nikad nije postojalo. Stoji ovde zato što je
+      zanimljivo, ne zato što išta znači za tvoju bebu.
+    </p>
+  </ui-card>
 
   <ui-card padding="lg" class="jap__objasnjenje">
     <h2>Zašto je ovo isto što i kineski horoskop</h2>

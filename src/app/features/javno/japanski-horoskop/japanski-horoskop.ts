@@ -37,7 +37,7 @@ export class JapanskiHoroskop implements OnInit {
   ngOnInit() {
     this.seo.postavi(
       'Japanski horoskop za bebu — eto znak po godini rođenja',
-      'Koji je japanski znak tvoje bebe: životinja, element, jin ili jang i eto kombinacija. Sa objašnjenjem zašto godina ne počinje prvog januara.',
+      'Koji je japanski znak tvoje bebe: životinja, element, jin ili jang i eto kombinacija. I zašto je 2026. godina vatrenog konja, koja se vraća jednom u šezdeset godina.',
       '/japanski-horoskop',
     );
     this.seo.strukturirano([

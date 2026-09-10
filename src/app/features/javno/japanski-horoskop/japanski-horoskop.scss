@@ -130,3 +130,23 @@
     margin-bottom: var(--space-2) !important;
   }
 }
+
+.jap {
+  &__hinoeuma-veza {
+    display: inline-block;
+    margin-top: var(--space-2);
+    font-size: 14px;
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  /* Stalan odeljak o vatrenom konju — najosobeniji sadržaj na stranici. */
+  &__vatreni {
+    border-left: 3px solid var(--color-primary);
+    scroll-margin-top: var(--space-6);
+
+    h2 { font-size: 20px; margin-bottom: var(--space-3); }
+    p { font-size: 14.5px; line-height: 1.7; margin-bottom: var(--space-3); }
+    p:last-child { margin-bottom: 0; font-size: 13px; }
+  }
+}

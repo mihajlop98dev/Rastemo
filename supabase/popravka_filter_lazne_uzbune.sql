@@ -48,10 +48,13 @@ begin
     return false;
   end if;
 
-  -- Tri ili više usamljenih slova znače da neko razbija reč da bi prošao.
-  select count(*) >= 3 into zaobilazi
-  from unnest(string_to_array(btrim(sa_razmacima), ' ')) w
-  where length(w) = 1;
+  -- Zaobilaženje su tri UZASTOPNA usamljena slova („k u r a c", „k.u.r.a.c").
+  --
+  -- Prva verzija je brojala usamljena slova bilo gde u tekstu i to je bilo
+  -- pogrešno: cifre se prevode u slova („1" u „i") ili brišu, pa rečenica
+  -- „između 16. i 22. nedelje" ostavi niz usamljenih slova i izgleda kao
+  -- zaobilaženje. Time se palila zbijena provera i opet vraćala lažna uzbuna.
+  zaobilazi := btrim(sa_razmacima) ~ '(^| )[a-z] [a-z] [a-z]( |$)';
 
   foreach rec in array public.nedozvoljene_reci() loop
     if position(' ' || rec in sa_razmacima) > 0 then
@@ -77,7 +80,8 @@ begin
 end;
 $$;
 
--- Provera — prva četiri moraju biti false, ostalo true:
+-- Provera — prvih pet moraju biti false, ostalo true:
+--   select public.sadrzi_nedozvoljeno('u 12. nedelji i na 20. pregledu je bilo dobro') as treba_false0,
 -- select public.sadrzi_nedozvoljeno('kako je bilo kod vas')        as treba_false,
 --        public.sadrzi_nedozvoljeno('koje bi bilo najbolje')       as treba_false2,
 --        public.sadrzi_nedozvoljeno('gde je bilo mesta')           as treba_false3,

@@ -272,3 +272,15 @@
     margin: 0;
   }
 }
+
+/* Ista oznaka kao u spisku tema; stilovi su po komponenti pa se ponavlja. */
+.community__zvanicna {
+  display: inline-block;
+  font-size: 11px;
+  padding: 1px 7px;
+  margin: 0 2px;
+  border-radius: 999px;
+  background: var(--color-primary-soft, rgba(233, 106, 130, .12));
+  color: var(--color-primary);
+  white-space: nowrap;
+}

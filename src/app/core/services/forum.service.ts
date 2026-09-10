@@ -27,6 +27,8 @@ export interface ForumTopicRow {
   uklonjeno_u: string | null;
   /** Da li je temu napisala prijavljena korisnica. */
   moja: boolean;
+  /** Temu je postavio sam sajt, kao pitanje zajednici. Potpisuje se „Dnevnik trudnoće". */
+  zvanicna?: boolean;
   forum_categories: { name: string } | null;
 }
 

@@ -502,3 +502,41 @@ a.calpage__week-apt {
 
   &:hover strong { text-decoration: underline; }
 }
+
+/* Tip događaja — dugmad umesto padajuće liste, jedan dodir. */
+.calpage__vrste {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.calpage__vrsta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 10px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  cursor: pointer;
+
+  &--aktivan {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+  }
+}
+
+.calpage__greska {
+  margin: 0 0 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  font-size: 14px;
+}

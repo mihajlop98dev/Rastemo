@@ -7,9 +7,6 @@
     </div>
   </header>
 
-  <ui-medical-notice
-    text="Opisi razvoja i navedeni datumi su prosečne vrednosti — svaka trudnoća je drugačija. Ovaj sadržaj je informativan i ne zamenjuje savet tvog ginekologa." />
-
   <div class="babydev__weeks">
     <button
       *ngFor="let w of weeks"
@@ -51,12 +48,20 @@
 
     <ui-card class="babydev__info-card" padding="lg">
       <h2>Razvoj u ovoj nedelji</h2>
-      <div class="babydev__point" *ngFor="let p of devPoints">
-        <span class="babydev__point-icon">
-          <lucide-icon [img]="p.icon" [size]="16"></lucide-icon>
-        </span>
-        <p>{{ p.text }}</p>
-      </div>
+      <ng-container *ngIf="vodic as v; else poTrimestru">
+        <p class="babydev__uvod">{{ v.uvod }}</p>
+        <div class="babydev__point"><span class="babydev__point-icon">👶</span><p><strong>Beba: </strong>{{ v.beba }}</p></div>
+        <div class="babydev__point"><span class="babydev__point-icon">💗</span><p><strong>Ti: </strong>{{ v.ti }}</p></div>
+        <div class="babydev__point"><span class="babydev__point-icon">💡</span><p><strong>Savet: </strong>{{ v.savet }}</p></div>
+      </ng-container>
+      <ng-template #poTrimestru>
+        <div class="babydev__point" *ngFor="let p of devPoints">
+          <span class="babydev__point-icon">
+            <lucide-icon [img]="p.icon" [size]="16"></lucide-icon>
+          </span>
+          <p>{{ p.text }}</p>
+        </div>
+      </ng-template>
 
       <div class="babydev__divider"></div>
 
@@ -128,4 +133,5 @@
       </div>
     </div>
   </ui-card>
+  <ui-medical-notice [tiho]="true" />
 </div>

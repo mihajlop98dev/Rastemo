@@ -1,4 +1,4 @@
-import { Component, inject, signal, output } from '@angular/core';
+import { Component, inject, input, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiButton } from '../ui/button/button';
 import { PushService } from '../../core/services/push.service';
@@ -23,6 +23,11 @@ import { PushService } from '../../core/services/push.service';
 export class PushPoziv {
   readonly push = inject(PushService);
   readonly zatvoreno = output<void>();
+  /**
+   * Povod za poziv: posle zakazanog pregleda ili sa početne (prvi koraci).
+   * Menja samo naslov i obrazloženje — dozvola je ista.
+   */
+  readonly povod = input<'pregled' | 'pocetna'>('pregled');
 
   readonly gotovo = signal(false);
   readonly odbijeno = signal(false);

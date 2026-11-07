@@ -1,3 +1,4 @@
+import { porukaGreske } from '../../../core/data/greske';
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 export class TopicDetail implements OnInit {
   readonly topic = signal<ForumTopicRow | null>(null);
   readonly loading = signal(true);
+  readonly greskaOdgovora = signal('');
   readonly sending = signal(false);
   private seo = inject(SeoService);
 
@@ -180,10 +182,13 @@ export class TopicDetail implements OnInit {
       this.traziKorisnicko.set(true);
       return;
     }
+    this.greskaOdgovora.set('');
     this.sending.set(true);
     try {
       await this.forumSvc.createPost(t.id, this.reply.trim(), this.replyAnonymous);
       this.reply = '';
+    } catch (e) {
+      this.greskaOdgovora.set(porukaGreske(e, 'Nije objavljeno. Ako si tek napravila nalog, otvori Početnu i prihvati pravila korišćenja, pa pokušaj ponovo.'));
     } finally {
       this.sending.set(false);
     }

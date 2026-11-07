@@ -94,6 +94,7 @@
         <ui-button variant="primary" size="sm" (click)="naPrijavu()">Prijavi se i odgovori</ui-button>
       </div>
 
+      <p class="topicdetail__greska" *ngIf="greskaOdgovora()" role="alert">{{ greskaOdgovora() }}</p>
       <form class="topicdetail__form" *ngIf="auth.user()" (ngSubmit)="submitReply()">
         <textarea [(ngModel)]="reply" name="reply" rows="3" placeholder="Napiši odgovor..."></textarea>
         <div class="topicdetail__form-actions">

@@ -164,3 +164,26 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ---------------------------------------------------------------
+   Telefon — čitljivost i dodir (nov. 2026)
+   Aplikaciju koriste i žene koje nisu vešte sa telefonom: tekst od
+   najmanje 16 px i dodiri od ~44 px. Polja za unos moraju imati 16 px,
+   inače iPhone sam zumira stranicu kad se dodirne polje.
+--------------------------------------------------------------- */
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select {
+    min-height: 46px;
+  }
+
+  .text-soft, .text-muted { line-height: 1.5; }
+}

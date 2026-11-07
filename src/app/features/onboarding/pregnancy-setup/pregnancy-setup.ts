@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { LOKAL } from '../../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,9 +7,10 @@ import { UiCard } from '../../../shared/ui/card/card';
 import { UiButton } from '../../../shared/ui/button/button';
 import { PregnancyService } from '../../../core/services/pregnancy.service';
 import { ProfileService } from '../../../core/services/profile.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { bmiCategoryFor, recommendedWeightRangeForWeek, BMI_CATEGORY_LABELS } from '../../../core/data/weight-guidance';
-
-type Mode = 'lmp' | 'due-date';
+import { GreskaDatuma, Procena, VrstaDatuma, proceni, proveriDatum, terminZa, uIso } from '../../../core/data/datum-trudnoce';
+import { porukaGreske } from '../../../core/data/greske';
 
 @Component({
   selector: 'app-pregnancy-setup',
@@ -32,8 +32,10 @@ export class PregnancySetup {
    */
   readonly step = signal<1 | 2>(1);
 
-  mode = signal<Mode>('lmp');
+  mode = signal<VrstaDatuma>('menstruacija');
   dateInput = '';
+  /** Najkasniji datum koji kalendar nudi za menstruaciju — danas. */
+  readonly danasIso = uIso(new Date());
 
   heightInput: number | null = null;
   prePregnancyWeightInput: number | null = null;
@@ -46,27 +48,32 @@ export class PregnancySetup {
   constructor(
     private pregnancyService: PregnancyService,
     private profileService: ProfileService,
+    private auth: AuthService,
     private router: Router,
   ) {}
 
-  get computedDueDate(): Date | null {
+  /** Greška za trenutno uneti datum — prikazuje se odmah, pre „Nastavi". */
+  get greskaDatuma(): GreskaDatuma | null {
     if (!this.dateInput) return null;
-    const base = new Date(this.dateInput);
-    if (this.mode() === 'due-date') return base;
-    const due = new Date(base);
-    due.setDate(due.getDate() + 280);
-    return due;
+    return proveriDatum(this.mode(), this.dateInput);
   }
 
-  get formattedDueDate(): string {
-    const d = this.computedDueDate;
-    if (!d) return '';
-    return d.toLocaleDateString(LOKAL, { day: 'numeric', month: 'long', year: 'numeric' });
+  /** Šta će aplikacija pokazati — vidi se pre čuvanja, da korisnica potvrdi. */
+  get procena(): Procena | null {
+    if (!this.dateInput || this.greskaDatuma) return null;
+    return proceni(terminZa(this.mode(), this.dateInput));
   }
 
-  setMode(m: Mode) {
+  setMode(m: VrstaDatuma) {
     this.mode.set(m);
     this.dateInput = '';
+    this.error.set('');
+  }
+
+  /** Budući datum upisan kao menstruacija skoro uvek je zapravo termin. */
+  tumaciKaoTermin() {
+    this.mode.set('termin');
+    this.error.set('');
   }
 
   /** Živa najava rezultata — pokazuje čemu ta dva polja zapravo služe. */
@@ -78,9 +85,9 @@ export class PregnancySetup {
   }
 
   async submit() {
-    const due = this.computedDueDate;
-    if (!due) {
-      this.error.set('Unesi datum da nastaviš.');
+    const greska = proveriDatum(this.mode(), this.dateInput);
+    if (greska) {
+      this.error.set(greska.poruka);
       return;
     }
 
@@ -89,12 +96,12 @@ export class PregnancySetup {
 
     try {
       await this.pregnancyService.create({
-        due_date: due.toISOString().slice(0, 10),
-        last_period_date: this.mode() === 'lmp' ? this.dateInput : undefined,
+        due_date: terminZa(this.mode(), this.dateInput),
+        last_period_date: this.mode() === 'menstruacija' ? this.dateInput : undefined,
       });
       this.step.set(2);
-    } catch (e: any) {
-      this.error.set(e?.message ?? 'Nešto nije u redu, pokušaj ponovo.');
+    } catch (e) {
+      this.error.set(porukaGreske(e));
     } finally {
       this.loading.set(false);
     }
@@ -122,6 +129,12 @@ export class PregnancySetup {
 
   skipDetails() {
     this.router.navigateByUrl('/home');
+  }
+
+  /** Ekran nema drugi izlaz — bez ovoga je ko nije trudna zaglavljena ovde. */
+  async odjaviSe() {
+    await this.auth.signOut();
+    this.router.navigateByUrl('/');
   }
 }
 

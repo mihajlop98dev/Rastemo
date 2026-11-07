@@ -56,7 +56,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 12.5px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--color-text-soft);
     }
@@ -102,9 +102,19 @@
   }
 
   &__error {
-    font-size: 12.5px;
+    font-size: 14px;
+    line-height: 1.45;
     color: var(--color-danger);
     background: var(--color-danger-light);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  &__uspeh {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #3F6646;
+    background: var(--color-sage-light);
     padding: 10px 14px;
     border-radius: var(--radius-md);
   }

@@ -1,6 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { mesecZaNedelju } from '../data/mesec-trudnoce';
+import { danaTrudnoce } from '../data/datum-trudnoce';
 import { AuthService } from './auth.service';
 
 export type BabyGender = 'musko' | 'zensko' | 'nepoznato';
@@ -50,7 +51,7 @@ export class PregnancyService {
 
   async create(dto: { due_date: string; last_period_date?: string; confirmed_date?: string; conception_method?: 'natural' | 'ivf' }) {
     const userId = this.auth.user()?.id;
-    if (!userId) throw new Error('Not authenticated');
+    if (!userId) throw new Error('Sesija je istekla. Prijavi se ponovo.');
 
     // Guard against ever ending up with two active pregnancies for the same user
     // (e.g. if this screen is reached twice) — the "active" query elsewhere assumes
@@ -82,7 +83,7 @@ export class PregnancyService {
     birth_facility_id?: string | null;
   }) {
     const current = this.active();
-    if (!current) throw new Error('No active pregnancy');
+    if (!current) throw new Error('Trudnoća nije podešena.');
 
     const { data, error } = await this.supabase.client
       .from('pregnancies')
@@ -99,10 +100,7 @@ export class PregnancyService {
   readonly gestationDays = computed(() => {
     const p = this.active();
     if (!p) return 0;
-    const due = new Date(p.due_date);
-    const today = new Date();
-    const remainingDays = Math.round((due.getTime() - today.getTime()) / 86_400_000);
-    return Math.min(Math.max(TOTAL_GESTATION_DAYS - remainingDays, 0), TOTAL_GESTATION_DAYS);
+    return Math.min(Math.max(danaTrudnoce(p.due_date), 0), TOTAL_GESTATION_DAYS);
   });
 
   readonly weekNumber = computed(() => Math.floor(this.gestationDays() / 7));

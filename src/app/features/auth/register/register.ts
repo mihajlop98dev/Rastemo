@@ -1,3 +1,4 @@
+import { porukaGreske } from '../../../core/data/greske';
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -74,8 +75,20 @@ export class Register {
       this.error.set('Popuni sva polja.');
       return;
     }
+    const ime = this.username.trim();
+    if (ime.length < 3) {
+      this.error.set('Korisničko ime mora da ima bar 3 slova ili broja.');
+      return;
+    }
+    // Provera dostupnosti kasni 400 ms za kucanjem — ako korisnica klikne
+    // pre toga, proveravamo ovde, da baza ne odbije nalog generičkom greškom.
+    if (this.stanjeImena() !== 'slobodno') {
+      clearTimeout(this.tajmerProvere);
+      const slobodno = await this.auth.korisnickoImeSlobodno(ime);
+      this.stanjeImena.set(slobodno ? 'slobodno' : 'zauzeto');
+    }
     if (this.stanjeImena() === 'zauzeto') {
-      this.error.set('To korisničko ime je zauzeto ili nije dozvoljeno.');
+      this.error.set('To korisničko ime ne može — zauzeto je ili ima nedozvoljene znakove. Probaj drugo, npr. ' + predlogImena(this.fullName) + '.');
       return;
     }
     if (this.password.length < 6) {
@@ -94,11 +107,7 @@ export class Register {
     this.loading.set(false);
 
     if (error) {
-      this.error.set(
-        error.message.toLowerCase().includes('already registered')
-          ? 'Nalog sa ovom adresom već postoji. Prijavi se ili zatraži novu lozinku.'
-          : error.message
-      );
+      this.error.set(porukaGreske(error));
       return;
     }
 
@@ -124,6 +133,14 @@ export class Register {
     const { error } = await this.auth.signInWithGoogle(
       this.route.snapshot.queryParamMap.get('nazad'),
     );
-    if (error) this.error.set(error.message);
+    if (error) this.error.set(porukaGreske(error));
   }
+}
+
+/** Predlog za korisničko ime kad je izabrano zauzeto: ime + dve cifre. */
+function predlogImena(punoIme: string): string {
+  const osnova = (punoIme.trim().split(' ')[0] || 'mama').toLowerCase()
+    .replace(/[čć]/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z').replace(/đ/g, 'dj')
+    .replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'mama';
+  return osnova + String(Math.floor(10 + Math.random() * 89));
 }

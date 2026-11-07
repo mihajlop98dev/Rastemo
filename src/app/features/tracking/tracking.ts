@@ -75,6 +75,8 @@ export class Tracking implements OnInit, OnDestroy {
 
   readonly levels = [1, 2, 3] as const;
   readonly moodLevels = [1, 2, 3, 4, 5] as const;
+  /** Natpis ispod smajlija — bez njega nije jasno šta koji znači. */
+  readonly MOOD_TEKST: Record<number, string> = { 1: 'Loše', 2: 'Slabo', 3: 'Onako', 4: 'Dobro', 5: 'Super' };
   readonly MOOD_EMOJI = MOOD_EMOJI;
 
   readonly todayLabel = new Date().toLocaleDateString(LOKAL, { day: 'numeric', month: 'long' });

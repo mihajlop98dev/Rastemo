@@ -2,16 +2,13 @@
 
   <header class="tracking__header">
     <div>
-      <h1>Praćenje trudnoće</h1>
-      <p class="text-soft">Prati kako se osećaš svakog dana.</p>
+      <h1>Moj dnevnik</h1>
+      <p class="text-soft">Kako se osećaš, simptomi, težina i beleške — sve na jednom mestu.</p>
     </div>
     <ui-avatar [name]="profileSvc.profile()?.full_name ?? ''" size="md" />
   </header>
 
   <ui-tabs [tabs]="tabs" [active]="activeTab" (activeChange)="activeTab = $event"></ui-tabs>
-
-  <ui-medical-notice
-    text="Unosi i preporučeni rasponi ovde su orijentacioni i ne zamenjuju pregled kod lekara. Kod krvarenja, jakog bola, curenja plodove vode ili izostanka pokreta bebe odmah pozovi 194." />
 
   <div class="tracking__grid" *ngIf="activeTab === 'simptomi'">
 
@@ -21,14 +18,17 @@
       </div>
 
       <p class="tracking__uputstvo">
-        Dodirni koliko ti je nešto smetalo danas — čuva se odmah, ne treba ništa da potvrđuješ.
-        Ponovni dodir na isti smajli briše unos.
+        Dodirni koliko ti je nešto smetalo danas. Čuva se odmah.
+        Ako pogrešiš, dodirni isto dugme još jednom i unos se briše.
       </p>
 
       <div class="tracking__symptom" *ngFor="let s of symptomCatalog">
         <div class="tracking__symptom-name">
           <span class="tracking__symptom-emoji">{{ s.emoji }}</span>
-          {{ s.name }}
+          <span class="tracking__symptom-naziv">
+            {{ s.name }}
+            <span class="tracking__sacuvano" *ngIf="sacuvanSimptom() === s.name">✓ Sačuvano</span>
+          </span>
           <button
             *ngIf="s.customId"
             type="button"
@@ -46,11 +46,11 @@
             [class.tracking__level--active]="lvl === levelFor(s.name)"
             [class.tracking__level--l1]="lvl === 1"
             [class.tracking__level--l2]="lvl === 2"
-            [class.tracking__level--l3]="lvl === 3">
-            {{ lvl === 1 ? '🙂' : lvl === 2 ? '😐' : '😣' }}
+            [class.tracking__level--l3]="lvl === 3"
+            [attr.aria-pressed]="lvl === levelFor(s.name)">
+            <span class="tracking__level-emoji" aria-hidden="true">{{ lvl === 1 ? '🙂' : lvl === 2 ? '😐' : '😣' }}</span>
+            {{ lvl === 1 ? 'Blago' : lvl === 2 ? 'Srednje' : 'Jako' }}
           </button>
-
-          <span class="tracking__sacuvano" *ngIf="sacuvanSimptom() === s.name">✓ Sačuvano</span>
         </div>
       </div>
 
@@ -129,8 +129,10 @@
           *ngFor="let lvl of moodLevels"
           class="tracking__mood-btn"
           [class.tracking__mood-btn--active]="lvl === moodSvc.today()?.mood"
+          [attr.aria-pressed]="lvl === moodSvc.today()?.mood"
           (click)="setMood(lvl)">
-          {{ MOOD_EMOJI[lvl] }}
+          <span class="tracking__mood-emoji" aria-hidden="true">{{ MOOD_EMOJI[lvl] }}</span>
+          <span class="tracking__mood-tekst">{{ MOOD_TEKST[lvl] }}</span>
         </button>
       </div>
 
@@ -441,4 +443,5 @@
       </ui-card>
     </div>
   </div>
+  <ui-medical-notice [tiho]="true" />
 </div>

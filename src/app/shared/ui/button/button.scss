@@ -19,6 +19,11 @@
 
   &--full { width: 100%; }
 
+  @media (max-width: 720px) {
+    &--sm { height: 40px; font-size: 14px; }
+    &--md { height: 48px; font-size: 15.5px; }
+  }
+
   &--primary {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: var(--color-text-on-primary);

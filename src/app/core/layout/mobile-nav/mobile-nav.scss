@@ -22,23 +22,21 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
-    color: var(--color-text-muted);
-    font-size: 10.5px;
+    color: var(--color-text-soft);
+    font-size: 12px;
     font-weight: 600;
 
     &--active { color: var(--color-primary-dark); }
   }
 }
 
-/* Sa šest stavki umesto pet nema mesta za razmak koji je traka imala ranije. */
+/* Natpisi su kratki (Početna, Beba, Dnevnik, Pregledi, Profil), pa 12 px
+   staje i na 360 px — sitniji tekst je bio teško čitljiv. */
 @media (max-width: 400px) {
   .mobile-nav {
     padding-left: 0;
     padding-right: 0;
 
-    &__link {
-      font-size: 9.5px;
-      gap: 2px;
-    }
+    &__link { gap: 2px; }
   }
 }

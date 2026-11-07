@@ -23,6 +23,14 @@
 
       <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
 
+      <ui-button *ngIf="nepotvrdjen() && !poslato()" variant="outline" size="md" [fullWidth]="true"
+                 [disabled]="saljem()" (click)="posaljiPonovo()">
+        {{ saljem() ? 'Šaljem...' : 'Pošalji mi link ponovo' }}
+      </ui-button>
+      <p class="authpage__uspeh" *ngIf="poslato()" role="status">
+        Poslali smo novi link na {{ email }}. Otvori ga pa se prijavi.
+      </p>
+
       <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading()">
         {{ loading() ? 'Prijavljivanje...' : 'Prijavi se' }}
       </ui-button>

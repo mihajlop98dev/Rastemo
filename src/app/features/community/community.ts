@@ -1,3 +1,4 @@
+import { porukaGreske } from '../../core/data/greske';
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -154,8 +155,11 @@ export class Community implements OnInit {
     this.showCreate.set(false);
   }
 
+  readonly greskaObjave = signal('');
+
   async submitCreate() {
     if (!this.newTitle || !this.newBody || !this.newCategoryId) return;
+    this.greskaObjave.set('');
     this.saving.set(true);
     try {
       await this.forumSvc.createTopic({
@@ -165,6 +169,8 @@ export class Community implements OnInit {
         is_anonymous: this.newAnonymous,
       });
       this.showCreate.set(false);
+    } catch (e) {
+      this.greskaObjave.set(porukaGreske(e, 'Nije objavljeno. Ako si tek napravila nalog, otvori Početnu i prihvati pravila korišćenja, pa pokušaj ponovo.'));
     } finally {
       this.saving.set(false);
     }

@@ -1,158 +1,141 @@
 <div class="home">
 
-  <header class="home__header">
-    <h1>{{ greeting }} 👋</h1>
-    <p class="home__header-week">{{ weekNumber }}. nedelja + {{ weekDay }} dana</p>
-    <p class="home__header-month text-soft">{{ mesec }}. mesec trudnoće</p>
-    <p class="home__header-due text-soft">Termin porođaja: {{ dueDateLabel }}</p>
-  </header>
+  <!-- 1. Gde si sada — najveća stvar na ekranu -->
+  <section class="home__hero">
+    <p class="home__pozdrav">{{ pozdrav }}{{ babyName ? ' i ' + babyName : '' }} 👋</p>
+    <h1 class="home__nedelja">{{ weekNumber }}. nedelja</h1>
+    <p class="home__nedelja-sub">
+      <ng-container *ngIf="weekDay">i {{ danaTekst(weekDay) }} · </ng-container>{{ mesec }}. mesec trudnoće
+    </p>
 
-  <div class="home__row home__row--top">
+    <button type="button" class="home__beba" (click)="openViewer()" aria-label="Pogledaj bebu kroz nedelje">
+      <app-baby-visual [week]="weekNumber" size="lg" />
+    </button>
 
-    <ui-card class="home__baby-card" padding="lg">
-      <div class="home__baby-card-head">
-        <h2>Tvoja beba ove nedelje</h2>
-        <span class="home__baby-card-approx text-muted">Približno veličine {{ babyComparison }}</span>
-      </div>
+    <p class="home__velicina">Beba je sada veličine <strong>{{ babyComparison }}</strong></p>
+    <p class="home__mere">{{ babyLength }} cm · {{ babyWeight }} g</p>
+    <button type="button" class="home__beba-link" (click)="openViewer()">Pogledaj kako raste nedelju po nedelju →</button>
 
-      <div class="home__baby-card-body">
-        <button type="button" class="home__baby-visual-btn" (click)="openViewer()" aria-label="Otvori prikaz bebe kroz nedelje">
-          <app-baby-visual [week]="weekNumber" size="lg" />
-        </button>
+    <div class="home__napredak">
+      <ui-progress-bar [value]="weekProgress()" tone="primary" />
+      <p>Još <strong>{{ danaTekst(doTermina()) }}</strong> do termina · {{ dueDateLabel }}</p>
+    </div>
+  </section>
 
-        <div class="home__baby-stats">
-          <div class="home__baby-stat">
-            <strong>{{ babyLength }} cm</strong>
-            <span>{{ babyLengthLabel }}</span>
-          </div>
-          <div class="home__baby-stat">
-            <strong>{{ babyWeight }} g</strong>
-            <span>težina</span>
-          </div>
-        </div>
-      </div>
+  <!-- 2. Prvi koraci — samo dok nisu završeni -->
+  <ui-card *ngIf="prikaziKorake" class="home__koraci" padding="lg">
+    <div class="home__koraci-glava">
+      <h2>Prvi koraci</h2>
+      <span class="home__koraci-broj">{{ brojGotovih }} od {{ koraci.length }}</span>
+    </div>
+    <p class="home__koraci-uvod">Tri male stvari da ti Dnevnik bude od koristi od prvog dana.</p>
 
-      <div class="home__baby-slider">
-        <span class="text-muted">{{ weekNumber }}. nedelja</span>
-        <ui-progress-bar [value]="weekProgress()" [marker]="weekProgress()" tone="primary" />
-        <span class="text-muted">{{ totalWeeks }}. nedelja</span>
-      </div>
-    </ui-card>
+    <button type="button" class="home__korak" *ngFor="let k of koraci; let i = index"
+            [class.home__korak--gotov]="k.gotovo" [disabled]="k.gotovo" (click)="pokreniKorak(k.id)">
+      <span class="home__korak-krug">
+        <lucide-icon *ngIf="k.gotovo" [img]="CheckIcon" [size]="16"></lucide-icon>
+        <ng-container *ngIf="!k.gotovo">{{ i + 1 }}</ng-container>
+      </span>
+      <span class="home__korak-tekst">
+        <strong>{{ k.naslov }}</strong>
+        <span>{{ k.opis }}</span>
+      </span>
+      <lucide-icon *ngIf="!k.gotovo" [img]="ChevronIcon" [size]="18" class="home__korak-strelica"></lucide-icon>
+    </button>
 
-    <ui-card class="home__week-card" padding="lg">
-      <h2>Ove nedelje</h2>
-      <div class="home__highlight" *ngFor="let h of highlights">
-        <span class="home__highlight-icon">
-          <lucide-icon [img]="highlightIcons[h.icon]" [size]="16"></lucide-icon>
+    <app-push-poziv *ngIf="prikaziPush()" povod="pocetna" (zatvoreno)="zatvoriPush()" />
+
+    <button type="button" class="home__koraci-sakrij" (click)="sakrijKorake()">Sakrij ovo</button>
+  </ui-card>
+
+  <!-- 3. Danas — menja se svaki dan -->
+  <ui-card class="home__danas" padding="lg">
+    <div class="home__danas-glava">
+      <span class="home__oznaka" [ngClass]="'home__oznaka--' + danas().vrsta">{{ naslovDanas() }}</span>
+      <span class="home__danas-dan">{{ danTrudnoce() }}. dan trudnoće</span>
+    </div>
+    <p class="home__danas-tekst">{{ danas().tekst }}</p>
+    <ui-button *ngIf="danas().akcija as a" [routerLink]="a.link" [queryParams]="a.query ?? null"
+               variant="primary" size="md" [fullWidth]="true">{{ a.label }}</ui-button>
+  </ui-card>
+
+  <!-- 4. Ove nedelje — tekst za tačno ovu nedelju -->
+  <ui-card class="home__vodic" padding="lg" *ngIf="vodic() as v">
+    <h2>Ove nedelje</h2>
+    <p class="home__vodic-uvod">{{ v.uvod }}</p>
+    <div class="home__vodic-deo">
+      <span class="home__vodic-ikona">👶</span>
+      <div><strong>Beba</strong><p>{{ v.beba }}</p></div>
+    </div>
+    <div class="home__vodic-deo">
+      <span class="home__vodic-ikona">💗</span>
+      <div><strong>Ti</strong><p>{{ v.ti }}</p></div>
+    </div>
+    <div class="home__vodic-deo home__vodic-deo--savet">
+      <span class="home__vodic-ikona">💡</span>
+      <div><strong>Savet nedelje</strong><p>{{ v.savet }}</p></div>
+    </div>
+    <ui-button routerLink="/baby-development" variant="outline" size="md" [fullWidth]="true">Više o razvoju bebe</ui-button>
+  </ui-card>
+
+  <!-- 5. Šta sledi — razlog da se vrati -->
+  <ui-card class="home__prekretnica" padding="lg" *ngIf="prekretnica() as pk">
+    <span class="home__prekretnica-ikona"><lucide-icon [img]="FlagIcon" [size]="18"></lucide-icon></span>
+    <div>
+      <span class="home__prekretnica-za">Za {{ danaTekst(pk.zaDana) }}</span>
+      <strong>{{ pk.naslov }}</strong>
+      <p>{{ pk.tekst }}</p>
+    </div>
+  </ui-card>
+
+  <!-- 6. Sledeći pregled -->
+  <ui-card class="home__pregled" padding="lg">
+    <h2>Sledeći pregled</h2>
+    <ng-container *ngIf="nextAppointment as apt; else bezPregleda">
+      <a class="home__pregled-red" [routerLink]="['/appointment', apt.id]">
+        <span class="home__pregled-datum">
+          <strong>{{ formatDay(apt.scheduled_at) }}</strong>
+          <span>{{ formatMonth(apt.scheduled_at) }}</span>
         </span>
-        <div>
-          <strong>{{ h.title }}</strong>
-          <p class="text-soft">{{ h.text }}</p>
-        </div>
-      </div>
-      <ui-button routerLink="/baby-development" variant="outline" size="sm" [fullWidth]="true">Pročitaj više o ovoj nedelji</ui-button>
-    </ui-card>
-
-    <ui-card class="home__appointment-card" padding="lg">
-      <h2>Sledeći pregled</h2>
-
-      <ng-container *ngIf="nextAppointment as apt; else noAppointment">
-        <div class="home__appointment-date">
-          <div class="home__appointment-day">
-            <strong>{{ formatDay(apt.scheduled_at) }}</strong>
-            <span>{{ formatMonth(apt.scheduled_at) }}</span>
-          </div>
-          <div class="home__appointment-info">
-            <strong>{{ apt.title }}</strong>
-            <span class="text-soft">{{ apt.subtitle }}</span>
-          </div>
-        </div>
-        <div class="home__appointment-meta text-soft">
-          <span>🕐 {{ formatTime(apt.scheduled_at) }}</span>
-          <span *ngIf="apt.clinics as clinic">📍 {{ clinic.name }}</span>
-        </div>
-        <div class="home__appointment-actions">
-          <ui-button [routerLink]="['/appointment', apt.id]" variant="outline" size="sm" [fullWidth]="true">Vidi detalje</ui-button>
-          <ui-button routerLink="/calendar" variant="secondary" size="sm" [fullWidth]="true">Kalendar</ui-button>
-        </div>
-      </ng-container>
-
-      <ng-template #noAppointment>
-        <p class="text-soft home__appointment-empty">Nemaš zakazan sledeći pregled.</p>
-        <ui-button routerLink="/calendar" variant="outline" size="sm" [fullWidth]="true">Zakaži pregled</ui-button>
-      </ng-template>
-    </ui-card>
-
-  </div>
-
-  <div class="home__row home__row--bottom">
-
-    <ui-card class="home__quick-card" padding="lg">
-      <h2>Brzi unos</h2>
-      <div class="home__quick-actions">
-        <button class="home__quick-action" *ngFor="let action of quickActions" (click)="runQuickAction(action)">
-          <span class="home__quick-action-icon" [ngClass]="'home__quick-action-icon--' + action.tone">
-            <lucide-icon [img]="action.icon" [size]="19"></lucide-icon>
-          </span>
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
-    </ui-card>
-
-    <ui-card class="home__reminder-card" padding="lg">
-      <ui-badge tone="peach">Dnevni podsetnik</ui-badge>
-      <p class="home__reminder-text">Popij čašu vode i zabeleži kako se osećaš danas.</p>
-      <ui-button variant="primary" size="sm" (click)="logMoodNow()">Zabeleži sada</ui-button>
-    </ui-card>
-
-    <ui-card class="home__progress-card" padding="lg">
-      <h2>Tvoja trudnoća</h2>
-      <div class="home__progress-ring">
-        <svg viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="42" class="home__progress-track" />
-          <circle cx="50" cy="50" r="42" class="home__progress-fill"
-                  [style.stroke-dasharray]="264"
-                  [style.stroke-dashoffset]="264 - (264 * weekProgress() / 100)" />
-        </svg>
-        <div class="home__progress-ring-label">
-          <strong>{{ weekProgress() }}%</strong>
-          <span>od {{ totalWeeks }}</span>
-        </div>
-      </div>
-      <a routerLink="/tracking" class="home__progress-link">
-        Pogledaj ceo pregled
-        <lucide-icon [img]="ChevronIcon" [size]="15"></lucide-icon>
+        <span class="home__pregled-info">
+          <strong>{{ apt.title }}</strong>
+          <span>🕐 {{ formatTime(apt.scheduled_at) }}<ng-container *ngIf="apt.clinics as clinic"> · {{ clinic.name }}</ng-container></span>
+        </span>
+        <lucide-icon [img]="ChevronIcon" [size]="18"></lucide-icon>
       </a>
-    </ui-card>
+      <ui-button routerLink="/calendar" variant="ghost" size="sm" [fullWidth]="true">Svi pregledi</ui-button>
+    </ng-container>
+    <ng-template #bezPregleda>
+      <p class="home__prazno">Nemaš upisan sledeći pregled.</p>
+      <ui-button routerLink="/calendar" [queryParams]="{ new: 1 }" variant="outline" size="md" [fullWidth]="true">Upiši pregled</ui-button>
+    </ng-template>
+  </ui-card>
 
-  </div>
+  <!-- 7. Brzi unos -->
+  <ui-card class="home__brzi" padding="lg">
+    <h2>Zabeleži</h2>
+    <div class="home__brzi-dugmad">
+      <button type="button" class="home__brzi-dugme" *ngFor="let action of quickActions" (click)="runQuickAction(action)">
+        <span class="home__brzi-ikona" [ngClass]="'home__brzi-ikona--' + action.tone">
+          <lucide-icon [img]="action.icon" [size]="20"></lucide-icon>
+        </span>
+        <span>{{ action.label }}</span>
+      </button>
+    </div>
+  </ui-card>
 
-  <!-- Na telefonu je donji meni pun, pa je ovo jedini ulaz u Pripremu. -->
-  <a routerLink="/preparation" class="home__zabava">
-    <span class="home__zabava-ikona">
-      <lucide-icon [img]="PripremaIcon" [size]="20"></lucide-icon>
-    </span>
-    <span class="home__zabava-tekst">
-      <strong>Priprema</strong>
-      <span class="text-soft">Torba za porodilište, kupovina za bebu, plan porođaja.</span>
-    </span>
-    <lucide-icon [img]="ChevronIcon" [size]="16" class="home__zabava-strelica"></lucide-icon>
-  </a>
-
-  <!-- Na telefonu je donji meni pun, pa je ovo jedini ulaz u javne alatke. -->
-  <a routerLink="/zabava" class="home__zabava">
-    <span class="home__zabava-ikona">
-      <lucide-icon [img]="ZabavaIcon" [size]="20"></lucide-icon>
-    </span>
-    <span class="home__zabava-tekst">
-      <strong>Zabava</strong>
-      <span class="text-soft">Značenje imena, anketa za ime, odbrojavanje, horoskop bebe.</span>
-    </span>
-    <lucide-icon [img]="ChevronIcon" [size]="16" class="home__zabava-strelica"></lucide-icon>
-  </a>
+  <!-- 8. Ostalo u aplikaciji — na telefonu nisu u donjem meniju -->
+  <section class="home__jos">
+    <h2>Još u aplikaciji</h2>
+    <a *ngFor="let j of jos" [routerLink]="j.link" class="home__jos-red">
+      <span class="home__jos-ikona"><lucide-icon [img]="j.icon" [size]="19"></lucide-icon></span>
+      <span class="home__jos-tekst"><strong>{{ j.label }}</strong><span>{{ j.opis }}</span></span>
+      <lucide-icon [img]="ChevronIcon" [size]="17" class="home__jos-strelica"></lucide-icon>
+    </a>
+  </section>
 
   <div class="home__viewer" *ngIf="viewerOpen()">
-    <button type="button" class="home__viewer-close" (click)="closeViewer()">
+    <button type="button" class="home__viewer-close" (click)="closeViewer()" aria-label="Zatvori">
       <lucide-icon [img]="XIcon" [size]="20"></lucide-icon>
     </button>
 
@@ -163,13 +146,13 @@
       <span>Približno veličine {{ viewerComparison }}</span>
     </div>
 
-    <button type="button" class="home__viewer-arrow home__viewer-arrow--left" (click)="prevViewerWeek()" [disabled]="viewerWeek() <= VIEWER_MIN_WEEK">
+    <button type="button" class="home__viewer-arrow home__viewer-arrow--left" (click)="prevViewerWeek()" [disabled]="viewerWeek() <= VIEWER_MIN_WEEK" aria-label="Prethodna nedelja">
       <lucide-icon [img]="ChevronLeftIcon" [size]="22"></lucide-icon>
     </button>
-    <button type="button" class="home__viewer-arrow home__viewer-arrow--right" (click)="nextViewerWeek()" [disabled]="viewerWeek() >= VIEWER_MAX_WEEK">
+    <button type="button" class="home__viewer-arrow home__viewer-arrow--right" (click)="nextViewerWeek()" [disabled]="viewerWeek() >= VIEWER_MAX_WEEK" aria-label="Sledeća nedelja">
       <lucide-icon [img]="ChevronIcon" [size]="22"></lucide-icon>
     </button>
 
-    <div class="home__viewer-week">{{ viewerWeek() }} nedelja</div>
+    <div class="home__viewer-week">{{ viewerWeek() }}. nedelja</div>
   </div>
 </div>

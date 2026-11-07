@@ -8,6 +8,7 @@ import { BabyVisual } from '../../shared/illustrations/baby-visual/baby-visual';
 import { PregnancyService } from '../../core/services/pregnancy.service';
 import { babyComparisonForWeek, babyLengthForWeek, babyWeightForWeek, babyLengthLabelForWeek, devPointsForWeek } from '../../core/data/baby-growth';
 import { PREGNANCY_MILESTONES, milestoneStatus, MilestoneStatus } from '../../core/data/milestones';
+import { vodicZaNedelju } from '../../core/data/vodic-nedelje';
 import { NUTRITION_GUIDE } from '../../core/data/nutrition-guide';
 import { mesecZaNedelju, opsegMeseca } from '../../core/data/mesec-trudnoce';
 import { PitanjaLekarService } from '../../core/services/pitanja-lekar.service';
@@ -49,6 +50,11 @@ export class BabyDevelopment {
   /** Lista ide od 4. do 42. nedelje; van toga se hvatamo za najbliži kraj. */
   private uOpsegu(w: number): number {
     return Math.min(Math.max(w, this.weeks[0]), this.weeks[this.weeks.length - 1]);
+  }
+
+  /** Tekst baš za izabranu nedelju — ranije je bio isti za ceo trimestar. */
+  get vodic() {
+    return vodicZaNedelju(this.selectedWeek());
   }
 
   get devPoints() {

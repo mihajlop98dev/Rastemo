@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { porukaGreske } from '../../core/data/greske';
 import { LOKAL } from '../../core/data/lokalizacija';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -61,6 +62,20 @@ export class CalendarPage implements OnInit {
   readonly creating = signal(false);
   newTitle = '';
   newType: AppointmentRow['appointment_type'] = 'pregled';
+
+  /** Tip se bira jednim dodirom; naziv se popunjava sam ako ostane prazan. */
+  readonly tipovi: Array<{ id: AppointmentRow['appointment_type']; label: string; naziv: string }> = [
+    { id: 'pregled', label: 'Pregled', naziv: 'Pregled kod ginekologa' },
+    { id: 'ultrazvuk', label: 'Ultrazvuk', naziv: 'Ultrazvuk' },
+    { id: 'analize', label: 'Analize', naziv: 'Analize' },
+    { id: 'ostalo', label: 'Nešto drugo', naziv: 'Podsetnik' },
+  ];
+
+  get podrazumevaniNaziv(): string {
+    return this.tipovi.find(t => t.id === this.newType)?.naziv ?? 'Pregled';
+  }
+
+  readonly greskaCuvanja = signal('');
   newDate = '';
   newTime = '10:00';
   newClinicId: string | null = null;
@@ -296,9 +311,11 @@ export class CalendarPage implements OnInit {
 
   async submitCreate() {
     const p = this.pregnancy.active();
-    if (!p || !this.newTitle || !this.newDate) return;
+    if (!p || !this.newDate) return;
+    if (!this.newTitle.trim()) this.newTitle = this.podrazumevaniNaziv;
 
     this.creating.set(true);
+    this.greskaCuvanja.set('');
     try {
       const scheduledAt = new Date(`${this.newDate}T${this.newTime}:00`).toISOString();
       const id = this.uIzmeni();
@@ -330,6 +347,8 @@ export class CalendarPage implements OnInit {
       // Traži se jednom: ko odbije, na iPhone-u se dozvola posle menja samo
       // kroz podešavanja telefona, pa ponovno zapitkivanje ništa ne rešava.
       if (!id) await this.mozdaPonudiPodsetnik();
+    } catch (e) {
+      this.greskaCuvanja.set(porukaGreske(e, 'Pregled nije sačuvan. Proveri internet i pokušaj ponovo.'));
     } finally {
       this.creating.set(false);
     }

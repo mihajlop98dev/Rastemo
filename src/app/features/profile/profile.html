@@ -175,14 +175,25 @@
       </div>
 
       <form class="profile__edit-fields" *ngIf="editingPregnancy()">
+        <div class="profile__datum-izbor">
+          <span>Datum od kog se računa trudnoća</span>
+          <div class="profile__datum-dugmad" role="radiogroup">
+            <button type="button" role="radio" [attr.aria-checked]="editVrsta === 'termin'"
+                    [class.profile__datum-dugme--aktivno]="editVrsta === 'termin'" class="profile__datum-dugme"
+                    (click)="promeniVrstuDatuma('termin')">Termin porođaja</button>
+            <button type="button" role="radio" [attr.aria-checked]="editVrsta === 'menstruacija'"
+                    [class.profile__datum-dugme--aktivno]="editVrsta === 'menstruacija'" class="profile__datum-dugme"
+                    (click)="promeniVrstuDatuma('menstruacija')">Poslednja menstruacija</button>
+          </div>
+        </div>
         <label>
-          <span>Očekivani termin</span>
-          <input type="date" [(ngModel)]="editDueDate" name="editDueDate" />
+          <span>{{ editVrsta === 'termin' ? 'Termin porođaja' : 'Prvi dan poslednje menstruacije' }}</span>
+          <input type="date" [(ngModel)]="editDatum" name="editDatum" (ngModelChange)="greskaTrudnoce.set('')" />
         </label>
-        <label>
-          <span>Poslednja menstruacija</span>
-          <input type="date" [(ngModel)]="editLastPeriod" name="editLastPeriod" />
-        </label>
+        <p class="profile__datum-upozorenje" *ngIf="greskaEditDatuma as g" role="alert">{{ g.poruka }}</p>
+        <p class="profile__datum-procena" *ngIf="procenaEdit as pr">
+          Biće: <strong>{{ pr.nedelja }}. nedelja</strong> · termin <strong>{{ pr.terminTekst }}</strong>
+        </p>
         <label>
           <span>Način začeća</span>
           <select [(ngModel)]="editConceptionMethod" name="editConceptionMethod">
@@ -213,9 +224,10 @@
         </label>
       </form>
 
+      <p class="profile__datum-upozorenje" *ngIf="greskaTrudnoce()" role="alert">{{ greskaTrudnoce() }}</p>
       <div class="profile__edit-actions" *ngIf="editingPregnancy()" style="margin-top: var(--space-4)">
         <ui-button variant="secondary" size="sm" (click)="cancelEditPregnancy()">Otkaži</ui-button>
-        <ui-button variant="primary" size="sm" [disabled]="savingPregnancy() || !editDueDate" (click)="savePregnancy()">
+        <ui-button variant="primary" size="sm" [disabled]="savingPregnancy() || !editDatum || !!greskaEditDatuma" (click)="savePregnancy()">
           {{ savingPregnancy() ? 'Čuvanje...' : 'Sačuvaj' }}
         </ui-button>
       </div>
@@ -241,6 +253,18 @@
       </div>
 
       <p class="text-soft" *ngIf="!notifications.items().length">Nemaš notifikacija.</p>
+
+      <div class="profile__push">
+        <h3>Mejl</h3>
+        <label class="profile__toggle">
+          <input type="checkbox" [checked]="vrstaUkljucena('mejl_nedeljno')"
+                 (change)="promeniVrstuPusha('mejl_nedeljno', $any($event.target).checked)" />
+          <span>
+            <strong>Nedeljni mejl</strong>
+            <small class="text-soft">Kad počne nova nedelja: šta je novo kod bebe i savet nedelje.</small>
+          </span>
+        </label>
+      </div>
 
       <div class="profile__push">
         <h3>Notifikacije na telefonu</h3>

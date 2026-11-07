@@ -104,6 +104,7 @@
         <span>Objavi anonimno</span>
       </label>
 
+      <p class="community__greska" *ngIf="greskaObjave()" role="alert">{{ greskaObjave() }}</p>
       <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="saving() || !newTitle || !newBody" (click)="submitCreate()">
         {{ saving() ? 'Objavljivanje...' : 'Objavi temu' }}
       </ui-button>

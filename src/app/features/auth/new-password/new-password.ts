@@ -1,3 +1,4 @@
+import { porukaGreske } from '../../../core/data/greske';
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -57,7 +58,7 @@ export class NewPassword implements OnInit {
       this.error.set(
         error.message.toLowerCase().includes('should be different')
           ? 'Nova lozinka mora da se razlikuje od stare.'
-          : error.message
+          : porukaGreske(error)
       );
       return;
     }

@@ -6,40 +6,66 @@
 
   <ui-card padding="lg" class="authpage__card">
 
-    <div class="pregsetup__steps">
+    <div class="pregsetup__steps" aria-hidden="true">
       <i class="pregsetup__step pregsetup__step--active"></i>
       <i class="pregsetup__step" [class.pregsetup__step--active]="step() === 2"></i>
     </div>
 
     <ng-container *ngIf="step() === 1">
       <h1>Krenimo zajedno</h1>
-      <p class="text-soft">Treba nam samo jedan datum — odatle pratimo svaku tvoju nedelju, do termina.</p>
+      <p class="text-soft">Treba nam samo jedan datum — odatle računamo u kojoj si nedelji i šta se dešava sa bebom.</p>
 
-      <div class="pregsetup__toggle">
-        <button [class.pregsetup__toggle-btn--active]="mode() === 'lmp'" class="pregsetup__toggle-btn" (click)="setMode('lmp')">
-          Znam datum poslednje menstruacije
+      <p class="pregsetup__pitanje">Šta znaš?</p>
+      <div class="pregsetup__toggle" role="radiogroup">
+        <button type="button" role="radio" [attr.aria-checked]="mode() === 'menstruacija'"
+                [class.pregsetup__toggle-btn--active]="mode() === 'menstruacija'" class="pregsetup__toggle-btn"
+                (click)="setMode('menstruacija')">
+          <span class="pregsetup__toggle-krug"></span>
+          <span>
+            <strong>Datum poslednje menstruacije</strong>
+            <small>Prvi dan poslednje menstruacije pre trudnoće</small>
+          </span>
         </button>
-        <button [class.pregsetup__toggle-btn--active]="mode() === 'due-date'" class="pregsetup__toggle-btn" (click)="setMode('due-date')">
-          Znam očekivani termin
+        <button type="button" role="radio" [attr.aria-checked]="mode() === 'termin'"
+                [class.pregsetup__toggle-btn--active]="mode() === 'termin'" class="pregsetup__toggle-btn"
+                (click)="setMode('termin')">
+          <span class="pregsetup__toggle-krug"></span>
+          <span>
+            <strong>Termin porođaja</strong>
+            <small>Datum koji ti je rekao ginekolog</small>
+          </span>
         </button>
       </div>
 
       <form (ngSubmit)="submit()" class="authpage__form">
         <label>
-          <span>{{ mode() === 'lmp' ? 'Prvi dan poslednje menstruacije' : 'Očekivani termin porođaja' }}</span>
-          <input type="date" [(ngModel)]="dateInput" name="dateInput" />
+          <span>{{ mode() === 'menstruacija' ? 'Prvi dan poslednje menstruacije' : 'Termin porođaja' }}</span>
+          <input type="date" [(ngModel)]="dateInput" name="dateInput"
+                 [attr.max]="mode() === 'menstruacija' ? danasIso : null"
+                 (ngModelChange)="error.set('')" />
         </label>
 
-        <p class="pregsetup__preview" *ngIf="formattedDueDate">
-          Tvoj očekivani termin: <strong>{{ formattedDueDate }}</strong>
-        </p>
+        <div class="pregsetup__upozorenje" *ngIf="greskaDatuma as g" role="alert">
+          <p>{{ g.poruka }}</p>
+          <button type="button" class="pregsetup__upozorenje-dugme" *ngIf="g.mozdaJeTermin" (click)="tumaciKaoTermin()">
+            To je moj termin porođaja
+          </button>
+        </div>
+
+        <div class="pregsetup__procena" *ngIf="procena as p">
+          <span class="pregsetup__procena-oznaka">Sada si u</span>
+          <strong class="pregsetup__procena-nedelja">{{ p.nedelja }}. nedelji<ng-container *ngIf="p.dan"> i {{ p.dan }} {{ p.dan === 1 ? 'dan' : 'dana' }}</ng-container></strong>
+          <span>Termin porođaja: <strong>{{ p.terminTekst }}</strong></span>
+        </div>
 
         <p class="authpage__error" *ngIf="error()">{{ error() }}</p>
 
-        <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading()">
-          {{ loading() ? 'Čuvanje...' : 'Nastavi' }}
+        <ui-button type="submit" variant="primary" size="lg" [fullWidth]="true" [disabled]="loading() || !!greskaDatuma">
+          {{ loading() ? 'Čuvanje...' : (procena ? 'Tačno je, nastavi' : 'Nastavi') }}
         </ui-button>
       </form>
+
+      <button type="button" class="pregsetup__skip" (click)="odjaviSe()">Odjavi se</button>
     </ng-container>
 
     <ng-container *ngIf="step() === 2">
@@ -52,12 +78,12 @@
       <form (ngSubmit)="saveDetails()" class="authpage__form">
         <label>
           <span>Tvoja visina (cm)</span>
-          <input type="number" [(ngModel)]="heightInput" name="heightInput" placeholder="168" />
+          <input type="number" inputmode="numeric" [(ngModel)]="heightInput" name="heightInput" placeholder="npr. 168" />
         </label>
 
         <label>
           <span>Težina pre trudnoće (kg)</span>
-          <input type="number" step="0.1" [(ngModel)]="prePregnancyWeightInput" name="prePregnancyWeightInput" placeholder="62" />
+          <input type="number" inputmode="decimal" step="0.1" [(ngModel)]="prePregnancyWeightInput" name="prePregnancyWeightInput" placeholder="npr. 62" />
         </label>
 
         <p class="pregsetup__preview" *ngIf="previewRange">{{ previewRange }}</p>

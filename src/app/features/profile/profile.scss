@@ -358,3 +358,56 @@
 
   &:hover { background: var(--color-surface-soft, rgba(0, 0, 0, .03)); }
 }
+
+/* Izbor jednog datuma od kog se računa trudnoća */
+.profile__datum-izbor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  > span { font-size: 13px; font-weight: 600; color: var(--color-text-soft); }
+}
+
+.profile__datum-dugmad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.profile__datum-dugme {
+  min-height: 48px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  cursor: pointer;
+
+  &--aktivno {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+  }
+}
+
+.profile__datum-upozorenje {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-gold-light);
+  color: #6B4A12;
+  font-size: 14px;
+}
+
+.profile__datum-procena {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-sage-light);
+  color: var(--color-text-soft);
+  font-size: 14px;
+
+  strong { color: #3F6646; }
+}

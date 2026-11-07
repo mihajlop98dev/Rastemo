@@ -4,7 +4,7 @@
 
   <header class="calpage__header">
     <div>
-      <h1>Kalendar</h1>
+      <h1>Pregledi i nalazi</h1>
       <p class="text-soft">Svi tvoji pregledi, analize i podsetnici na jednom mestu.</p>
     </div>
     <ui-button variant="primary" size="md" (click)="openCreate()">
@@ -166,19 +166,19 @@
         </button>
       </div>
 
-      <label class="calpage__field">
-        <span>Naziv</span>
-        <input type="text" [(ngModel)]="newTitle" placeholder="Npr. Kontrola kod ginekologa" />
-      </label>
+      <div class="calpage__field">
+        <span>Šta je u pitanju?</span>
+        <div class="calpage__vrste" role="radiogroup">
+          <button type="button" *ngFor="let tp of tipovi" role="radio" [attr.aria-checked]="newType === tp.id"
+                  class="calpage__vrsta" [class.calpage__vrsta--aktivan]="newType === tp.id" (click)="newType = tp.id">
+            {{ tp.label }}
+          </button>
+        </div>
+      </div>
 
       <label class="calpage__field">
-        <span>Tip</span>
-        <select [(ngModel)]="newType">
-          <option value="pregled">Pregled</option>
-          <option value="analize">Analize</option>
-          <option value="ultrazvuk">Ultrazvuk</option>
-          <option value="ostalo">Ostalo</option>
-        </select>
+        <span>Naziv (nije obavezno)</span>
+        <input type="text" [(ngModel)]="newTitle" [placeholder]="podrazumevaniNaziv" />
       </label>
 
       <div class="calpage__field-row">
@@ -203,7 +203,8 @@
                   placeholder="Npr. uraditi krvnu sliku pre pregleda, poneti nalaze, doći natašte..."></textarea>
       </label>
 
-      <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newTitle || !newDate" (click)="submitCreate()">
+      <p class="calpage__greska" *ngIf="greskaCuvanja()" role="alert">{{ greskaCuvanja() }}</p>
+      <ui-button variant="primary" size="md" [fullWidth]="true" [disabled]="creating() || !newDate" (click)="submitCreate()">
         {{ creating() ? 'Čuvanje...' : (uIzmeni() ? 'Sačuvaj izmene' : 'Sačuvaj događaj') }}
       </ui-button>
 

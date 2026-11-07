@@ -23,3 +23,9 @@ enabled = true
 # Zove je okidac iz baze preko pg_net, a okidaci ne salju korisnicki token.
 # Zastita je poredjenje sa service_role kljucem unutar same funkcije.
 verify_jwt = false
+
+[functions.posalji-nedeljni-mejl]
+enabled = true
+# Link za odjavu iz mejla se otvara bez prijave, pa JWT ne može da se traži.
+# Slanje (POST) funkcija sama proverava: prolazi samo sa service_role ključem.
+verify_jwt = false

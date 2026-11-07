@@ -8,6 +8,7 @@ import { UiButton } from '../../../shared/ui/button/button';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService } from '../../../core/services/admin.service';
 import { SeoService } from '../../vodic/seo.service';
+import { jeNepotvrdjenMejl, porukaGreske } from '../../../core/data/greske';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,10 @@ export class Login {
 
   readonly loading = signal(false);
   readonly error = signal('');
+  /** Nalog postoji, ali mejl nije potvrđen — nudi se novi link. */
+  readonly nepotvrdjen = signal(false);
+  readonly saljem = signal(false);
+  readonly poslato = signal(false);
 
   readonly HeartIcon = Heart;
 
@@ -49,13 +54,22 @@ export class Login {
 
     this.loading.set(true);
     this.error.set('');
+    this.nepotvrdjen.set(false);
+    this.poslato.set(false);
 
     const { error } = await this.auth.prijaviSe(this.email, this.password);
 
     this.loading.set(false);
 
     if (error) {
-      this.error.set('Pogrešan email ili lozinka.');
+      // Ranije je svaka greška bila „pogrešna lozinka" — i kad mejl samo
+      // nije potvrđen. Korisnica je tada bila zaključana bez izlaza.
+      if (jeNepotvrdjenMejl(error)) {
+        this.nepotvrdjen.set(true);
+        this.error.set('Tvoj mejl još nije potvrđen. Otvori link koji smo ti poslali (pogledaj i neželjenu poštu) ili zatraži novi.');
+      } else {
+        this.error.set(porukaGreske(error, 'Pogrešan email ili lozinka.'));
+      }
       return;
     }
 
@@ -70,9 +84,21 @@ export class Login {
     this.router.navigateByUrl(await this.admin.checkAdmin() ? '/admin' : '/home');
   }
 
+  async posaljiPonovo() {
+    this.saljem.set(true);
+    const { error } = await this.auth.resendConfirmation(this.email.trim());
+    this.saljem.set(false);
+    if (error) {
+      this.error.set(porukaGreske(error));
+      return;
+    }
+    this.poslato.set(true);
+    this.error.set('');
+  }
+
   async withGoogle() {
     this.error.set('');
     const { error } = await this.auth.signInWithGoogle(this.nazadUrl);
-    if (error) this.error.set(error.message);
+    if (error) this.error.set(porukaGreske(error));
   }
 }

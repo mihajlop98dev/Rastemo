@@ -17,6 +17,8 @@ import { SupabaseService } from '../../core/services/supabase.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { PushService, StanjePusha } from '../../core/services/push.service';
 import { WeightService } from '../../core/services/weight.service';
+import { VrstaDatuma, menstruacijaIzTermina, proceni, proveriDatum, terminIzMenstruacije } from '../../core/data/datum-trudnoce';
+import { porukaGreske } from '../../core/data/greske';
 
 type Section = 'profil' | 'trudnoca' | 'notifikacije' | 'privatnost' | 'lozinka' | 'izvestaj';
 
@@ -77,7 +79,7 @@ export class Profile implements OnInit {
     } catch (e) {
       // Okidač u bazi vraća razumljivu poruku o tome šta ne valja sa imenom.
       this.greskaKorisnickog.set(
-        (e as { message?: string }).message || 'Nije uspelo čuvanje. Probaj ponovo.',
+        porukaGreske(e, 'Nije uspelo čuvanje. Probaj ponovo.'),
       );
     } finally {
       this.cuvamKorisnicko.set(false);
@@ -147,7 +149,7 @@ export class Profile implements OnInit {
       this.lozinkaGreska.set(
         error.message.toLowerCase().includes('should be different')
           ? 'Nova lozinka mora da se razlikuje od stare.'
-          : error.message
+          : porukaGreske(error)
       );
       return;
     }
@@ -169,8 +171,6 @@ export class Profile implements OnInit {
 
   readonly editingPregnancy = signal(false);
   readonly savingPregnancy = signal(false);
-  editDueDate = '';
-  editLastPeriod = '';
   editConceptionMethod: 'natural' | 'ivf' = 'natural';
   editBabyName = '';
   editBabyGender: BabyGender = 'nepoznato';
@@ -224,6 +224,12 @@ export class Profile implements OnInit {
 
   selectSection(id: Section) {
     this.activeSection = id;
+    // Na telefonu je meni iznad sadržaja i zauzima ceo ekran — bez ovoga
+    // dodir na stavku izgleda kao da ništa nije uradio.
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+      setTimeout(() => document.querySelector('.profile__content')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
   }
 
   get email(): string {
@@ -262,8 +268,9 @@ export class Profile implements OnInit {
 
   startEditPregnancy() {
     const p = this.pregnancy.active();
-    this.editDueDate = p?.due_date ?? '';
-    this.editLastPeriod = p?.last_period_date ?? '';
+    this.editVrsta = p?.last_period_date ? 'menstruacija' : 'termin';
+    this.editDatum = (this.editVrsta === 'menstruacija' ? p?.last_period_date : p?.due_date) ?? '';
+    this.greskaTrudnoce.set('');
     this.editConceptionMethod = p?.conception_method ?? 'natural';
     this.editBabyName = p?.baby_name ?? '';
     this.editBabyGender = p?.baby_gender ?? 'nepoznato';
@@ -276,13 +283,46 @@ export class Profile implements OnInit {
     this.editingPregnancy.set(false);
   }
 
+  /**
+   * Menja se jedan datum — drugi se računa. Ranije su oba bila slobodna
+   * polja, pa su mogla da stoje dva datuma koja jedan drugom protivreče.
+   */
+  editVrsta: VrstaDatuma = 'termin';
+  editDatum = '';
+  readonly greskaTrudnoce = signal('');
+
+  promeniVrstuDatuma(v: VrstaDatuma) {
+    if (v === this.editVrsta) return;
+    // Isti trenutak u trudnoći, samo prikazan kao drugi datum.
+    if (this.editDatum && !proveriDatum(this.editVrsta, this.editDatum)) {
+      this.editDatum = v === 'termin' ? terminIzMenstruacije(this.editDatum) : menstruacijaIzTermina(this.editDatum);
+    }
+    this.editVrsta = v;
+  }
+
+  get greskaEditDatuma() {
+    return this.editDatum ? proveriDatum(this.editVrsta, this.editDatum) : null;
+  }
+
+  get procenaEdit() {
+    if (!this.editDatum || this.greskaEditDatuma) return null;
+    return proceni(this.editVrsta === 'termin' ? this.editDatum : terminIzMenstruacije(this.editDatum));
+  }
+
   async savePregnancy() {
-    if (!this.editDueDate) return;
+    const greska = proveriDatum(this.editVrsta, this.editDatum);
+    if (greska) {
+      this.greskaTrudnoce.set(greska.poruka);
+      return;
+    }
+    const termin = this.editVrsta === 'termin' ? this.editDatum : terminIzMenstruacije(this.editDatum);
+    const menstruacija = this.editVrsta === 'menstruacija' ? this.editDatum : menstruacijaIzTermina(this.editDatum);
     this.savingPregnancy.set(true);
+    this.greskaTrudnoce.set('');
     try {
       await this.pregnancy.update({
-        due_date: this.editDueDate,
-        last_period_date: this.editLastPeriod || null,
+        due_date: termin,
+        last_period_date: menstruacija,
         conception_method: this.editConceptionMethod,
         baby_name: this.editBabyName.trim() || null,
         baby_gender: this.editBabyGender,
@@ -290,6 +330,8 @@ export class Profile implements OnInit {
         birth_facility_id: this.editBirthFacilityId,
       });
       this.editingPregnancy.set(false);
+    } catch (e) {
+      this.greskaTrudnoce.set(porukaGreske(e));
     } finally {
       this.savingPregnancy.set(false);
     }

@@ -30,9 +30,8 @@
 
   &__symptom {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
+    flex-direction: column;
+    gap: 10px;
     padding: var(--space-4) 0;
     border-bottom: 1px solid var(--color-border-soft);
   }
@@ -41,8 +40,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14.5px;
+    font-size: 15px;
     font-weight: 600;
+  }
+
+  &__symptom-naziv {
+    display: flex;
+    flex-direction: column;
   }
 
   &__symptom-emoji {
@@ -56,31 +60,37 @@
     font-size: 16px;
   }
 
+  /* Tri jednaka dugmeta sa natpisom — smajli bez reči nije bio jasan. */
   &__symptom-levels {
-    display: flex;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
 
   &__level {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid var(--color-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 6px 8px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--color-border);
     background: var(--color-surface);
-    font-size: 15px;
-    opacity: .45;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-soft);
+    cursor: pointer;
     transition: all .15s ease;
 
-    &--active {
-      opacity: 1;
-      border-color: transparent;
-      transform: scale(1.08);
-    }
+    &--active { color: var(--color-text); }
 
-    &--l1.tracking__level--active { background: var(--color-sage-light); }
-    &--l2.tracking__level--active { background: var(--color-gold-light); }
-    &--l3.tracking__level--active { background: var(--color-danger-light); }
+    &--l1.tracking__level--active { background: var(--color-sage-light); border-color: var(--color-sage); }
+    &--l2.tracking__level--active { background: var(--color-gold-light); border-color: var(--color-gold); }
+    &--l3.tracking__level--active { background: var(--color-danger-light); border-color: var(--color-danger); }
   }
+
+  &__level-emoji { font-size: 16px; }
 
   &__list > ui-button { margin-top: var(--space-2); }
 
@@ -131,26 +141,30 @@
   }
 
   &__mood-picker {
-    display: flex;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
     margin-bottom: var(--space-4);
   }
 
   &__mood-btn {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 64px;
+    padding: 6px 2px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-border);
     background: var(--color-surface);
-    font-size: 20px;
-    opacity: .5;
+    color: var(--color-text-soft);
+    cursor: pointer;
     transition: all .15s ease;
 
     &--active {
-      opacity: 1;
-      border-color: transparent;
+      border-color: var(--color-primary);
       background: var(--color-primary-soft);
-      transform: scale(1.08);
+      color: var(--color-primary-dark);
     }
   }
 
@@ -519,8 +533,7 @@
 
 /* Unos se čuva na klik, pa korisnica mora nekako da vidi da je prošlo. */
 .tracking__sacuvano {
-  margin-left: 10px;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--color-sage);
   white-space: nowrap;
@@ -660,3 +673,6 @@
     margin-top: var(--space-3);
   }
 }
+
+.tracking__mood-emoji { font-size: 22px; line-height: 1.2; }
+.tracking__mood-tekst { font-size: 12.5px; font-weight: 600; }

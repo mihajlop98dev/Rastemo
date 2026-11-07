@@ -22,7 +22,7 @@
           <ng-container [ngSwitch]="stanjeImena()">
             <ng-container *ngSwitchCase="'proveravam'">Proveravam…</ng-container>
             <ng-container *ngSwitchCase="'slobodno'">Slobodno je.</ng-container>
-            <ng-container *ngSwitchCase="'zauzeto'">Zauzeto ili nije dozvoljeno.</ng-container>
+            <ng-container *ngSwitchCase="'zauzeto'">Ovo ime ne može — probaj drugo (samo slova i brojevi).</ng-container>
             <ng-container *ngSwitchDefault>
               Ovim se potpisuješ na forumu — tvoje pravo ime tamo se ne prikazuje.
               Njime možeš i da se prijaviš.

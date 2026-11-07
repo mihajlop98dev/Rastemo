@@ -1,449 +1,385 @@
+/*
+ * Početna — jedna kolona, jedna stvar za drugom, kao priča dana.
+ * Pisano za telefon: veći tekst (min. 15 px), dodiri od 48 px, bez gustih mreža.
+ */
 .home {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  max-width: 1360px;
+  gap: var(--space-4);
+  max-width: 640px;
+  margin: 0 auto;
 
-  &__header {
-    padding: var(--space-4) var(--space-1) var(--space-2);
-
-    h1 {
-      font-size: 26px;
-      margin-bottom: 4px;
-    }
-
-    &-week {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--color-primary-dark);
-      margin-bottom: 2px;
-    }
-
-    &-month {
-      font-size: 13px;
-      margin-bottom: 2px;
-    }
-
-    &-due { font-size: 13.5px; }
-  }
-
-  &__row {
-    display: grid;
-    gap: var(--space-5);
-    grid-template-columns: 1.7fr 1.15fr 1fr;
-
-    @media (max-width: 1180px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  h2 {
-    font-size: 16.5px;
-    margin-bottom: var(--space-4);
-  }
-
-  /* <ui-card> projects its content into an inner .ui-card element, so layout
-     meant for the card's contents has to target that element. Putting it on the
-     host instead makes the inner card shrink to its content width, which pulled
-     the reminder and progress cards out of the grid column. */
-  &__baby-card,
-  &__week-card,
-  &__appointment-card,
-  &__reminder-card,
-  &__progress-card {
-    ::ng-deep .ui-card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-  }
-
-  /* Baby card */
-  &__baby-card {
-    display: block;
-  }
-
-  &__baby-card-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-
-    h2 { margin: 0; }
-    &-approx { font-size: 12.5px; font-weight: 500; }
-  }
-
-  &__baby-card-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-6);
-    padding: var(--space-3) 0 var(--space-5);
-  }
-
-  &__baby-stats {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  &__baby-stat {
-    display: flex;
-    flex-direction: column;
-    strong { font-family: var(--font-heading); font-size: 22px; }
-    span { font-size: 12px; color: var(--color-text-muted); }
-  }
-
-  &__baby-slider {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: 12px;
-    margin-top: auto;
-
-    ui-progress-bar { flex: 1; }
-  }
-
-  /* Ove nedelje card */
-  &__week-card {
-    display: block;
-  }
-
-  &__highlight {
-    display: flex;
-    gap: 12px;
-    margin-bottom: var(--space-4);
-
-    strong { display: block; font-size: 13.5px; margin-bottom: 2px; }
-    p { font-size: 12.5px; line-height: 1.5; }
-  }
-
-  &__highlight-icon {
-    flex-shrink: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-primary-soft);
-    color: var(--color-primary-dark);
-  }
-
-  /* Appointment card */
-  &__appointment-card {
-    display: block;
-  }
-
-  &__appointment-date {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    margin-bottom: var(--space-4);
-  }
-
-  &__appointment-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-md);
-    background: var(--color-primary-soft);
-    flex-shrink: 0;
-
-    strong { font-family: var(--font-heading); font-size: 20px; color: var(--color-primary-dark); line-height: 1; }
-    span { font-size: 10px; font-weight: 700; color: var(--color-primary-dark); letter-spacing: .04em; }
-  }
-
-  &__appointment-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    strong { font-size: 15px; }
-    span { font-size: 12.5px; }
-  }
-
-  &__appointment-empty {
-    font-size: 13px;
-    margin-bottom: var(--space-4);
-  }
-
-  &__appointment-meta {
-    display: flex;
-    gap: var(--space-4);
-    font-size: 12.5px;
-    margin-bottom: var(--space-5);
-  }
-
-  &__appointment-actions {
-    display: flex;
-    gap: var(--space-2);
-    margin-top: auto;
-  }
-
-  /* Quick actions */
-  &__quick-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-2);
-
-    @media (max-width: 640px) { flex-wrap: wrap; }
-  }
-
-  &__quick-action {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: none;
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--color-text-soft);
-    flex: 1;
-
-    &:hover span:first-child { transform: translateY(-2px); }
-  }
-
-  &__quick-action-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: var(--radius-md);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform .15s ease;
-
-    &--primary { background: var(--color-primary-soft); color: var(--color-primary-dark); }
-    &--peach { background: var(--color-peach-light); color: #B36941; }
-    &--lavender { background: var(--color-lavender-light); color: #6C5A9E; }
-    &--sage { background: var(--color-sage-light); color: #4F7856; }
-    &--gold { background: var(--color-gold-light); color: #A6752A; }
-  }
-
-  /* Reminder card */
-  &__reminder-card {
-    display: block;
-    background: linear-gradient(160deg, var(--color-surface) 40%, var(--color-peach-light) 160%);
-
-    ::ng-deep .ui-card {
-      align-items: flex-start;
-      gap: var(--space-3);
-    }
-  }
-
-  &__reminder-text {
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--color-text-soft);
-  }
-
-  /* Progress card */
-  &__progress-card {
-    display: block;
-
-    ::ng-deep .ui-card {
-      align-items: center;
-      text-align: center;
-    }
-
-    h2 { align-self: stretch; }
-  }
-
-  &__progress-ring {
-    position: relative;
-    width: 128px;
-    height: 128px;
-    margin-bottom: var(--space-4);
-
-    svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-
-    &-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      strong { font-family: var(--font-heading); font-size: 22px; }
-      span { font-size: 11px; color: var(--color-text-muted); }
-    }
-  }
-
-  &__progress-track {
-    fill: none;
-    stroke: var(--color-bg-soft);
-    stroke-width: 9;
-  }
-
-  &__progress-fill {
-    fill: none;
-    stroke: var(--color-primary);
-    stroke-width: 9;
-    stroke-linecap: round;
-    transition: stroke-dashoffset .5s ease;
-  }
-
-  &__progress-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-primary-dark);
-  }
-
-  &__baby-visual-btn {
-    border-radius: 50%;
-    transition: transform .15s ease;
-    cursor: pointer;
-
-    &:hover { transform: scale(1.03); }
-    &:active { transform: scale(0.98); }
-  }
-
-  &__viewer {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-5);
-    background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
-  }
-
-  &__viewer-close {
-    position: absolute;
-    top: var(--space-5);
-    right: var(--space-5);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.6);
-    color: var(--color-text);
-  }
-
-  &__viewer-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    text-align: center;
-
-    strong { font-family: var(--font-heading); font-size: 18px; }
-    span { font-size: 13px; color: var(--color-text-soft); }
-  }
-
-  &__viewer-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.7);
-    color: var(--color-text);
-
-    &:disabled { opacity: .3; }
-    &--left { left: var(--space-5); }
-    &--right { right: var(--space-5); }
-
-    @media (max-width: 640px) {
-      width: 38px;
-      height: 38px;
-      &--left { left: var(--space-3); }
-      &--right { right: var(--space-3); }
-    }
-  }
-
-  &__viewer-week {
-    position: absolute;
-    bottom: var(--space-6);
-    padding: 8px 20px;
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.7);
-    font-weight: 700;
-    font-size: 13.5px;
-    color: var(--color-primary-dark);
-  }
+  h2 { font-size: 18px; margin: 0 0 var(--space-3); }
 }
 
-/* Na telefonu slika bebe i brojevi ne staju jedno pored drugog: slika uzme
-   236 od 303 piksela, pa brojevima ostane 43 i "16.4 cm" se prelomi na dva
-   reda, a natpis "dužina (teme–trtica)" na tri. Zato idu jedno ispod drugog. */
-@media (max-width: 640px) {
-  .home {
-    &__baby-card-body {
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-
-    &__baby-stats {
-      flex-direction: row;
-      justify-content: center;
-      gap: var(--space-6);
-      width: 100%;
-    }
-
-    &__baby-stat {
-      align-items: center;
-      text-align: center;
-    }
-
-    &__baby-card-head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-    }
-  }
+/* --- 1. Hero --- */
+.home__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(170deg, var(--color-primary-soft) 0%, var(--color-peach-light) 100%);
 }
 
-.home__zabava {
+.home__pozdrav { margin: 0; font-size: 16px; color: var(--color-text-soft); }
+
+.home__nedelja {
+  margin: 4px 0 0;
+  font-size: 38px;
+  line-height: 1.1;
+  color: var(--color-primary-dark);
+}
+
+.home__nedelja-sub { margin: 4px 0 0; font-size: 15px; color: var(--color-text-soft); }
+
+.home__beba {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.home__velicina { margin: var(--space-2) 0 0; font-size: 17px; strong { color: var(--color-primary-dark); } }
+.home__mere { margin: 2px 0 0; font-size: 14px; color: var(--color-text-soft); }
+
+.home__beba-link {
+  margin-top: 6px;
+  padding: 8px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+}
+
+.home__napredak {
+  width: 100%;
+  margin-top: var(--space-3);
+
+  p { margin: 8px 0 0; font-size: 14px; color: var(--color-text-soft); }
+  strong { color: var(--color-text); }
+}
+
+/* --- 2. Prvi koraci --- */
+.home__koraci ::ng-deep .ui-card { border: 2px solid var(--color-primary-light); }
+
+.home__koraci-glava {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  h2 { margin: 0; }
+}
+
+.home__koraci-broj { font-size: 14px; font-weight: 700; color: var(--color-primary-dark); }
+.home__koraci-uvod { margin: 4px 0 var(--space-3); font-size: 15px; color: var(--color-text-soft); }
+
+.home__korak {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
-  padding: var(--space-4);
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not(:disabled) { border-color: var(--color-primary); }
+
+  &--gotov {
+    cursor: default;
+    background: var(--color-sage-light);
+    border-color: transparent;
+    strong { text-decoration: line-through; color: var(--color-text-soft); }
+  }
+}
+
+.home__korak-krug {
+  flex: 0 0 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+
+  .home__korak--gotov & { background: var(--color-sage); color: #fff; }
+}
+
+.home__korak-tekst {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  strong { font-size: 15px; color: var(--color-text); }
+  span { font-size: 13.5px; color: var(--color-text-soft); }
+}
+
+.home__korak-strelica { color: var(--color-text-muted); }
+
+.home__koraci-sakrij {
+  display: block;
+  margin: var(--space-3) auto 0;
+  padding: 8px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* --- 3. Danas --- */
+.home__danas-glava {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: var(--space-3);
+}
+
+.home__oznaka {
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+
+  &--beba { background: var(--color-lavender-light); color: #5B4C8A; }
+  &--ti { background: var(--color-primary-soft); color: var(--color-primary-dark); }
+  &--ideja { background: var(--color-gold-light); color: #7A5413; }
+}
+
+.home__danas-dan { font-size: 13px; color: var(--color-text-muted); }
+
+.home__danas-tekst {
+  margin: 0 0 var(--space-4);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--color-text);
+
+  &:last-child { margin-bottom: 0; }
+}
+
+/* --- 4. Ove nedelje --- */
+.home__vodic-uvod { margin: 0 0 var(--space-3); font-size: 16px; font-weight: 600; line-height: 1.45; }
+
+.home__vodic-deo {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border-soft);
+
+  strong { font-size: 15px; }
+  p { margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--color-text-soft); }
+
+  &--savet { margin-bottom: var(--space-3); }
+}
+
+.home__vodic-ikona { flex: 0 0 auto; font-size: 20px; line-height: 1.3; }
+
+/* --- 5. Prekretnica --- */
+.home__prekretnica ::ng-deep .ui-card {
+  display: flex;
+  gap: 14px;
+  background: var(--color-lavender-light);
+  border-color: transparent;
+}
+
+.home__prekretnica-ikona {
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  color: #5B4C8A;
+}
+
+.home__prekretnica-za { display: block; font-size: 13px; font-weight: 700; color: #5B4C8A; }
+.home__prekretnica strong { display: block; font-size: 17px; margin-top: 2px; }
+.home__prekretnica p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.45; color: var(--color-text-soft); }
+
+/* --- 6. Pregled --- */
+.home__pregled-red {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home__pregled-datum {
+  flex: 0 0 56px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-gold-light);
+  color: #7A5413;
+
+  strong { font-size: 22px; line-height: 1; }
+  span { font-size: 12px; font-weight: 700; }
+}
+
+.home__pregled-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  strong { font-size: 16px; }
+  span { font-size: 14px; color: var(--color-text-soft); }
+}
+
+.home__prazno { margin: 0 0 var(--space-3); font-size: 15px; color: var(--color-text-soft); }
+
+/* --- 7. Brzi unos --- */
+.home__brzi-dugmad {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (min-width: 560px) { grid-template-columns: repeat(4, 1fr); }
+  gap: 8px;
+}
+
+.home__brzi-dugme {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 84px;
+  padding: 10px 4px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+
+  &:hover { border-color: var(--color-primary); }
+}
+
+.home__brzi-ikona {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &--primary { background: var(--color-primary-soft); color: var(--color-primary-dark); }
+  &--peach { background: var(--color-peach-light); color: #B5643F; }
+  &--lavender { background: var(--color-lavender-light); color: #5B4C8A; }
+  &--sage { background: var(--color-sage-light); color: #4F7856; }
+  &--gold { background: var(--color-gold-light); color: #7A5413; }
+}
+
+/* --- 8. Još u aplikaciji --- */
+.home__jos h2 { padding: 0 4px; }
+
+.home__jos-red {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  margin-bottom: 8px;
+  padding: 10px 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  text-decoration: none;
   color: inherit;
-  transition: border-color .15s ease;
+  text-decoration: none;
 
   &:hover { border-color: var(--color-primary); }
+}
 
-  &-ikona {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    flex: none;
-    border-radius: 50%;
-    background: var(--color-primary-soft, rgba(233, 106, 130, .12));
-    color: var(--color-primary);
-  }
+.home__jos-ikona {
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
 
-  &-tekst {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
+.home__jos-tekst {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  strong { font-size: 15.5px; }
+  span { font-size: 13.5px; color: var(--color-text-soft); }
+}
 
-    span { font-size: 13px; }
-  }
+.home__jos-strelica { color: var(--color-text-muted); }
 
-  &-strelica { margin-left: auto; flex: none; color: var(--color-text-soft); }
+/* --- Prikaz bebe kroz nedelje --- */
+.home__viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  background: linear-gradient(160deg, var(--color-peach-light), var(--color-primary-light));
+}
+
+.home__viewer-close,
+.home__viewer-arrow {
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--color-text);
+  cursor: pointer;
+
+  &:disabled { opacity: .3; }
+}
+
+.home__viewer-close { position: absolute; top: var(--space-5); right: var(--space-5); }
+
+.home__viewer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  &--left { left: var(--space-3); }
+  &--right { right: var(--space-3); }
+}
+
+.home__viewer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  strong { font-family: var(--font-heading); font-size: 20px; }
+  span { font-size: 15px; color: var(--color-text-soft); }
+}
+
+.home__viewer-week {
+  position: absolute;
+  bottom: var(--space-6);
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-primary-dark);
 }

@@ -4,7 +4,7 @@
     <ng-container [ngSwitch]="push.stanje()">
 
       <ng-container *ngSwitchCase="'treba-instalirati'">
-        <h3>Da te podsetimo dan pre pregleda?</h3>
+        <h3>{{ povod() === 'pocetna' ? 'Dodaj Dnevnik na početni ekran' : 'Da te podsetimo dan pre pregleda?' }}</h3>
         <p>
           Da bi podsetnici radili na iPhone-u, aplikacija mora da stoji na
           početnom ekranu. To traje pola minuta:
@@ -28,8 +28,12 @@
       </ng-container>
 
       <ng-container *ngSwitchDefault>
-        <h3>Da te podsetimo dan pre pregleda?</h3>
-        <p *ngIf="!odbijeno()">
+        <h3>{{ povod() === 'pocetna' ? 'Da ti javimo kad počne nova nedelja?' : 'Da te podsetimo dan pre pregleda?' }}</h3>
+        <p *ngIf="!odbijeno() && povod() === 'pocetna'">
+          Jednom nedeljno kratka poruka šta je novo kod bebe, i podsetnik dan pre
+          svakog pregleda. Ništa više — a možeš da isključiš kad god hoćeš.
+        </p>
+        <p *ngIf="!odbijeno() && povod() !== 'pocetna'">
           Poslaćemo ti jednu notifikaciju dan ranije, sa vremenom i ustanovom.
           Ništa drugo — a možeš da isključiš kad god hoćeš.
         </p>
@@ -41,7 +45,7 @@
         <div class="pushpoziv__dugmad" *ngIf="!odbijeno()">
           <ui-button variant="ghost" size="sm" (click)="zatvori()">Ne sada</ui-button>
           <ui-button variant="primary" size="sm" [disabled]="push.radi()" (click)="ukljuci()">
-            {{ push.radi() ? 'Uključujem…' : 'Podseti me' }}
+            {{ push.radi() ? 'Uključujem…' : (povod() === 'pocetna' ? 'Da, javi mi' : 'Podseti me') }}
           </ui-button>
         </div>
         <ui-button *ngIf="odbijeno()" variant="ghost" size="sm" (click)="zatvori()">U redu</ui-button>
@@ -52,7 +56,7 @@
 
   <ng-template #uspeh>
     <h3>Gotovo 🎉</h3>
-    <p>Javićemo ti se dan pre pregleda. Šta sve stiže možeš da podesiš u Profilu.</p>
+    <p>{{ povod() === 'pocetna' ? 'Javićemo ti se kad počne nova nedelja i dan pre pregleda.' : 'Javićemo ti se dan pre pregleda.' }} Šta sve stiže možeš da podesiš u Profilu.</p>
     <ui-button variant="primary" size="sm" (click)="zatvori()">Zatvori</ui-button>
   </ng-template>
 </div>

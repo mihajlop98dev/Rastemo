@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   // Do ovog ekrana se ranije dolazilo samo preko dugmeta na početnoj, a na
   // njemu su i pitanja za lekara.
   { label: 'Razvoj bebe', path: '/baby-development', icon: 'baby' },
-  { label: 'Praćenje trudnoće', path: '/tracking', icon: 'activity' },
+  { label: 'Moj dnevnik', path: '/tracking', icon: 'activity' },
   { label: 'Pregledi i nalazi', path: '/calendar', icon: 'clipboard-list' },
   { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },
   // Forum je javan; ista adresa i iz aplikacije i sa sajta.
@@ -27,11 +27,15 @@ export const navItems: NavItem[] = [
 export const adminNavItem: NavItem = { label: 'Administracija', path: '/admin', icon: 'shield' };
 
 // Natpisi su skraćeni da se na 375px ne lome u dva reda. Levi meni postoji samo
-// na širem ekranu, pa sve što nije ovde korisnica na telefonu ne može da otvori.
+// na širem ekranu; sve što nije ovde ima ulaz u „Još u aplikaciji" na početnoj.
+//
+// Forum i Lekari su izašli iz donjeg menija (nov. 2026): forum je imao nula
+// odgovora i prazan ekran u glavnom meniju je odbijao nove korisnice, a
+// Pregledi — funkcija koju korisnice stvarno koriste — nisu bili u meniju.
 export const mobileNavItems: NavItem[] = [
   { label: 'Početna', path: '/home', icon: 'home' },
-  { label: 'Prati', path: '/tracking', icon: 'activity' },
-  { label: 'Forum', path: '/zajednica', icon: 'users' },
-  { label: 'Lekari', path: '/doctors', icon: 'stethoscope' },
+  { label: 'Beba', path: '/baby-development', icon: 'baby' },
+  { label: 'Dnevnik', path: '/tracking', icon: 'activity' },
+  { label: 'Pregledi', path: '/calendar', icon: 'clipboard-list' },
   { label: 'Profil', path: '/profile', icon: 'user' },
 ];

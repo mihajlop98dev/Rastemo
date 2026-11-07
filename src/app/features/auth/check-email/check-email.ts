@@ -1,3 +1,4 @@
+import { porukaGreske } from '../../../core/data/greske';
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -41,7 +42,7 @@ export class CheckEmail {
       this.error.set(
         error.message.toLowerCase().includes('rate')
           ? 'Mejl je već poslat pre koji trenutak. Sačekaj minut pa pokušaj ponovo.'
-          : error.message
+          : porukaGreske(error)
       );
       return;
     }

@@ -28,7 +28,7 @@ const KONTAKT = KONTAKT_IZ_SECRETS.startsWith('https://')
   : 'https://dnevniktrudnoce.com';
 
 /** Menja se uz svaku izmenu, da se vidi je li objavljena verzija stigla. */
-const VERZIJA = 'v10-terapija';
+const VERZIJA = 'v11-nedelja-po-kalendaru';
 
 /**
  * Ključevi se proveravaju ovde, a ne prepuštaju biblioteci.
@@ -332,14 +332,23 @@ Deno.serve(async (req) => {
     .select('id, user_id, due_date')
     .eq('is_active', true);
 
-  const danas = new Date();
-  for (const t of trudnoce ?? []) {
+  // Samo u jutarnjem krugu. Poruka o novoj nedelji je jutarnja vest; uveče
+  // je ranije zbog greške u računu stizala dan pre početka nedelje.
+  const jutro = new Date().getUTCHours() < 14;
+
+  // Dan se računa po kalendaru u Srbiji, ne po satu. Ranije je razlika do
+  // termina zaokruživana sa tačnim vremenom, pa je u 19h ispadalo da je već
+  // sutra — korisnica je dobijala „ušla si u 33. nedelju" dan ranije.
+  const danasBg = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Belgrade' }).format(new Date());
+  const danasMs = Date.parse(`${danasBg}T00:00:00Z`);
+
+  for (const t of jutro ? (trudnoce ?? []) : []) {
     const { data: profil } = await baza
       .from('profiles').select('push_nedelja').eq('id', t.user_id).single();
     if (!profil?.push_nedelja) continue;
 
-    const termin = new Date(t.due_date);
-    const preostalo = Math.round((termin.getTime() - danas.getTime()) / 86_400_000);
+    const terminMs = Date.parse(`${t.due_date}T00:00:00Z`);
+    const preostalo = Math.round((terminMs - danasMs) / 86_400_000);
     const proteklo = 280 - preostalo;
     if (proteklo < 28 || proteklo > 294 || proteklo % 7 !== 0) continue;
 
